@@ -1,7 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.sql.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class OdinModel
 {
@@ -18,16 +17,15 @@ public class OdinModel
 	{
 		Connection myConn = null;
 		Statement myStmt = null;
-		ResultSet myRs = null;
+		List<Employee> employees = new ArrayList<Employee>();
 		try
 		{
 			myConn = connect();
 			myStmt = myConn.createStatement();
-			if(args.length > 0) myRs = myStmt.executeQuery(args[0]);
-			while(myRs.next()) System.out.println(myRs.getString("Name"));
+			employees = getEmployees(myStmt);
+			employees.forEach(p->System.out.println(p.employeeLine()));
 			myConn.close();
 			myStmt.close();
-			myRs.close();
 		}catch (Exception e){ e.printStackTrace(); } 
 	}
 	
@@ -41,6 +39,15 @@ public class OdinModel
 		con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
 		reader.close();
 		return con;
+	}
+	
+	List<Employee> getEmployees(Statement myStmt) throws Exception
+	{
+		ResultSet myRs = myStmt.executeQuery("SELECT * FROM employees;");
+		List<Employee> employees = new ArrayList<Employee>();
+		while(myRs.next()) employees.add(new Employee(myRs));
+		myRs.close();
+		return employees;
 	}
 }
 
@@ -59,6 +66,11 @@ class Employee
 		this.name = myRS.getString("Name");
 		this.position = myRS.getString("Position");
 		this.password = myRS.getString("Password");
+	}
+	
+	String employeeLine()
+	{
+		return (this.employeeID + "\t" + this.name + "\t" + this.position + "\t" + this.groupID);
 	}
 }
 
