@@ -28,7 +28,7 @@ public class OdinModel
 			myConn.close();
 			myStmt.close();
 			myRs.close();
-		}catch (Exception e){ e.printStackTrace(); }//System.out.println("Failure."); 
+		}catch (Exception e){ e.printStackTrace(); } 
 	}
 	
 	public Connection connect() throws Exception
