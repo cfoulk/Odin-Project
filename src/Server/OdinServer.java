@@ -44,4 +44,13 @@ public class OdinServer
         myRS.close();
         return employees;
     }
+
+    void addEmployees (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    {
+        this.stmt.executeQuery(SQL "INSERT INTO employees (" +
+                    "Name, Position, Password, GroupID, EmployeeID, Username)" +
+                ") VALUES(" + name + " " + position + " " password + " " groupID + " "employeeID + " " + username + ");");
+            this.stmt.close();
+
+    }
 }
