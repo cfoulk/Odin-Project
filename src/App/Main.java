@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("Login.xml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
         primaryStage.setTitle("Odin Management");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
