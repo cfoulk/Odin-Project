@@ -27,4 +27,9 @@ public class OdinModel
 			myStmt.close();
 		}catch (Exception e){ e.printStackTrace(); } 
 	}
+
+	public int getUserID(String userName, String password){
+		//TODO Joel, login
+		return -1;
+	}
 }
