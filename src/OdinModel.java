@@ -43,11 +43,20 @@ public class OdinModel
 	
 	List<Employee> getEmployees(Statement myStmt) throws Exception
 	{
-		ResultSet myRs = myStmt.executeQuery("SELECT * FROM employees;");
+		ResultSet myRS = myStmt.executeQuery("SELECT * FROM employees;");
 		List<Employee> employees = new ArrayList<Employee>();
-		while(myRs.next()) employees.add(new Employee(myRs));
-		myRs.close();
+		while(myRS.next()) employees.add(new Employee(myRS));
+		myRS.close();
 		return employees;
+	}
+	
+	List<Project> getProjects(Statement myStmt) throws Exception
+	{
+		ResultSet myRS = myStmt.executeQuery("SELECT * FROM projects;");
+		List<Project> projects = new ArrayList<Project>();
+		while(myRS.next()) projects.add(new Project(myRS));
+		myRS.close();
+		return projects;
 	}
 }
 
@@ -76,7 +85,31 @@ class Employee
 
 class Project
 {
+	int projectID;
+	int groupID;
+	int projectLeadID;
+	String name;
+	String description;
+	String status;
+	String dueDate;
 	
+	Project(ResultSet myRS) throws Exception
+	{
+		this.projectID = myRS.getInt("ProjectID");
+		this.groupID = myRS.getInt("GroupID");
+		this.projectLeadID = myRS.getInt("ProjectLeadID");
+		this.name = myRS.getString("Name");
+		this.description = myRS.getString("Description");
+		this.status = myRS.getString("Status");
+		this.dueDate = myRS.getString("DueDate");
+	}
+	
+	String projectLine()
+	{
+		return (this.projectID + "\t" + this.name + "\t" + this.status + "\t" +
+				this.groupID + "\t" + this.projectLeadID + "\t" + this.dueDate + "\t" +
+				this.description);
+	}
 }
 
 class Task
