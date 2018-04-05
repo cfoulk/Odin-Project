@@ -44,7 +44,7 @@ public class OdinModel
 	List<Employee> getEmployees(Statement myStmt) throws Exception
 	{
 		ResultSet myRS = myStmt.executeQuery("SELECT * FROM employees;");
-		List<Employee> employees = new ArrayList<Employee>();
+		List<Employee> employees = new ArrayList<>();
 		while(myRS.next()) employees.add(new Employee(myRS));
 		myRS.close();
 		return employees;
@@ -53,7 +53,7 @@ public class OdinModel
 	List<Project> getProjects(Statement myStmt) throws Exception
 	{
 		ResultSet myRS = myStmt.executeQuery("SELECT * FROM projects;");
-		List<Project> projects = new ArrayList<Project>();
+		List<Project> projects = new ArrayList<>();
 		while(myRS.next()) projects.add(new Project(myRS));
 		myRS.close();
 		return projects;
@@ -114,7 +114,7 @@ class Project
 
 class Task
 {
-	
+
 }
 
 class WorkLog
