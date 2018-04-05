@@ -1,0 +1,47 @@
+package Server;
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class OdinServer
+{
+    final String FILENAME = "ServerInfo.txt";
+
+    public Connection connect() throws Exception
+    {
+        StringTokenizer stk;
+        Connection con;
+        BufferedReader reader;
+        reader = new BufferedReader(new FileReader(FILENAME));
+        stk = new StringTokenizer(reader.readLine(), "\t");
+        con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
+        reader.close();
+        return con;
+    }
+
+    List<Project> getProjects(Statement myStmt) throws Exception
+    {
+        ResultSet myRS = myStmt.executeQuery("SELECT * FROM projects;");
+        List<Project> projects = new ArrayList<>();
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    List<Employee> getEmployees(Statement myStmt) throws Exception
+    {
+        ResultSet myRS = myStmt.executeQuery("SELECT * FROM employees;");
+        List<Employee> employees = new ArrayList<>();
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
+    }
+}
