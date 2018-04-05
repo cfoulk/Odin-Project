@@ -14,7 +14,7 @@
          <children>
             <HBox alignment="CENTER" layoutY="151.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="63.0" prefWidth="273.0">
                <children>
-                  <JFXButton buttonType="RAISED" prefHeight="34.0" prefWidth="73.0" ripplerFill="#2b5797" style="-fx-background-color: #FFFFFF;" text="Login" textFill="#2b5797">
+                  <JFXButton fx:id="loginButton" buttonType="RAISED" onAction="#login" prefHeight="34.0" prefWidth="73.0" ripplerFill="#2b5797" style="-fx-background-color: #FFFFFF;" text="Login" textFill="#2b5797">
                      <font>
                         <Font size="16.0" />
                      </font>

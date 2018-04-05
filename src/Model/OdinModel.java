@@ -30,4 +30,14 @@ public class OdinModel
 		}catch (Exception e){ e.printStackTrace(); } 
 	}
 	*/
+
+	public int getUserID(String userName, String password){
+		//TODO Joel, login
+		return -1;
+	}
+
+	public Employee getEmployee(){
+		//TODO
+		return null;
+	}
 }
