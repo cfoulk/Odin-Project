@@ -32,4 +32,9 @@ public class OdinModel
 		//TODO Joel, login
 		return -1;
 	}
+
+	public Employee getEmployee(){
+		//TODO
+		return null;
+	}
 }
