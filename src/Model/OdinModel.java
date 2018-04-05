@@ -6,6 +6,7 @@ import java.util.*;
 
 public class OdinModel
 {
+	/*
 	public static void main(String[] args) throws Exception
 	{
 		OdinModel OM = new OdinModel();
@@ -17,9 +18,10 @@ public class OdinModel
 		Connection myConn = null;
 		Statement myStmt = null;
 		List<Employee> employees = new ArrayList<Employee>();
+		OdinServer OS = new OdinServer();
 		try
 		{
-			myConn = OdinServer.connect();
+			myConn = OS.connect();
 			myStmt = myConn.createStatement();
 			employees = getEmployees(myStmt);
 			employees.forEach(p->System.out.println(p.employeeLine()));
@@ -27,6 +29,7 @@ public class OdinModel
 			myStmt.close();
 		}catch (Exception e){ e.printStackTrace(); } 
 	}
+	*/
 
 	public int getUserID(String userName, String password){
 		//TODO Joel, login
