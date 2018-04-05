@@ -35,23 +35,31 @@ public class OdinServer
         return con;
     }
 
-    List<Project> getProjects(Statement myStmt) throws Exception
+    List<Project> getProjects() throws Exception
     {
-        ResultSet myRS = myStmt.executeQuery("SELECT * FROM projects;");
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
         List<Project> projects = new ArrayList<>();
         while(myRS.next()) projects.add(new Project(myRS));
         myRS.close();
         return projects;
     }
 
-    List<Employee> getEmployees(Statement myStmt) throws Exception
+    List<Employee> getEmployees() throws Exception
     {
-        ResultSet myRS = myStmt.executeQuery("SELECT * FROM employees;");
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         List<Employee> employees = new ArrayList<>();
         while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
         return employees;
     }
 
-
+    void addProject(String name, String dueDate, int groupID, int projectLeadID,
+                    String description, String status, int projectID) throws Exception
+    {
+        this.stmt.executeQuery("INSERT INTO projects (" +
+                "Name, DueDate, GroupID, ProjectLeadID, Description, Status, ProjectID" +
+                ") VALUES (" +
+                name + " " + groupID + " " + projectID + " " + description + " " + status + " " + projectID + ");");
+        this.stmt.close();
+    }
 }
