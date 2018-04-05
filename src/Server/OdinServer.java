@@ -1,12 +1,8 @@
 package Server;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -14,6 +10,18 @@ import java.util.StringTokenizer;
 public class OdinServer
 {
     final String FILENAME = "ServerInfo.txt";
+    Connection con;
+    Statement stmt;
+
+    OdinServer()
+    {
+        try
+        {
+            this.con = connect();
+            this.stmt = con.createStatement();
+        }
+        catch(Exception e){ e.printStackTrace(); }
+    }
 
     public Connection connect() throws Exception
     {
@@ -53,4 +61,5 @@ public class OdinServer
             this.stmt.close();
 
     }
+
 }
