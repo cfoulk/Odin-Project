@@ -3,13 +3,13 @@ package Server;
 import java.sql.ResultSet;
 
 public class Task {
-    int dueDate;
-    int employeeID;
-    int projectID;
-    int size;
-    int taskID;
-    String name;
-    String description;
+    public int dueDate;
+    public int employeeID;
+    public int projectID;
+    public int size;
+    public int taskID;
+    public String name;
+    public String description;
 
     public Task(ResultSet myRS) throws Exception {
         this.dueDate = myRS.getInt("DueDate");

@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 
 public class WorkLog
 {
-    int employeeID;
-    int taskID;
-    int logID;
-    String entryType;
-    String description;
+    public int employeeID;
+    public int taskID;
+    public int logID;
+    public String entryType;
+    public String description;
 
     public WorkLog(ResultSet myRS) throws Exception
     {

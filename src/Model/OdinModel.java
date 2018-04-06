@@ -6,6 +6,19 @@ import java.util.*;
 
 public class OdinModel
 {
+    //Returns the employee's ID number on success.
+    //Returns -1 if the username does not exist.
+    //Returns -2 if the username exists, but the password is wrong.
+    int loginRequest(String username, String password)
+    {
+        OdinServer OS = new OdinServer();
+        Employee emp = null;
+        try{ emp = OS.getEmployee(username); }
+        catch(Exception e) { e.printStackTrace(); }
+        if(emp == null) return -1;
+        if(emp.passwordCheck(password)) return emp.employeeID;
+        return -2;
+    }
 	/*
 	public static void main(String[] args) throws Exception
 	{

@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 
 public class Employee
 {
-    int employeeID;
-    int groupID;
-    String name;
-    String position;
+    public int employeeID;
+    public int groupID;
+    public String name;
+    public String position;
     String password;
 
     public Employee(ResultSet myRS) throws Exception
@@ -17,5 +17,10 @@ public class Employee
         this.name = myRS.getString("Name");
         this.position = myRS.getString("Position");
         this.password = myRS.getString("Password");
+    }
+
+    public boolean passwordCheck(String input)
+    {
+        return (this.password.compareTo(input) == 0);
     }
 }
