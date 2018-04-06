@@ -91,4 +91,15 @@ public class OdinServer
                 name + " " + groupID + " " + projectID + " " + description + " " + status + " " + projectID + ");");
         this.stmt.close();
     }
+
+    void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    {
+        this.stmt.executeQuery("INSERT INTO tasks (" +
+                "Name, DueDate, ProjectID, EmployeeID, Description, Size, TaskID" +
+            ") VALUES (" +
+                dueDate + " " + employeeID + " " + projectID + " " + description + " " + size + " " + name + " " + taskID + "):");
+        this.stmt.close();
+    }
+
+
 }
