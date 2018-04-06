@@ -81,5 +81,14 @@ public class OdinServer
         this.stmt.close();
     }
 
+    void addWorkLog(String employeeID, String entryType, int taskID, String description, int logID) throws Exception
+    {
+        this.stmt.executeQuery("INSERT INTO WorkLog (" +
+            "EntryType, EmployeeID, TaskID, Description, LogID" +
+        ") VALUES (" +
+                employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
+        this.stmt.close();
+    }
+
 
 }
