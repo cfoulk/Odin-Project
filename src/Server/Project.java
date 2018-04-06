@@ -4,13 +4,13 @@ import java.sql.ResultSet;
 
 public class Project
 {
-    int projectID;
-    int groupID;
-    int projectLeadID;
-    String name;
-    String description;
-    String status;
-    String dueDate;
+    public int projectID;
+    public int groupID;
+    public int projectLeadID;
+    public String name;
+    public String description;
+    public String status;
+    public String dueDate;
 
     public Project(ResultSet myRS) throws Exception
     {

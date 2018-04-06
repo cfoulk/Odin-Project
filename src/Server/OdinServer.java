@@ -13,7 +13,7 @@ public class OdinServer
     Connection con;
     Statement stmt;
 
-    OdinServer()
+    public OdinServer()
     {
         try
         {
@@ -53,12 +53,32 @@ public class OdinServer
         return employees;
     }
 
+    Employee getEmployee(int employeeID) throws Exception
+    {
+        Employee ret;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
+        ret = new Employee(myRS);
+        this.stmt.close();
+        myRS.close();
+        return ret;
+    }
+
+    public Employee getEmployee(String username) throws Exception
+    {
+        Employee ret;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = " + username + ";");
+        ret = new Employee(myRS);
+        this.stmt.close();
+        myRS.close();
+        return ret;
+    }
+
     void addEmployees (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
-        this.stmt.executeQuery(SQL "INSERT INTO employees (" +
+        this.stmt.executeQuery("INSERT INTO employees (" +
                     "Name, Position, Password, GroupID, EmployeeID, Username)" +
-                ") VALUES(" + name + " " + position + " " password + " " groupID + " "employeeID + " " + username + ");");
-            this.stmt.close();
+                ") VALUES(" + name + " " + position + " " + password + " " + groupID + " " + employeeID + " " + username + ");");
+        this.stmt.close();
 
     }
 
