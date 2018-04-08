@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.svg.SVGGlyph;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,7 +51,15 @@ public class loginController {
         System.out.println(logo.getSize());
         button.setGraphic(logo);
         ObservableList list = contentArray.getChildren();
+//        usernameField.requestFocus();
         contentArray.getChildren().add(0, button);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                usernameField.requestFocus();
+            }
+        });
 
     }
 

@@ -8,29 +8,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="531.0" style="-fx-background-color: #2b5797;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.gui.component.loginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="492.0" style="-fx-background-color: #2b5797;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.gui.component.loginController">
    <children>
-      <VBox fx:id="contentArray" alignment="CENTER" layoutX="129.0" layoutY="98.0" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+      <VBox layoutX="47.0" layoutY="14.0" prefWidth="398.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="47.0" AnchorPane.topAnchor="47.0">
          <children>
-            <JFXTextField fx:id="usernameField" focusColor="WHITE" labelFloat="true" promptText="Username" style="-fx-background-color: #FFFFFF;" unFocusColor="#2b5797">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </JFXTextField>
-            <JFXPasswordField fx:id="passwordField" focusColor="WHITE" labelFloat="true" prefHeight="31.0" prefWidth="169.0" promptText="Password" style="-fx-background-color: #FFFFFF;" unFocusColor="#2b5797">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </JFXPasswordField>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="273.0">
+            <VBox fx:id="contentArray" alignment="CENTER" prefHeight="234.0" prefWidth="398.0" spacing="30.0">
                <children>
-                  <JFXButton fx:id="loginButton" buttonType="RAISED" onAction="#login" prefHeight="34.0" prefWidth="73.0" ripplerFill="#2b5797" style="-fx-background-color: #FFFFFF;" text="Login" textFill="#2b5797">
+                  <JFXTextField fx:id="usernameField" focusColor="WHITE" labelFloat="true" prefHeight="31.0" prefWidth="345.0" promptText="Username" style="-fx-background-color: #FFFFFF; -fx-focus-traversable: true;" unFocusColor="#2b5797">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="15.0" />
                      </font>
-                  </JFXButton>
+                  </JFXTextField>
+                  <JFXPasswordField fx:id="passwordField" focusColor="WHITE" labelFloat="true" prefHeight="31.0" prefWidth="325.0" promptText="Password" style="-fx-background-color: #FFFFFF;" unFocusColor="#2b5797">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </JFXPasswordField>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="111.0">
+                     <children>
+                        <JFXButton fx:id="loginButton" buttonType="RAISED" onAction="#login" prefHeight="34.0" prefWidth="73.0" ripplerFill="#2b5797" style="-fx-background-color: #FFFFFF;" text="Login" textFill="#2b5797">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </children>
