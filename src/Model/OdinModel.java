@@ -44,7 +44,13 @@ public class OdinModel
 
 	public int getUserID(String userName, String password){
 		//TODO Joel, login
-		return -1;
+        OdinServer OS = new OdinServer();
+        Employee emp = null;
+        try{ emp = OS.getEmployee(username); }
+        catch(Exception e) { e.printStackTrace(); }
+        if(emp == null) return -1;
+        if(emp.passwordCheck(password)) return emp.employeeID;
+        return -2;
 	}
 
 	public Employee getEmployee(){
