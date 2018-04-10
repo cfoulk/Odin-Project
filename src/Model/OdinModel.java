@@ -20,7 +20,7 @@ public class OdinModel
         return -2;
 	}
 
-	public boolean addEmployees (String name, String position, String password, int groupID, int employeeID, String userName)
+	public boolean addEmployees (String name, String position, String password, int groupID, int employeeID, String userName) throws Exception
     {
 
         OdinServer OS = new OdinServer();
