@@ -38,7 +38,7 @@ public class OdinServer implements OdinInterface
         return con;
     }
 
-    List<Employee> getEmployees() throws Exception
+    public List<Employee> getEmployees() throws Exception
     {
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         List<Employee> employees = new ArrayList<>();
@@ -47,7 +47,7 @@ public class OdinServer implements OdinInterface
         return employees;
     }
 
-    Employee getEmployee(int employeeID) throws Exception
+    public Employee getEmployee(int employeeID) throws Exception
     {
         Employee ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
@@ -67,7 +67,7 @@ public class OdinServer implements OdinInterface
         return ret;
     }
 
-    List<Project> getProjects() throws Exception
+    public List<Project> getProjects() throws Exception
     {
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
         List<Project> projects = new ArrayList<>();
@@ -77,7 +77,7 @@ public class OdinServer implements OdinInterface
     }
 
     //Requires a Project ID because we won't be needing the full list as far as I can tell.
-    List<Task> getTasks(int projectID) throws Exception
+    public List<Task> getTasks(int projectID) throws Exception
     {
         ResultSet myRS =
                 this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
@@ -88,7 +88,7 @@ public class OdinServer implements OdinInterface
     }
 
     //This is for the specific employee's worklog.
-    List<WorkLog> getWorkLog(int employeeID) throws Exception
+    public List<WorkLog> getWorkLog(int employeeID) throws Exception
     {
         ResultSet myRS =
                 this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
@@ -98,7 +98,7 @@ public class OdinServer implements OdinInterface
         return workLogs;
     }
 
-    void addEmployee(String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    public void addEmployee(String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO employees (" +
                     "Name, Position, Password, GroupID, EmployeeID, Username)" +
@@ -107,7 +107,7 @@ public class OdinServer implements OdinInterface
 
     }
 
-    void addProject(String name, String dueDate, int groupID, int projectLeadID,
+    public void addProject(String name, String dueDate, int groupID, int projectLeadID,
                     String description, String status, int projectID) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO projects (" +
@@ -117,7 +117,7 @@ public class OdinServer implements OdinInterface
         this.stmt.close();
     }
 
-    void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    public void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO tasks (" +
                 "Name, DueDate, ProjectID, EmployeeID, Description, Size, TaskID" +
@@ -126,7 +126,7 @@ public class OdinServer implements OdinInterface
         this.stmt.close();
     }
 
-    void addWorkLog(String employeeID, String entryType, int taskID, String description, int logID) throws Exception
+    public void addWorkLog(String employeeID, String entryType, int taskID, String description, int logID) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO WorkLog (" +
             "EntryType, EmployeeID, TaskID, Description, LogID" +
@@ -134,6 +134,4 @@ public class OdinServer implements OdinInterface
                 employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
         this.stmt.close();
     }
-
-
 }
