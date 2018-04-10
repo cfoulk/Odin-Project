@@ -23,16 +23,14 @@ public class OdinModel
     {
 
         OdinServer OS = new OdinServer();
-        Employee emp = null;
+        Employee emp;
         try {emp = OS.getEmployee(userName);}
-        catch (Exception e) {e.printStackTrace(); }
-        if (emp == null)
+        catch (Exception e)
         {
             OS.addEmployee(name, position, password, groupID,employeeID, userName);
             return true;
         }
         return false;
-
     }
 
 
