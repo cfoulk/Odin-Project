@@ -131,4 +131,33 @@ public class OdinServer
                 employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
         this.stmt.close();
     }
+
+
+///edit
+    public void editEmployee (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    {
+        this.stmt.executeQuery(  "UPDATE employees SET " +
+                "Name = " + name + " " +
+                "Position = " + position + ", " +
+                "Password = " + password + ", " +
+                "GroupID =  " + groupID  + ", " +
+                "EmployeeID = " + employeeID + ", " +
+                "Username =  "  + username + " " +
+                "WHERE EmployeeID = " + employeeID + ";" );
+        this.stmt.close();
+    }
+
+    public  void editProject (String name, String dueDate, int groupID, int projectLeadID,
+                              String description, String status, int projectID) throws Exception
+    {
+        this.stmt.executeQuery ( "UPDATE projects SET " +
+                "Name = " + name + ", " +
+                "DueDate = " + dueDate + ", " +
+                "GroupID = " + groupID + ", " +
+                "ProjectLeadID = " + projectLeadID + ", " +
+                "Description = " + description + ", " +
+                "Status = " + status + ", " +
+                "ProjectID = " + projectID + ";" );
+        this.stmt.close();
+    }
 }
