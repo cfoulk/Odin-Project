@@ -12,10 +12,9 @@ public class OdinModel
     //Returns -2 if the username exists, but the password is wrong.
 	public int getUserID(String userName, String password){
         OdinServer OS = new OdinServer();
-        Employee emp = null;
+        Employee emp;
         try{ emp = OS.getEmployee(userName); }
-        catch(Exception e) { e.printStackTrace(); }
-        if(emp == null) return -1;
+        catch(Exception e) { return -1; }
         if(emp.passwordCheck(password)) return emp.employeeID;
         return -2;
 	}
