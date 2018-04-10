@@ -1,8 +1,5 @@
 package Server;
 
-import Model.OdinInterface;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
@@ -10,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class OdinServer implements OdinInterface
+public class OdinServer
 {
     final String FILENAME = "ServerInfo.txt";
     Connection con;
