@@ -34,9 +34,19 @@ public class OdinModel
     }
 
 
-	public Employee getEmployee(){
-		//TODO
-		return null;
+	public Employee getEmployee(int employeeID)
+    {
+		OdinServer OS = new OdinServer();
+		Employee ret;
+		try
+        {
+		    ret = OS.getEmployee(employeeID);
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
+        return ret;
 	}
 
 	public List<Project> getProjects() throws Exception
