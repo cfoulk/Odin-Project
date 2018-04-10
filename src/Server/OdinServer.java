@@ -10,8 +10,8 @@ import java.util.StringTokenizer;
 public class OdinServer
 {
     final String FILENAME = "ServerInfo.txt";
-    Connection con;
-    Statement stmt;
+    public Connection con;
+    public Statement stmt;
 
     public OdinServer()
     {
