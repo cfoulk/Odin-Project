@@ -144,5 +144,20 @@ public class OdinServer
                 "EmployeeID = " + employeeID + ", " +
                 "Username =  "  + username + " " +
                 "WHERE EmployeeID = " + employeeID + ";" );
+        this.stmt.close();
+    }
+
+    public  void editProject (String name, String dueDate, int groupID, int projectLeadID,
+                              String description, String status, int projectID) throws Exception
+    {
+        this.stmt.executeQuery ( "UPDATE projects SET " +
+                "Name = " + name + ", " +
+                "DueDate = " + dueDate + ", " +
+                "GroupID = " + groupID + ", " +
+                "ProjectLeadID = " + projectLeadID + ", " +
+                "Description = " + description + ", " +
+                "Status = " + status + ", " +
+                "ProjectID = " + projectID + ";" );
+        this.stmt.close();
     }
 }
