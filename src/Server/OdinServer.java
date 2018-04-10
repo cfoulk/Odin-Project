@@ -134,4 +134,18 @@ public class OdinServer implements OdinInterface
                 employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
         this.stmt.close();
     }
+
+
+///edit
+    public void editEmployee (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    {
+        this.stmt.executeQuery(  "UPDATE employees SET " +
+                "Name = " + name + " " +
+                "Position = " + position + ", " +
+                "Password = " + password + ", " +
+                "GroupID =  " + groupID  + ", " +
+                "EmployeeID = " + employeeID + ", " +
+                "Username =  "  + username + " " +
+                "WHERE EmployeeID = " + employeeID + ";" );
+    }
 }
