@@ -133,16 +133,16 @@ public class OdinServer
     }
 
 
-///edit
+///edit function
     public void editEmployee (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
         this.stmt.executeQuery(  "UPDATE employees SET " +
-                "Name = " + name + " " +
-                "Position = " + position + ", " +
-                "Password = " + password + ", " +
+                "Name = \"" + name + "\", " +
+                "Position = \" " + position + "\", " +
+                "Password = \"" + password + "\", " +
                 "GroupID =  " + groupID  + ", " +
                 "EmployeeID = " + employeeID + ", " +
-                "Username =  "  + username + " " +
+                "Username =  \""  + username + "\" " +
                 "WHERE EmployeeID = " + employeeID + ";" );
         this.stmt.close();
     }
@@ -151,13 +151,40 @@ public class OdinServer
                               String description, String status, int projectID) throws Exception
     {
         this.stmt.executeQuery ( "UPDATE projects SET " +
-                "Name = " + name + ", " +
-                "DueDate = " + dueDate + ", " +
+                "Name = \"" + name + "\", " +
+                "DueDate = \"" + dueDate + "\", " +
                 "GroupID = " + groupID + ", " +
                 "ProjectLeadID = " + projectLeadID + ", " +
-                "Description = " + description + ", " +
-                "Status = " + status + ", " +
-                "ProjectID = " + projectID + ";" );
+                "Description = \"" + description + "\", " +
+                "Status = \"" + status + "\", " +
+                "ProjectID = " + projectID + " " +
+                "WHERE ProjectID = " + projectID + ";");
+        this.stmt.close();
+    }
+
+    public void  editTasks (String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    {
+        this.stmt.executeQuery("Update tasks SET " +
+                "Duedate = \"" + dueDate + "\", " +
+                "Description = \"" + description + "\", " +
+                "Size = " + size + ", " +
+                "Name = \"" + name + "\", " +
+                "TaskID = " + taskID + ", " +
+                "EmployeeID = " + employeeID + ", " +
+                "ProjectID = " + projectID + " " +
+                "WHERE TaskID = " + taskID + ";");
+        this.stmt.close();
+    }
+
+    public void editWorkLog (String employeeID, String entryType, int taskID, String description, int logID) throws Exception
+    {
+        this.stmt.executeQuery("UPDATE work log SET " +
+                "EmployeeID = \"" + employeeID + "\", " +
+                "EntryType = \"" + entryType + "\", " +
+                "TaskID = " + taskID + ", " +
+                "Description = \"" + description + "\", " +
+                "LogID = " + logID + " " +
+                "WHERE LogID = " + logID + ";" );
         this.stmt.close();
     }
 }
