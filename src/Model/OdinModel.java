@@ -46,7 +46,7 @@ public class OdinModel
 		//TODO Joel, login
         OdinServer OS = new OdinServer();
         Employee emp = null;
-        try{ emp = OS.getEmployee(username); }
+        try{ emp = OS.getEmployee(userName); }
         catch(Exception e) { e.printStackTrace(); }
         if(emp == null) return -1;
         if(emp.passwordCheck(password)) return emp.employeeID;
