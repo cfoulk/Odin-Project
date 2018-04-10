@@ -7,11 +7,17 @@ import java.util.List;
 
 public class OdinModel
 {
+    OdinServer OS;
+
+    public OdinModel()
+    {
+        OS = new OdinServer();
+    }
+
     //Returns the employee's ID number on success.
     //Returns -1 if the username does not exist.
     //Returns -2 if the username exists, but the password is wrong.
 	public int getUserID(String userName, String password){
-        OdinServer OS = new OdinServer();
         Employee emp;
         try{ emp = OS.getEmployee(userName); }
         catch(Exception e) { return -1; }
@@ -19,10 +25,8 @@ public class OdinModel
         return -2;
 	}
 
-	public boolean addEmployees (String name, String position, String password, int groupID, int employeeID, String userName) throws Exception
+	public boolean addEmployee(String name, String position, String password, int groupID, int employeeID, String userName) throws Exception
     {
-
-        OdinServer OS = new OdinServer();
         Employee emp;
         try {emp = OS.getEmployee(userName);}
         catch (Exception e)
@@ -36,7 +40,6 @@ public class OdinModel
 
 	public Employee getEmployee(int employeeID)
     {
-		OdinServer OS = new OdinServer();
 		Employee ret;
 		try
         {
@@ -51,7 +54,6 @@ public class OdinModel
 
 	public List<Project> getProjects() throws Exception
     {
-        OdinServer OS = new OdinServer();
         List<Project>  projects =  OS.getProjects();
         return projects;
     }
