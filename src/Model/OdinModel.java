@@ -57,4 +57,17 @@ public class OdinModel
         List<Project>  projects =  OS.getProjects();
         return projects;
     }
+
+    public void closeConnection()
+    {
+        try
+        {
+            OS.con.close();
+            OS.stmt.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }
