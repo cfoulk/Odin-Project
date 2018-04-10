@@ -1,5 +1,8 @@
 package Server;
 
+import Model.OdinInterface;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
@@ -7,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class OdinServer
+public class OdinServer implements OdinInterface
 {
     final String FILENAME = "ServerInfo.txt";
     Connection con;
@@ -33,15 +36,6 @@ public class OdinServer
         con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
         reader.close();
         return con;
-    }
-
-    List<Project> getProjects() throws Exception
-    {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
-        List<Project> projects = new ArrayList<>();
-        while(myRS.next()) projects.add(new Project(myRS));
-        myRS.close();
-        return projects;
     }
 
     List<Employee> getEmployees() throws Exception
@@ -73,7 +67,38 @@ public class OdinServer
         return ret;
     }
 
-    void addEmployees (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    List<Project> getProjects() throws Exception
+    {
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
+        List<Project> projects = new ArrayList<>();
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    //Requires a Project ID because we won't be needing the full list as far as I can tell.
+    List<Task> getTasks(int projectID) throws Exception
+    {
+        ResultSet myRS =
+                this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
+        List<Task> tasks = new ArrayList<>();
+        while(myRS.next()) tasks.add(new Task(myRS));
+        myRS.close();
+        return tasks;
+    }
+
+    //This is for the specific employee's worklog.
+    List<WorkLog> getWorkLog(int employeeID) throws Exception
+    {
+        ResultSet myRS =
+                this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
+        List<WorkLog> workLogs = new ArrayList<>();
+        while(myRS.next()) workLogs.add(new WorkLog(myRS));
+        myRS.close();
+        return workLogs;
+    }
+
+    void addEmployee(String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO employees (" +
                     "Name, Position, Password, GroupID, EmployeeID, Username)" +
