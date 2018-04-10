@@ -133,7 +133,7 @@ public class OdinServer
     }
 
 
-///edit function
+    //Edit functions
     public void editEmployee (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
         this.stmt.executeQuery(  "UPDATE employees SET " +
@@ -147,7 +147,7 @@ public class OdinServer
         this.stmt.close();
     }
 
-    public  void editProject (String name, String dueDate, int groupID, int projectLeadID,
+    public void editProject (String name, String dueDate, int groupID, int projectLeadID,
                               String description, String status, int projectID) throws Exception
     {
         this.stmt.executeQuery ( "UPDATE projects SET " +
@@ -162,7 +162,7 @@ public class OdinServer
         this.stmt.close();
     }
 
-    public void  editTasks (String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    public void editTasks (String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
     {
         this.stmt.executeQuery("Update tasks SET " +
                 "Duedate = \"" + dueDate + "\", " +
