@@ -100,7 +100,7 @@ public class OdinServer
     {
 
         this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                        "VALUES ('" + name + "', '" + position + "', '" + groupID + ", '" + username + "', '" + password + "');");
+                        "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
         this.stmt.close();
     }
 
@@ -111,19 +111,17 @@ public class OdinServer
         this.stmt.close();
     }
 
-    public void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name) throws Exception
+    public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeQuery("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
-            "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + " " + description + " " + size + " " + name +  "):");
+            "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
         this.stmt.close();
     }
 
-    public void addWorkLog(String employeeID, String entryType, int taskID, String description, int logID) throws Exception
+    public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO WorkLog (" +
-            "EntryType, EmployeeID, TaskID, Description, LogID" +
-        ") VALUES (" +
-                employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
+        this.stmt.executeQuery("INSERT INTO WorkLog (EntryType, EmployeeID, TaskID, Description, LogID) " +
+            "VALUES (" + employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
         this.stmt.close();
     }
 
