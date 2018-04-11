@@ -45,13 +45,17 @@ public class OdinModel implements OdinInterface
 
     public boolean addEmployee(String name, String position, int groupID, String username, String password)
     {
-        Employee emp;
         try {
-            emp = OS.getEmployee(username);
-            OS.addEmployee(name, position, groupID, username, password);
-            return true;
+            try {
+                OS.getEmployee(username);
+            }
+            catch(Exception e) {
+                OS.addEmployee(name, position, groupID, username, password);
+                return true;
+            }
         } catch (Exception e) {
             System.err.println("Unable to add user");
+            //Debug
             e.printStackTrace();
         }
         return false;
