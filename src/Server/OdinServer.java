@@ -95,13 +95,11 @@ public class OdinServer
         return workLogs;
     }
 
-    public void addEmployee(String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    public void addEmployee(String name, String position, String password, int groupID, String username) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO employees (" +
-                    "Name, Position, Password, GroupID, EmployeeID, Username)" +
-                ") VALUES(" + name + " " + position + " " + password + " " + groupID + " " + employeeID + " " + username + ");");
+        this.stmt.executeQuery("INSERT INTO employees (Name, Position, GroupID, Username, Password)" +
+                ") VALUES(" + name + ", " + position + ", " + password + ", " + groupID + ", " + username + ");");
         this.stmt.close();
-
     }
 
     public void addProject(String name, String dueDate, int groupID, int projectLeadID,
