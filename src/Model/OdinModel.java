@@ -76,24 +76,30 @@ public class OdinModel implements OdinInterface
 
     public Employee getEmployee(int employeeID) {
         Employee ret;
-        try {
-            ret = OS.getEmployee(employeeID);
-        } catch (Exception e) {
-            return null;
-        }
+        try { ret = OS.getEmployee(employeeID); }
+        catch (Exception e) { return null; }
         return ret;
     }
 
     public Project getProject(int projectID) {
-        return null;
+        Project ret;
+        try { ret = OS.getProject(projectID); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public Task getTask(int taskID) {
-        return null;
+        Task ret;
+        try { ret = OS.getTask(taskID); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public WorkLog getLog(int logID) {
-        return null;
+        WorkLog ret;
+        try { ret = OS.getWorkLog(logID); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<Employee> getEmployees() {
@@ -106,14 +112,8 @@ public class OdinModel implements OdinInterface
 
     public List<Project> getProjects() {
         List<Project> projects = null;
-        try
-        {
-            projects = OS.getProjects();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        try { projects = OS.getProjects(); }
+        catch(Exception e) { return null; }
         return projects;
     }
 
