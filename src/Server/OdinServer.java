@@ -54,18 +54,15 @@ public class OdinServer
         return ret;
     }
 
-    public Employee getEmployee(String username)
+    public Employee getEmployee(String username) throws Exception
     {
         Employee ret;
-        try {
             ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = " + username + ";");
             ret = new Employee(myRS);
             this.stmt.close();
             myRS.close();
             return ret;
-        }catch (Exception e){
-            return null;
-        }
+
     }
 
     public List<Project> getProjects() throws Exception
