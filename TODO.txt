@@ -1,0 +1,2 @@
+//TODO 4/11/18 | OS needs to handle missing connections more "elegantly"
+//TODO 4/11/18 | OS connection should not throw exception and stacktrace, immediately since we need to verify connection to server
