@@ -5,7 +5,8 @@ import Server.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OdinModel {
+public class OdinModel implements OdinInterface
+{
     OdinServer OS;
 
     public OdinModel() {
@@ -26,6 +27,22 @@ public class OdinModel {
         return -2;
     }
 
+    public boolean editEmployee(String name, String position, int groupID, String username, String password) {
+        return false;
+    }
+
+    public boolean editProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+        return false;
+    }
+
+    public boolean editTask(String name, String dueDate, int employeeID, int projectID, String description, int size) {
+        return false;
+    }
+
+    public boolean editWorkLog(String employeeID, String entryType, int taskID, String description) {
+        return false;
+    }
+
     public boolean addEmployee(String name, String position, int groupID, String username, String password)
     {
         Employee emp;
@@ -37,6 +54,18 @@ public class OdinModel {
             System.err.println("Unable to add user");
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+        return false;
+    }
+
+    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) {
+        return false;
+    }
+
+    public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
         return false;
     }
 

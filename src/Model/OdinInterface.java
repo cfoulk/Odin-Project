@@ -1,14 +1,17 @@
 package Model;
 
-import Server.OdinServer;
 
-public interface OdinInterface {
+public interface OdinInterface
+{
     //Edits
-    boolean editEmployee(String name, String position, String password, int groupID, int employeeID, String username);
-    boolean editProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status, int projectID);
-    boolean editTask(String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID);
-    boolean editWorkLog(String employeeID, String entryType, int taskID, String description, int logID);
+    boolean editEmployee(String name, String position, int groupID, String username, String password);
+    boolean editProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
+    boolean editTask(String name, String dueDate, int employeeID, int projectID, String description, int size);
+    boolean editWorkLog(String employeeID, String entryType, int taskID, String description);
 
     //Adds
-
+    boolean addEmployee(String name, String position, int groupID, String username, String password);
+    boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
+    boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size);
+    boolean addWorkLog(String employeeID, String entryType, int taskID, String description);
 }

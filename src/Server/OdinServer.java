@@ -102,7 +102,7 @@ public class OdinServer
     public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
     {
 
-        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password " +
+        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
                                     "VALUES ('" + name + "', '" + position + "', '" + groupID + ", '" + username + "', '" + password + "');");
         this.stmt.close();
     }
