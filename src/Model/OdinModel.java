@@ -27,19 +27,19 @@ public class OdinModel implements OdinInterface
         return -2;
     }
 
-    public boolean editEmployee(String name, String position, int groupID, String username, String password) {
+    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password) {
         return false;
     }
 
-    public boolean editProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
         return false;
     }
 
-    public boolean editTask(String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) {
         return false;
     }
 
-    public boolean editWorkLog(String employeeID, String entryType, int taskID, String description) {
+    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description) {
         return false;
     }
 
