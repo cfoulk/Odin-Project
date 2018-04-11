@@ -19,8 +19,5 @@ public class Employee
         this.password = myRS.getString("Password");
     }
 
-    public boolean passwordCheck(String input)
-    {
-        return (this.password.compareTo(input) == 0);
-    }
+    public boolean passwordCheck(String input) { return (this.password.compareTo(input) == 0); }
 }
