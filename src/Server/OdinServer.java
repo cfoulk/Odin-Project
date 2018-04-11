@@ -54,14 +54,18 @@ public class OdinServer
         return ret;
     }
 
-    public Employee getEmployee(String username) throws Exception
+    public Employee getEmployee(String username)
     {
         Employee ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = " + username + ";");
-        ret = new Employee(myRS);
-        this.stmt.close();
-        myRS.close();
-        return ret;
+        try {
+            ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = " + username + ";");
+            ret = new Employee(myRS);
+            this.stmt.close();
+            myRS.close();
+            return ret;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public List<Project> getProjects() throws Exception
@@ -99,7 +103,7 @@ public class OdinServer
     {
         this.stmt.executeQuery("INSERT INTO employees (" +
                     "Name, Position, Password, GroupID, EmployeeID, Username)" +
-                ") VALUES(" + name + " " + position + " " + password + " " + groupID + " " + employeeID + " " + username + ");");
+                ") VALUES(" + name + ", " + position + ", " + password + ", " + groupID + ", " + employeeID + ", " + username + ");");
         this.stmt.close();
 
     }

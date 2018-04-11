@@ -4,9 +4,10 @@ import Server.OdinServer;
 
 public class Offsite {
     public static void main(String[] args){
-        OdinServer a = new OdinServer();
+        OdinModel a = new OdinModel();
         //4/10/18
-//        a.addEmployee();
+
+        a.addEmployee("TestName", "Employee", "testPass", 55, 123, "Test");
 
 
     }

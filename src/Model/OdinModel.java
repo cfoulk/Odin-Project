@@ -25,14 +25,16 @@ public class OdinModel
         return -2;
 	}
 
-	public boolean addEmployee(String name, String position, String password, int groupID, int employeeID, String userName) throws Exception
+	public boolean addEmployee(String name, String position, String password, int groupID, int employeeID, String userName)
     {
         Employee emp;
-        try {emp = OS.getEmployee(userName);}
-        catch (Exception e)
-        {
+        try {emp = OS.getEmployee(userName);
             OS.addEmployee(name, position, password, groupID,employeeID, userName);
             return true;
+        }
+        catch (Exception e){
+            System.err.println("Unable to add user");
+            e.printStackTrace();
         }
         return false;
     }
@@ -56,5 +58,9 @@ public class OdinModel
     {
         List<Project>  projects =  OS.getProjects();
         return projects;
+    }
+
+    private void print(){
+	    //TODO shorter print statement
     }
 }
