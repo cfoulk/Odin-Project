@@ -48,10 +48,14 @@ public class OdinServer
     {
         Employee ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
-        ret = new Employee(myRS);
-        this.stmt.close();
-        myRS.close();
-        return ret;
+        if(myRS.next())
+        {
+            ret = new Employee(myRS);
+            this.stmt.close();
+            myRS.close();
+            return ret;
+        }
+        return null;
     }
 
     public Employee getEmployee(String username) throws Exception
@@ -116,35 +120,33 @@ public class OdinServer
 
     public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
-        /*this.stmt.executeQuery("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
+        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
-        this.stmt.close();*/
+        this.stmt.close();
     }
 
     public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
     {
-        /*this.stmt.executeQuery("INSERT INTO WorkLog (EntryType, EmployeeID, TaskID, Description, LogID) " +
-            "VALUES (" + employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
-        this.stmt.close();*/
+        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
+            "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
+        this.stmt.close();
     }
 
 
     //Edit functions
-    public void editEmployee (String name, String position, String password, int groupID, int employeeID, String username) throws Exception
+    public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
     {
-        this.stmt.executeQuery(  "UPDATE employees SET " +
-                "Name = \"" + name + "\", " +
-                "Position = \" " + position + "\", " +
-                "Password = \"" + password + "\", " +
+        this.stmt.executeUpdate(  "UPDATE employees SET " +
+                "Name = '" + name + "', " +
+                "Position = '" + position + "', " +
                 "GroupID =  " + groupID  + ", " +
-                "EmployeeID = " + employeeID + ", " +
-                "Username =  \""  + username + "\" " +
-                "WHERE EmployeeID = " + employeeID + ";" );
+                "Username =  '"  + username + "', " +
+                "Password = '" + password + "', " +
+                "WHERE EmployeeID = " + employeeID + ";");
         this.stmt.close();
     }
 
-    public void editProject (String name, String dueDate, int groupID, int projectLeadID,
-                              String description, String status, int projectID) throws Exception
+    public void editProject (int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
     {
         this.stmt.executeQuery ( "UPDATE projects SET " +
                 "Name = \"" + name + "\", " +
@@ -158,28 +160,26 @@ public class OdinServer
         this.stmt.close();
     }
 
-    public void editTasks (String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    public void editTasks (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeQuery("Update tasks SET " +
-                "Duedate = \"" + dueDate + "\", " +
-                "Description = \"" + description + "\", " +
-                "Size = " + size + ", " +
-                "Name = \"" + name + "\", " +
-                "TaskID = " + taskID + ", " +
+                "Name = '" + name + "', " +
+                "Duedate = '" + dueDate + "', " +
                 "EmployeeID = " + employeeID + ", " +
-                "ProjectID = " + projectID + " " +
+                "ProjectID = " + projectID + ", " +
+                "Description = '" + description + "', " +
+                "Size = " + size + ", " +
                 "WHERE TaskID = " + taskID + ";");
         this.stmt.close();
     }
 
-    public void editWorkLog (String employeeID, String entryType, int taskID, String description, int logID) throws Exception
+    public void editWorkLog (int logID, String employeeID, String entryType, int taskID, String description) throws Exception
     {
         this.stmt.executeQuery("UPDATE work log SET " +
-                "EmployeeID = \"" + employeeID + "\", " +
-                "EntryType = \"" + entryType + "\", " +
+                "EmployeeID = " + employeeID + ", " +
+                "EntryType = '" + entryType + "', " +
                 "TaskID = " + taskID + ", " +
-                "Description = \"" + description + "\", " +
-                "LogID = " + logID + " " +
+                "Description = '" + description + "', " +
                 "WHERE LogID = " + logID + ";" );
         this.stmt.close();
     }
