@@ -3,6 +3,8 @@ package Server;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -91,7 +93,7 @@ public class OdinServer
     public Project getProject(int projectID) throws Exception
     {
         Project ret;
-        ResultSet myRS = this.stmt.executeQuery("SELCT * FROM projects WHERE ProjectID = " + projectID + ";");
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
         if(myRS.next())
         {
             ret = new Project(myRS);
@@ -170,10 +172,10 @@ public class OdinServer
                         "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
     }
 
-    public void addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
+    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + ", " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
+                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
     }
 
     public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception

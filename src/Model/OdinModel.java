@@ -2,6 +2,7 @@ package Model;
 
 import Server.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,18 @@ public class OdinModel implements OdinInterface
 
     public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status)
     {
+        Project proj;
+        Employee lead;
+        try
+        {
+            lead = OS.getEmployee(projectLeadID);
+            if(lead != null && lead.position.compareTo("Project Lead") == 0)
+            {
+                OS.addProject(name, Date.valueOf(dueDate), groupID, projectLeadID, description, status);
+                return true;
+            }
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
