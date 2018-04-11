@@ -57,12 +57,15 @@ public class OdinServer
     public Employee getEmployee(String username) throws Exception
     {
         Employee ret;
-            ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = " + username + ";");
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
+        if(myRS.next())
+        {
             ret = new Employee(myRS);
             this.stmt.close();
             myRS.close();
             return ret;
-
+        }
+        return null;
     }
 
     public List<Project> getProjects() throws Exception
@@ -113,16 +116,16 @@ public class OdinServer
 
     public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
+        /*this.stmt.executeQuery("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
-        this.stmt.close();
+        this.stmt.close();*/
     }
 
     public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO WorkLog (EntryType, EmployeeID, TaskID, Description, LogID) " +
+        /*this.stmt.executeQuery("INSERT INTO WorkLog (EntryType, EmployeeID, TaskID, Description, LogID) " +
             "VALUES (" + employeeID + " " + entryType + " " + taskID + " " + description + " " + logID + "):");
-        this.stmt.close();
+        this.stmt.close();*/
     }
 
 
