@@ -84,9 +84,73 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public List<Project> getProjects() throws Exception {
-        List<Project> projects = OS.getProjects();
+    public Project getProject(int projectID) {
+        return null;
+    }
+
+    public Task getTask(int taskID) {
+        return null;
+    }
+
+    public WorkLog getLog(int logID) {
+        return null;
+    }
+
+    public List<Employee> getEmployees() {
+        return null;
+    }
+
+    public List<Employee> getEmployeesGroup(int groupID) {
+        return null;
+    }
+
+    public List<Project> getProjects() {
+        List<Project> projects = null;
+        try
+        {
+            projects = OS.getProjects();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return projects;
+    }
+
+    public List<Project> getProjectsGroup(int groupID) {
+        return null;
+    }
+
+    public List<Project> getProjectsLead(int projectLeadID) {
+        return null;
+    }
+
+    public List<Project> getProjectsStatus(String status) {
+        return null;
+    }
+
+    public List<Task> getTasks() {
+        return null;
+    }
+
+    public List<Task> getTasksProject(int projectID) {
+        return null;
+    }
+
+    public List<Task> getTasksEmployee(int employeeID) {
+        return null;
+    }
+
+    public List<WorkLog> getLogs() {
+        return null;
+    }
+
+    public List<WorkLog> getLogsEmployee(int employeeID) {
+        return null;
+    }
+
+    public List<WorkLog> getLogsTask(int taskID) {
+        return null;
     }
 
 

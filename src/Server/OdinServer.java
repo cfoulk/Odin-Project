@@ -35,6 +35,11 @@ public class OdinServer
         return con;
     }
 
+    public List<Object> getData(String dataType, String keyType, int key)
+    {
+        return null;
+    }
+
     public List<Employee> getEmployees() throws Exception
     {
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
