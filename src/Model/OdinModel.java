@@ -29,6 +29,17 @@ public class OdinModel implements OdinInterface
 
     public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password)
     {
+        Employee emp;
+        try
+        {
+            emp = OS.getEmployee(employeeID);
+            if(emp != null)
+            {
+                OS.editEmployee(employeeID, name, position, groupID, username, password);
+                return true;
+            }
+        }
+        catch(Exception e) { e.printStackTrace(); }
         return false;
     }
 
@@ -162,7 +173,8 @@ public class OdinModel implements OdinInterface
         //TODO shorter print statement
     }
 
-    public void closeConnection() {
+    public void closeConnection()
+    {
         try {
             OS.con.close();
             OS.stmt.close();

@@ -60,7 +60,6 @@ public class OdinServer
         if(myRS.next())
         {
             ret = new Employee(myRS);
-            this.stmt.close();
             myRS.close();
             return ret;
         }
@@ -74,7 +73,6 @@ public class OdinServer
         if(myRS.next())
         {
             ret = new Employee(myRS);
-            this.stmt.close();
             myRS.close();
             return ret;
         }
@@ -97,7 +95,6 @@ public class OdinServer
         if(myRS.next())
         {
             ret = new Project(myRS);
-            this.stmt.close();
             myRS.close();
             return ret;
         }
@@ -129,7 +126,6 @@ public class OdinServer
         if(myRS.next())
         {
             ret = new Task(myRS);
-            this.stmt.close();
             myRS.close();
             return ret;
         }
@@ -162,7 +158,6 @@ public class OdinServer
         if(myRS.next())
         {
             ret = new WorkLog(myRS);
-            this.stmt.close();
             myRS.close();
             return ret;
         }
@@ -171,31 +166,26 @@ public class OdinServer
 
     public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
     {
-
         this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
                         "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
-        this.stmt.close();
     }
 
     public void addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
                 "VALUES ('" + name + "', '" + dueDate + ", " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
-        this.stmt.close();
     }
 
     public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
-        this.stmt.close();
     }
 
     public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
             "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
-        this.stmt.close();
     }
 
 
@@ -205,11 +195,10 @@ public class OdinServer
         this.stmt.executeUpdate(  "UPDATE employees SET " +
                 "Name = '" + name + "', " +
                 "Position = '" + position + "', " +
-                "GroupID =  " + groupID  + ", " +
-                "Username =  '"  + username + "', " +
-                "Password = '" + password + "', " +
+                "GroupID = " + groupID  + ", " +
+                "Username = '"  + username + "', " +
+                "Password = '" + password + "' " +
                 "WHERE EmployeeID = " + employeeID + ";");
-        this.stmt.close();
     }
 
     public void editProject (int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
@@ -222,7 +211,6 @@ public class OdinServer
                 "Description = '" + description + "', " +
                 "Status = '" + status + "' " +
                 "WHERE ProjectID = " + projectID + ";");
-        this.stmt.close();
     }
 
     public void editTasks (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
@@ -235,7 +223,6 @@ public class OdinServer
                 "Description = '" + description + "', " +
                 "Size = " + size + ", " +
                 "WHERE TaskID = " + taskID + ";");
-        this.stmt.close();
     }
 
     public void editWorkLog (int logID, String employeeID, String entryType, int taskID, String description) throws Exception
@@ -246,6 +233,5 @@ public class OdinServer
                 "TaskID = " + taskID + ", " +
                 "Description = '" + description + "', " +
                 "WHERE LogID = " + logID + ";" );
-        this.stmt.close();
     }
 }
