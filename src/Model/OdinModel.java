@@ -27,7 +27,8 @@ public class OdinModel implements OdinInterface
         return -2;
     }
 
-    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password) {
+    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password)
+    {
         return false;
     }
 
@@ -45,23 +46,22 @@ public class OdinModel implements OdinInterface
 
     public boolean addEmployee(String name, String position, int groupID, String username, String password)
     {
-        try {
-            try {
-                OS.getEmployee(username);
-            }
-            catch(Exception e) {
+        Employee emp;
+        try
+        {
+            emp = OS.getEmployee(username);
+            if (emp == null)
+            {
                 OS.addEmployee(name, position, groupID, username, password);
                 return true;
             }
-        } catch (Exception e) {
-            System.err.println("Unable to add user");
-            //Debug
-            e.printStackTrace();
         }
+        catch(Exception e) { e.printStackTrace(); }
         return false;
     }
 
-    public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+    public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status)
+    {
         return false;
     }
 
@@ -72,7 +72,6 @@ public class OdinModel implements OdinInterface
     public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
         return false;
     }
-
 
     public Employee getEmployee(int employeeID) {
         Employee ret;
@@ -103,11 +102,17 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Employee> getEmployees() {
-        return null;
+        List<Employee> ret;
+        try { ret = OS.getEmployees(); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<Employee> getEmployeesGroup(int groupID) {
-        return null;
+        List<Employee> ret;
+        try { ret = OS.getEmployees(groupID); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<Project> getProjects() {
@@ -152,7 +157,6 @@ public class OdinModel implements OdinInterface
     public List<WorkLog> getLogsTask(int taskID) {
         return null;
     }
-
 
     private void print() {
         //TODO shorter print statement

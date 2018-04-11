@@ -44,6 +44,15 @@ public class OdinServer
         return employees;
     }
 
+    public List<Employee> getEmployees(int groupID) throws Exception
+    {
+        List<Employee> ret = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
+        while(myRS.next()) ret.add(new Employee(myRS));
+        myRS.close();
+        return ret;
+    }
+
     public Employee getEmployee(int employeeID) throws Exception
     {
         Employee ret;
