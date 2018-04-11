@@ -101,9 +101,7 @@ public class OdinServer
 
     public void addEmployee(String name, String position, String password, int groupID, int employeeID, String username) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO employees (" +
-                    "Name, Position, Password, GroupID, EmployeeID, Username)" +
-                ") VALUES(" + name + ", " + position + ", " + password + ", " + groupID + ", " + employeeID + ", " + username + ");");
+        this.stmt.executeUpdate("INSERT INTO employees VALUES ('" + name + "', '" + position + "', '" + password + "', " + groupID + ", " + employeeID + ", '" + username + "');");
         this.stmt.close();
 
     }
