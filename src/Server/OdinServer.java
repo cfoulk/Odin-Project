@@ -103,26 +103,21 @@ public class OdinServer
     {
 
         this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                                    "VALUES ('" + name + "', '" + position + "', '" + groupID + ", '" + username + "', '" + password + "');");
+                        "VALUES ('" + name + "', '" + position + "', '" + groupID + ", '" + username + "', '" + password + "');");
         this.stmt.close();
     }
 
-    public void addProject(String name, String dueDate, int groupID, int projectLeadID,
-                    String description, String status, int projectID) throws Exception
+    public void addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO projects (" +
-                "Name, DueDate, GroupID, ProjectLeadID, Description, Status, ProjectID" +
-                ") VALUES (" +
-                name + " " + groupID + " " + projectID + " " + description + " " + status + " " + projectID + ");");
+        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + ", " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
         this.stmt.close();
     }
 
-    public void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name, int taskID) throws Exception
+    public void addTasks(String dueDate, int employeeID, int projectID, String description, int size, String name) throws Exception
     {
-        this.stmt.executeQuery("INSERT INTO tasks (" +
-                "Name, DueDate, ProjectID, EmployeeID, Description, Size, TaskID" +
-            ") VALUES (" +
-                dueDate + " " + employeeID + " " + projectID + " " + description + " " + size + " " + name + " " + taskID + "):");
+        this.stmt.executeQuery("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
+            "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + " " + description + " " + size + " " + name +  "):");
         this.stmt.close();
     }
 
