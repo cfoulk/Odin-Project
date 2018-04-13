@@ -1,0 +1,24 @@
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+Model -->> Server: Model requests employee info for username
+Server -->> Model: Sends employee info if username exists
+Model -->> Model: Checks if password is valid for username
+Model -->> GUI: User is valid
+GUI ->> User: GUI displays status window
+User ->> GUI: Select a project to view
+GUI ->> User: Display project window
+User ->> GUI: User selects task to edit
+GUI ->> User: Opens task edit windows
+User ->> GUI: Change task info
+GUI -->> Model: Sends new task info
+Model -->> Server: Asks if employee with employeeID exists
+Server -->> Model: Confirms employee exits
+Model -->> Server: Asks if project with projectID exists
+Server -->> Model: Confirms project exists
+Model -->> Server: Sends new task info
+Server -->> Server: Updates task with new info
+GUI -->> Server: GUI requests update.
+Server -->> GUI: Server sends update.
+GUI -->> GUI: GUI updates.
+GUI ->> User: Displays confirmation and new info.
