@@ -7,7 +7,7 @@ UC-4|Create Task| Create a task, defining its name, associated project, and empl
 UC-5|Edit Task| Change any data of a task excluding the task ID. Can change name, associated project, employee assigned, due date, description, and size.
 UC-6|Summarize Task| View all of the information that a task contains, including the time spent on it.
 UC-7|Start a work session| Log the beginning of a working session.
-UC-8|End a work session| Log the end of a work session, including a description of the work done.
+UC-8|End a work session| Log the end of a work session, including a description of the work done. May request closure of task.
 UC-9|Create Employee| Create an employee, defining its name, position, username, and password. Optional: Group.
 UC-10|Edit Employee| Change any data of an employee excluding the employee ID. Can change name, group, position, username, and password.
 UC-11|Change Login| Change the login information of the logged in user.
