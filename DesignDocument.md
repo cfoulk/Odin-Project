@@ -58,3 +58,19 @@ REQ13|  1|      |X  |   |   |X  |   |   |   |   |   |   |
 REQ14|  3|      |X  |   |   |X  |   |   |   |   |   |   |
 Max PW|||    5  |5  |5  |5  |5  |5  |5  |5  |5  |5  |5  |5
 Total PW|||  13 |22 |18 |9  |18 |14 |13 |18 |13 |11 |12 |9
+### Use Case Blocks
+Use Case UC - | Name
+---|---
+Initiating Actor:|
+Actor's Goal:|
+Participating Actors:|
+Preconditions:|
+Postconditions:|
+<td colspan=2>Flow of Events for Main Success Scenario:
+<div style="text-align: right"> 1 </div>|
+<div style="text-align: right"> 2 </div>|
+<div style="text-align: right"> 3 </div>|
+<div style="text-align: right"> 4 </div>|
+<div style="text-align: right"> 5 </div>|
+<div style="text-align: right"> 6 </div>|
+<td colspan=2>Flow of Events for Extensions (Alternate Scenarios):
