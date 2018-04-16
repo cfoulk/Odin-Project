@@ -173,3 +173,35 @@ Event Flow for Extension:|- - -
 1   |**Odin** (a) finds no project with the given name and (b) signals the **Project Lead**.
 2   |**Project Lead** enters the project's name.
 3   |Same as in Step 8 above.
+
+Use Case UC - 5| Editing a task
+---|---
+Initiating Actor:|Project Lead
+Actor's Goal:|Change properties of the task, including its name, due date, description, size, project association, employee association, and status.
+Participating Actors:|Odin
+Preconditions:|There is a task to edit.
+Postconditions:|Changes are made to the task in accordance to what the Project Lead inputs.
+Event Flow for Main:|- - -
+1   |**Project Lead** arrives at the terminal and is prompted for a log in.
+2   |**Project Lead** supplies his login information.
+3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validitiy.
+4   |**Odin** (a) displays options available to the **Project Lead**, (b) and prompts the **Project Lead** to make a selection.
+5   |**Project Lead** selects the "Edit a task" option and enters the task's name.
+6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
+7   |**Project Lead**d enters the project name.
+8   |**Odin** Displays options available to the **Project Lead**, and (b) prompts the **Project Lead** to make a selection.
+9   |**Project Lead** selects one of the options, and provides new information for the selection.
+10  |**Odin** (a) stores the new information in the database, and (b) signals completion.
+Event Flow for Extension:|- - -
+2a  |**Project Lead** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Project Lead**.
+2   |**Project Lead** supplies his login information.
+3   |Same as in step 3 above.
+5a  |
+1   |**Odin** (a) finds no task with the given name and (b) signals the **Project Lead**.
+2   |**Project Lead** enters the task's name.
+3   |Same as in Step 6 above.
+7a  |
+1   |**Odin** (a) finds no project with the given name and (b) signals the **Project Lead**.
+2   |**Project Lead** enters the project's name.
+3   |Same as in Step 8 above.
