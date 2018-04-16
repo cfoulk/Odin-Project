@@ -295,25 +295,46 @@ Initiating Actor:|Project Lead
 Actor's Goal:|Change properties of the work log,entry type, task association, description, and time stamp.
 Participating Actors:|Odin
 Preconditions:|There is a task to edit.
-Postconditions:|Changes are made to the task in accordance to what the Project Lead inputs.
+Postconditions:|Changes are made to the task in accordance to what the **Project Lead** inputs.
 Event Flow for Main:|- - -
-1   |Project Lead arrives at the terminal and is prompted for a log in.
-2   |Project Lead supplies his login information.
-3   |Odin (a) verifies the login information, and (b) signals the Project Lead of its validitiy.
-4   |Odin (a) displays options available to the Project Lead, (b) and prompts the Project Lead to make a selection.
-5   |Project Lead selects the "Edit a Work Log" option and enters the work log's ID.
-8   |Odin displays the work log with editable fields.
-9   |Project Lead provides new information for the log.
-10  |Odin (a) stores the new information in the database, and (b) signals completion.
+1   |**Project Lead** arrives at the terminal and is prompted for a log in.
+2   |**Project Lead** supplies his login information.
+3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validitiy.
+4   |**Odin** (a) displays options available to the **Project Lead**, (b) and prompts the **Project Lead** to make a selection.
+5   |**Project Lead** selects the "Edit a Work Log" option and enters the work log's ID.
+8   |**Odin** displays the work log with editable fields.
+9   |**Project Lead** provides new information for the log.
+10  |**Odin** (a) stores the new information in the database, and (b) signals completion.
 Event Flow for Extension:|- - -
-2a  |Project Lead supplies invalid login information.
-1   |Odin (a) detects an error and (b) signals the Project Lead.
-2   |Project Lead supplies his login information.
+2a  |**Project Lead** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Project Lead**.
+2   |**Project Lead** supplies his login information.
 3   |Same as in step 3 above.
 5a  |
-1   |Odin (a) finds  work log with the given ID and (b) signals the Project Lead.
-2   |Project Lead enters the work log's ID.
+1   |**Odin** (a) finds  work log with the given ID and (b) signals the **Project Lead**.
+2   |**Project Lead** enters the work log's ID.
 3   |Same as in Step 6 above.
+
+Use Case UC - 10| Create an Employee
+---|---
+Initiating Actor:|Manager
+Actor's Goal:|To create a new employee.
+Participating Actors:|Odin
+Preconditions:|None worth mentioning.
+Postconditions:|A new employee is added to the database.
+Event Flow for Main:|- - -
+1   |**Manager** arrives at the terminal and is prompted for a log in.
+2   |**Manager** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validity.
+4   |**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
+5   |**Manager** selects the "Create an employee" option and enters the new data.
+6   |**Odin** (a) stores the new data and (b) signals completion.
+Event Flow for Extension:|- - -
+2a  |**Manager** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Manager**.
+2   |**Manager** supplies his login information.
+3   |Same as in step 3 above.
+
 
 Use Case UC - | Name
 ---|---
