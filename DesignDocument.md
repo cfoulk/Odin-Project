@@ -66,11 +66,26 @@ Actor's Goal:|
 Participating Actors:|
 Preconditions:|
 Postconditions:|
-<td colspan=2>Flow of Events for Main Success Scenario:
-<div style="text-align: right"> 1 </div>|
-<div style="text-align: right"> 2 </div>|
-<div style="text-align: right"> 3 </div>|
-<div style="text-align: right"> 4 </div>|
-<div style="text-align: right"> 5 </div>|
-<div style="text-align: right"> 6 </div>|
-<td colspan=2>Flow of Events for Extensions (Alternate Scenarios):
+Event Flow for Main:|- - -
+Event Flow for Extension:|- - -
+
+Use Case UC - 1| Create a project
+---|---
+Initiating Actor:|Manager
+Actor's Goal:|To create a new project.
+Participating Actors:|Odin
+Preconditions:|None worth mentioning.
+Postconditions:|A new project is added to the database.
+Event Flow for Main:|- - -
+1|**Manager** arrives at the terminal and is prompted for a log in.
+2|**Manager** supplies his login information.
+3|(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validity.
+4|**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
+5|**Manager** selects the "Create a project" option and enters the new data.
+6|**Odin** (a) stores the new data and (b) signals completion.
+Event Flow for Extension:|- - -
+2a  |**Manager** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Manager**.
+2   |**Manager** supplies his login information.
+3   |Same as in step 3 above.
+
