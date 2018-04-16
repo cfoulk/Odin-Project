@@ -383,3 +383,6 @@ Event Flow for Extension:|- - -
 2   |**Actor** supplies his login information.
 3   |Same as in step 3 above.
 
+## Domain Model
+###Generic Domain Model
+![alt text]( "Generic Domain Model")
