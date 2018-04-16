@@ -12,6 +12,8 @@ From our research on various project management tools we will be using a couple 
 ## Project Architecture
 The core ideas of our prior task management software will remain the same. The tool will be used to manage the progression of tasks. Our first deviation is that we will be using JavaFX for a GUI and Jfoenix for material design. We will be storing our project data using an SQL Database. We will be also implementing a login system and as such we will keep user login information. Where we previously had only one set of data to store, this new product will have many. Each project will have its own data, so only tasks related to that project will be held together. In addition, we will have another data set to hold our login information.
 
+<div style="page-break-after: always;"></div>
+
 ## Requirements
 ID|Priority|Description
 :-:|:-:|---|
@@ -29,6 +31,8 @@ REQ11	|1|The system shall display messages set by authorized users ("Your perfor
 REQ12	|2|The system will limit project and task view to users specfic to that project.
 REQ13	|1|The system will notify authorized users (project lead) when a task is marked as complete by regular user (employee) on login.
 REQ14	|3|The system will allow authorized users to conclude items such as projects and tasks to prevent access to sub-users
+
+<div style="page-break-after: always;"></div>
 
 ## Use Cases
 ID|Name|Description
@@ -642,6 +646,8 @@ The following diagrams represent the each individual diagram of a class. Showing
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/OdinServer_Diagram.PNG "Server Diagram")
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ModelServerDiagram1.png "Model Diagram")
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ModelServerDiagramMethods.PNG "Model Diagram Methods")
+
+<div style="page-break-after: always;"></div>
 
 ## Progress Report
 ### Implemented Use Cases:
