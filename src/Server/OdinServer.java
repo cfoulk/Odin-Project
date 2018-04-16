@@ -29,9 +29,6 @@ public class OdinServer
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(FILENAME));
         stk = new StringTokenizer(reader.readLine(), "\t");
-//        System.out.println(stk.nextToken());
-//        System.out.println(stk.nextToken());
-//        System.out.println(stk.nextToken());
         con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
         reader.close();
         return con;
@@ -176,7 +173,7 @@ public class OdinServer
                 "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
     }
 
-    public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
+    public void addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");

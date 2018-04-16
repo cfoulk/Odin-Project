@@ -93,11 +93,24 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size)
+    {
+        try
+        {
+            OS.addTask(name, dueDate, employeeID, projectID, description, size);
+            return true;
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
     public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
+        try
+        {
+            OS.addWorkLog(employeeID, entryType, taskID, description);
+            return true;
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
