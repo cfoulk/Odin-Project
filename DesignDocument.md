@@ -67,15 +67,6 @@ Max PW|||    5  |5  |5  |5  |5  |5  |5  |5  |5  |5  |5  |5
 Total PW|||  13 |22 |18 |9  |18 |14 |13 |18 |13 |11 |12 |9
 
 ### Use Case Blocks
-Use Case UC - | Name
----|---
-Initiating Actor:|
-Actor's Goal:|
-Participating Actors:|
-Preconditions:|
-Postconditions:|
-Event Flow for Main:|- - -
-Event Flow for Extension:|- - -
 
 Use Case UC - 1| Create a project
 ---|---
@@ -205,3 +196,44 @@ Event Flow for Extension:|- - -
 1   |**Odin** (a) finds no project with the given name and (b) signals the **Project Lead**.
 2   |**Project Lead** enters the project's name.
 3   |Same as in Step 8 above.
+
+Use Case UC - 6| Summarize a task
+---|---
+Initiating Actor:|Project Lead or Employee
+Actor's Goal:|See a summary of a task.
+Participating Actors:|Odin
+Preconditions:|There is a task to summarize.
+Postconditions:|The Actor sees a summary of the task.
+Event Flow for Main:|- - -
+1   |**Actor** arrives at the terminal and is prompted for a log in.
+2   |**Actor** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validitiy.
+4   |**Odin** (a) displays options available to the **Actor**, (b) and prompts the **Actor** to make a selection.
+5   |**Actor** selects the "See time spent on a task" option and enters the task's name.
+6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
+7   |Project Lead enters the project name.
+8   |**Odin** Displays a summary of the task.
+Event Flow for Extension:|- - -
+2a  |**Actor** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Actor**.
+2   |**Actor** supplies his login information.
+3   |Same as in step 3 above.
+5a  |
+1   |**Odin** (a) finds no task with the given name and (b) signals the **Actor**.
+2   |**Actor** enters the task's name.
+3   |Same as in Step 6 above.
+7a  |
+1   |**Odin** (a) finds no project with the given name and (b) signals the **Actor**.
+2   |**Actor** enters the project's name.
+3   |Same as in Step 8 above.
+
+Use Case UC - | Name
+---|---
+Initiating Actor:|
+Actor's Goal:|
+Participating Actors:|
+Preconditions:|
+Postconditions:|
+Event Flow for Main:|- - -
+Event Flow for Extension:|- - -
+
