@@ -387,7 +387,7 @@ Event Flow for Extension:|- - -
 
 ### Generic Domain Model
 
-![alt text](https://github.com/CSUS-CSC-131-Spring2018/S3T3TM2/blob/master/Design%20Model/images/Generic%20Domain%20Model.png "Generic Domain Model")
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/Generic%20Domain%20Model.png "Generic Domain Model")
 
 ### UC Add Employ
 
@@ -604,6 +604,61 @@ Model -->>GUI : displays the task summary
 
 ## System Design
 
-![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/GeneralDiagramOverview.PNG "Generic Domain Model")
+The first diagram shows the general breakdown of the program and how each of the classes is derived from each other (associations). The classes we are working with here include the Server Class(Server, Employee, Task, Worklog), Model, and the Interface. The GUI is the external portion that is represented here by the server.
 
-![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ServerClassDiagram.PNG "Generic Domain Model")
+The following diagrams represent the each individual diagram of a class. Showing individual parameters and methods being used in that class.
+
+
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/GeneralDiagramOverview.PNG "Generic Domain Model")
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ServerClassDiagram.PNG "Server Class Diagram")
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/OdinServer_Diagram.PNG "Server Method Diagrams")
+
+
+## System Design
+
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/OdinServer_Diagram.PNG "Server Diagram")
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ModelServerDiagram1.png "Model Diagram")
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ModelServerDiagramMethods.PNG "Model Diagram Methods")
+
+## Progress Report
+### Implemented Use Cases:
+No use cases have been completely implemented. GUI work has been going in parallel,
+so even though the back end for the following use cases is in place, the GUI still
+needs to implement them. All necessary methods for getting and sending information
+to the server have also been implemented, but need Model and GUI support before
+the use cases can be considered implemented fully.
+* (UC-1) Create Project
+* (UC-9) Create Employee
+* (UC-10) Edit Employee
+
+### Already Functional
+The OdinServer.java is completely done or only needing minor tweaks for the future.
+It already has all the necessary methods for getting entries, creating new entries,
+and editing already existing data. This includes all the searches that are deemed
+necessary for querying the data for specific lists of data.
+
+### Currently Being Tackled
+The GUI is taking some work, but is being worked on steadily. The GUI supports
+a login, but nothing beyond that for now. OdinModel.java is being worked on as well,
+it is intended to make sure that the server only gets valid queries and that
+the user does not try to push duplicate data onto the server.
+
+## Plan of Work
+The View and Add methods of OdinModel should be done by the end of this week on
+April 21st. The initial status page and employee page is planned to be finished
+by the 21st as well. Using the completing of these milestones, we should be able
+to more accurately estimate future dates.
+
+## Breakdown of Responsibilities
+GUI Work: David Henning
+Edit Methods: Yusuf Amani
+Add Methods: Joel Sanchez
+Get Methods: Ramya Singamsetty & Charles Foulke
+
+Coordinator/Server: Joel Sanchez
+
+Testing: Charles Foulke
+
+
+
+

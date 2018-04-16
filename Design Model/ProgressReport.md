@@ -33,6 +33,6 @@ Edit Methods: Yusuf Amani
 Add Methods: Joel Sanchez
 Get Methods: Ramya Singamsetty & Charles Foulke
 
-Coordinator: Joel Sanchez
+Coordinator/Server: Joel Sanchez
 
 Testing: Charles Foulke
