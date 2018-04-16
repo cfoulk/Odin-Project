@@ -63,12 +63,6 @@ public class loginController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-//        //TODO
-//        if (a.getUserID(usernameField.getText(), passwordField.getText()) != -1) {
-//            System.out.println("Success");
-//        } else
-//            System.out.println("Wrong User");
     }
 
     public void initialize() {
