@@ -383,11 +383,15 @@ Event Flow for Extension:|- - -
 2   |**Actor** supplies his login information.
 3   |Same as in step 3 above.
 
+<div style="page-break-after: always;"></div>
+
 ## Domain Model
 
 ### Generic Domain Model
 
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/Generic%20Domain%20Model.png "Generic Domain Model")
+
+<div style="page-break-after: always;"></div>
 
 ### UC Add Employ
 
@@ -411,6 +415,8 @@ Server -->> Model: Confirms username is new.
 Model -->> Server: Sends employee info.
 Server -->> Server: Saves employee info.
 ```
+
+<div style="page-break-after: always;"></div>
 
 ### UC Edit Employ
 
@@ -439,6 +445,8 @@ GUI -->> GUI: GUI updates.
 GUI ->> User: Displays confirmation and new info.
 ```
 
+<div style="page-break-after: always;"></div>
+
 ### UC Add Project
 
 ```mermaid
@@ -459,6 +467,8 @@ Server -->> Model: Server confirms project lead exists.
 Model -->> Server: Model sends project info to server.
 Server -->> Server: Server saves project.
 ```
+
+<div style="page-break-after: always;"></div>
 
 ### UC Edit Project
 
@@ -484,6 +494,8 @@ GUI -->> GUI: GUI updates.
 GUI ->> User: Displays confirmation and new info.
 ```
 
+<div style="page-break-after: always;"></div>
+
 ### UC Project Summary
 
 ```mermaid
@@ -501,6 +513,8 @@ Model-->>Server: requests project info
 Server-->> Model: sends project info to the Model
 Model -->> GUI : display the project summary
  ```
+
+<div style="page-break-after: always;"></div>
 
 ### UC Add Task
 
@@ -526,6 +540,8 @@ Server -->> Model: Server confirms project exists.
 Model -->> Server: Model sends task info to server.
 Server -->> Server: Server saves task.
 ```
+
+<div style="page-break-after: always;"></div>
 
 ### UC Edit Task
 
@@ -556,6 +572,8 @@ GUI -->> GUI: GUI updates.
 GUI ->> User: Displays confirmation and new info.
 ```
 
+<div style="page-break-after: always;"></div>
+
 ### UC Start Task
 
 ```mermaid
@@ -578,6 +596,8 @@ User-->GUI: send work session summary
 GUI->> Model: sends work session summary
 Model ->> Server: records work session and stores
 ```
+
+<div style="page-break-after: always;"></div>
 
 ### UC Task Summary
 
@@ -602,6 +622,8 @@ Server-->>Model :sends task info
 Model -->>GUI : displays the task summary
 ```
 
+<div style="page-break-after: always;"></div>
+
 ## System Design
 
 The first diagram shows the general breakdown of the program and how each of the classes is derived from each other (associations). The classes we are working with here include the Server Class(Server, Employee, Task, Worklog), Model, and the Interface. The GUI is the external portion that is represented here by the server.
@@ -613,6 +635,7 @@ The following diagrams represent the each individual diagram of a class. Showing
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ServerClassDiagram.PNG "Server Class Diagram")
 ![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/OdinServer_Diagram.PNG "Server Method Diagrams")
 
+<div style="page-break-after: always;"></div>
 
 ## System Design
 
