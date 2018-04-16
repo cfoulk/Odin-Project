@@ -1,0 +1,7 @@
+.input-line{
+    -fx-pref-height:0;
+}
+
+.input-focused-line{
+    -fx-pref-height:0;
+}
