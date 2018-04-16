@@ -2,11 +2,13 @@ package Server;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 public class OdinServer
@@ -15,30 +17,27 @@ public class OdinServer
     public Connection con;
     public Statement stmt;
 
-    public OdinServer()
-    {
-        try
-        {
-            this.con = connect();
-            this.stmt = con.createStatement();
-        }
-        catch(Exception e){ e.printStackTrace(); }
+    public OdinServer() throws IOException, SQLException {
+        this.con = connect();
+        this.stmt = con.createStatement();
+
     }
 
-    public Connection connect() throws Exception
-    {
+    public Connection connect() throws SQLException, IOException {
         StringTokenizer stk;
         Connection con;
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(FILENAME));
         stk = new StringTokenizer(reader.readLine(), "\t");
+//        System.out.println(stk.nextToken());
+//        System.out.println(stk.nextToken());
+//        System.out.println(stk.nextToken());
         con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
         reader.close();
         return con;
     }
 
-    public List<Employee> getEmployees() throws Exception
-    {
+    public List<Employee> getEmployees() throws SQLException {
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         List<Employee> employees = new ArrayList<>();
         while(myRS.next()) employees.add(new Employee(myRS));
@@ -55,7 +54,7 @@ public class OdinServer
         return ret;
     }
 
-    public Employee getEmployee(int employeeID) throws Exception
+    public Employee getEmployee(int employeeID) throws SQLException
     {
         Employee ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
@@ -68,8 +67,7 @@ public class OdinServer
         return null;
     }
 
-    public Employee getEmployee(String username) throws Exception
-    {
+    public Employee getEmployee(String username) throws SQLException {
         Employee ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
         if(myRS.next())

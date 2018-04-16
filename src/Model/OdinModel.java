@@ -2,15 +2,18 @@ package Model;
 
 import Server.*;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class OdinModel implements OdinInterface
 {
     OdinServer OS;
 
-    public OdinModel() {
+    public OdinModel() throws IOException, SQLException {
         OS = new OdinServer();
     }
 
@@ -21,9 +24,11 @@ public class OdinModel implements OdinInterface
         Employee emp;
         try {
             emp = OS.getEmployee(userName);
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
             return -1;
         }
+        if (emp == null) return -1;
         if (emp.passwordCheck(password)) return emp.employeeID;
         return -2;
     }
@@ -74,7 +79,6 @@ public class OdinModel implements OdinInterface
 
     public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status)
     {
-        Project proj;
         Employee lead;
         try
         {

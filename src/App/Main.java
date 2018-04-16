@@ -13,6 +13,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
         primaryStage.setTitle("Odin Management");
         primaryStage.setScene(new Scene(root));
+        root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
         primaryStage.show();
     }
 }

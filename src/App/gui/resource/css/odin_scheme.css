@@ -1,0 +1,9 @@
+//text field line
+.input-line{
+    -fx-pref-height:0;
+}
+
+//text focused field line
+.input-focused-line{
+    -fx-pref-height:0;
+}
