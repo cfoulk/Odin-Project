@@ -77,15 +77,42 @@ Participating Actors:|Odin
 Preconditions:|None worth mentioning.
 Postconditions:|A new project is added to the database.
 Event Flow for Main:|- - -
-1|**Manager** arrives at the terminal and is prompted for a log in.
-2|**Manager** supplies his login information.
-3|(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validity.
-4|**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
-5|**Manager** selects the "Create a project" option and enters the new data.
-6|**Odin** (a) stores the new data and (b) signals completion.
+1   |**Manager** arrives at the terminal and is prompted for a log in.
+2   |**Manager** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validity.
+4   |**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
+5   |**Manager** selects the "Create a project" option and enters the new data.
+6   |**Odin** (a) stores the new data and (b) signals completion.
 Event Flow for Extension:|- - -
 2a  |**Manager** supplies invalid login information.
 1   |**Odin** (a) detects an error and (b) signals the **Manager**.
 2   |**Manager** supplies his login information.
 3   |Same as in step 3 above.
+
+Use Case UC - 2| Editing a project
+---|---
+Initiating Actor:|Manager or Project Lead
+Actor's Goal:|Change properties of the project, including its name, group number, description, status, and due date.
+Participating Actors:|Odin
+Preconditions:|There is a project to edit.
+Postconditions:|Changes are made to the project in accordance to what the actor inputs.
+Event Flow for Main:|- - -
+1   |**Actor** arrives at the terminal and is prompted for a log in.
+2   |**Actor** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validity.
+4   |**Odin** (a) displays options available to the **Actor**, (b) and prompts the **Actor** to make a selection.
+5   |**Actor** selects the "Edit a project" option and enters the project's name.
+6   |**Odin** (a) verifies the project exists, (b) displays options available to the **Actor**, and (c) prompts the **Actor** to make a selection.
+7   |**Actor** selects one of the options, and provides new information for the selection.
+8   |**Odin** (a) stores the new information in the database, and (b) signals completion.
+Event Flow for Extension:|- - -
+2a|**Actor** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Actor**.
+2   |**Actor** supplies his login information.
+3   |Same as in step 3 above.
+5a  |
+1   |**Odin** (a) finds no project with the given name and (b) signals the **Actor**.
+2   |**Actor** enters the project's name.
+3   |Same as in Step 6 above.
+
 
