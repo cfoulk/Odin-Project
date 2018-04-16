@@ -650,14 +650,14 @@ by the 21st as well. Using the completing of these milestones, we should be able
 to more accurately estimate future dates.
 
 ## Breakdown of Responsibilities
-GUI Work: David Henning
-Edit Methods: Yusuf Amani
-Add Methods: Joel Sanchez
-Get Methods: Ramya Singamsetty & Charles Foulke
+* GUI Work: David Henning
+* Edit Methods: Yusuf Amani
+* Add Methods: Joel Sanchez
+* Get Methods: Ramya Singamsetty & Charles Foulke
 
-Coordinator/Server: Joel Sanchez
+* Coordinator/Server: Joel Sanchez
 
-Testing: Charles Foulke
+* Testing: Charles Foulke
 
 
 
