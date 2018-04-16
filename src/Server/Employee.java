@@ -1,6 +1,7 @@
 package Server;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Employee
 {
@@ -10,8 +11,7 @@ public class Employee
     public String position;
     String password;
 
-    public Employee(ResultSet myRS) throws Exception
-    {
+    public Employee(ResultSet myRS) throws SQLException {
         this.employeeID = myRS.getInt("EmployeeID");
         this.groupID = myRS.getInt("GroupID");
         this.name = myRS.getString("Name");
