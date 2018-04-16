@@ -335,6 +335,31 @@ Event Flow for Extension:|- - -
 2   |**Manager** supplies his login information.
 3   |Same as in step 3 above.
 
+Use Case UC - 11| Editing an Employee
+---|---
+Initiating Actor:|Manager
+Actor's Goal:|Change properties of an employee, including its name, position, group, username, and password
+Participating Actors:|Odin
+Preconditions:|There is a employee to edit.
+Postconditions:|Changes are made to the employee in accordance to what the manager inputs.
+Event Flow for Main:|- - -
+1   |**Manager** arrives at the terminal and is prompted for a log in.
+2   |**Manager** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validitiy.
+4   |**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
+5   |**Manager** selects the "Edit an employee" option and enters the employee's name.
+6   |**Odin** (a) verifies the employee exists, (b) displays options available to the **Manager**, and (c) prompts the **Manager** to make a selection.
+7   |**Manager** provides new information for the selection.
+8   |**Odin** (a) stores the new information in the database, and (b) signals completion.
+Event Flow for Extension:|- - -
+2a  |**Manager** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Manager**.
+2   |**Manager** supplies his login information.
+3   |Same as in step 3 above.
+5a  |
+1   |**Odin** (a) finds no project with the given name and (b) signals the **Manager**.
+2   |**Manager** enters the employee's name.
+3   |Same as in Step 6 above.
 
 Use Case UC - | Name
 ---|---
