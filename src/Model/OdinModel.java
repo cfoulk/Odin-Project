@@ -74,7 +74,6 @@ public class OdinModel implements OdinInterface
 
     public boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status)
     {
-        Project proj;
         Employee lead;
         try
         {
