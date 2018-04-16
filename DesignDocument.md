@@ -115,4 +115,26 @@ Event Flow for Extension:|- - -
 2   |**Actor** enters the project's name.
 3   |Same as in Step 6 above.
 
-
+Use Case UC - 3| Summarize a project
+---|---
+Initiating Actor:|Manager, Project Lead, or Employee
+Actor's Goal:|See a summary of a project.
+Participating Actors:|Odin
+Preconditions:|There is a project to summarize.
+Postconditions:|The Actor sees a summary of the project.
+Event Flow for Main:|- - -
+1   |**Actor** arrives at the terminal and is prompted for a log in.
+2   |**Actor** supplies his login information.
+3   |(a) Odin verifies the login information, and (b) signals the **Actor** of its validity.
+4   |Odin (a) displays options available to the **Actor**, (b) and prompts the Actor to make a selection.
+5   |**Actor** selects the "See time spent on a project" option and enters the project's name.
+6   |Odin (a) verifies the project exists, (b) displays a summary of the project.
+Event Flow for Extension:|- - -
+2a  |**Actor** supplies invalid login information.
+1   |Odin (a) detects an error and (b) signals the Actor.
+2   |**Actor** supplies his login information.
+3   |Same as in step 3 above.
+5a  |
+1   |Odin (a) finds no project with the given name and (b) signals the **Actor**.
+2   |**Actor** enters the project's name.
+3   |Same as in Step 6 above.
