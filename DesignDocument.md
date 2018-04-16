@@ -384,5 +384,220 @@ Event Flow for Extension:|- - -
 3   |Same as in step 3 above.
 
 ## Domain Model
+
 ###Generic Domain Model
-![alt text]( "Generic Domain Model")
+
+![alt text](https://github.com/CSUS-CSC-131-Spring2018/S3T3TM2/blob/master/Design%20Model/images/Generic%20Domain%20Model.png "Generic Domain Model")
+
+### UC Add Employ
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info.
+GUI -->> Model: GUI sends login info to Model.
+Model -->> Server: Model requests employee info for username.
+Server -->> Model: Sends employee info if username exists.
+Model -->> Model: Checks if password is valid for username.
+Model -->> GUI: User is valid.
+GUI ->> User: GUI displays status window.
+User ->> GUI: Selects view employees.
+GUI ->> User: Displays employees window.
+User ->> GUI: Selects add employee.
+GUI ->> User: Displays employee info window.
+User ->> GUI: Fills in employee information and selects save.
+GUI -->> Model: Sends employee info to Model.
+Model -->> Server: Asks if an employee exists with username.
+Server -->> Model: Confirms username is new.
+Model -->> Server: Sends employee info.
+Server -->> Server: Saves employee info.
+```
+
+### UC Edit Employ
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info.
+GUI -->> Model: GUI sends login info to Model.
+Model -->> Server: Model requests employee info for username.
+Server -->> Model: Sends employee info if username exists.
+Model -->> Model: Checks if password is valid for username.
+Model -->> GUI: User is valid.
+GUI ->> User: GUI displays status window.
+User ->> GUI: Selects view employees.
+GUI ->> User: Displays employees window.
+User ->> GUI: Selects an employee to edit.
+GUI ->> User: Displays employee info window.
+User ->> GUI: Fills in employee information and selects save.
+GUI -->> Model: Sends employee info to Model.
+Model -->> Server: Asks if an employee exists with username.
+Server -->> Model: Confirms username is new.
+Model -->> Server: Sends employee info.
+Server -->> Server: Saves employee info.
+GUI -->> Server: GUI requests update.
+Server -->> GUI: Server sends update.
+GUI -->> GUI: GUI updates.
+GUI ->> User: Displays confirmation and new info.
+```
+
+### UC Add Project
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+Model -->> Server: Model requests employee info for username
+Server -->> Model: Sends employee info if username exists
+Model -->> Model: Checks if password is valid for username
+Model -->> GUI: User is valid
+GUI ->> User: GUI displays status window
+User ->> GUI: User selects add project
+GUI ->> User: GUI opens a project info window.
+User ->> GUI: User inputs project info and clicks save.
+GUI -->> Model: GUI sends info to Model.
+Model -->> Server: Model asks if project lead with employeeID exists.
+Server -->> Model: Server confirms project lead exists.
+Model -->> Server: Model sends project info to server.
+Server -->> Server: Server saves project.
+```
+
+### UC Edit Project
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info.
+GUI -->> Model: GUI sends login info to Model.
+Model -->> Server: Model requests employee info for username.
+Server -->> Model: Sends employee info if username exists.
+Model -->> Model: Checks if password is valid for username.
+Model -->> GUI: User is valid.
+GUI ->> User: GUI displays status window.
+User ->> GUI: Select a project to edit.
+GUI ->> User: GUI opens a project edit window.
+User ->> GUI: User inputs project info and clicks save.
+GUI -->> Model: GUI sends info to Model.
+Model -->> Server: Model asks if project lead with employeeID exists.
+Server -->> Model: Server confirms project lead exists.
+Model -->> Server: Model sends project info to server.
+GUI -->> Server: GUI requests update.
+Server -->> GUI: Server sends update.
+GUI -->> GUI: GUI updates.
+GUI ->> User: Displays confirmation and new info.
+```
+
+### UC Project Summary
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+ Model -->> Server: Model requests employee info for username
+ Server -->> Model: Sends employee info if username exists
+ Model -->> Model: Checks if password is valid for username
+ Model -->> GUI: User is valid
+ GUI ->> User: GUI displays status window
+User ->> GUI: selects a project
+GUI --> Model: sends selected project info to the Model
+Model-->>Server: requests project info
+Server-->> Model: sends project info to the Model
+Model -->> GUI : display the project summary
+ ```
+
+### UC Add Task
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+Model -->> Server: Model requests employee info for username
+Server -->> Model: Sends employee info if username exists
+Model -->> Model: Checks if password is valid for username
+Model -->> GUI: User is valid
+GUI ->> User: GUI displays status window
+User ->> GUI: Select a project to view
+GUI ->> User: Display project window
+User ->> GUI: User selects add task
+GUI ->> User: GUI opens a task info window.
+User ->> GUI: User inputs task info and clicks save.
+GUI -->> Model: GUI sends info to Model.
+Model -->> Server: Model asks if employee with employeeID exists.
+Server -->> Model: Server confirms employee exists.
+Model -->> Server: Model asks if project with projectID exists.
+Server -->> Model: Server confirms project exists.
+Model -->> Server: Model sends task info to server.
+Server -->> Server: Server saves task.
+```
+
+### UC Edit Task
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+Model -->> Server: Model requests employee info for username
+Server -->> Model: Sends employee info if username exists
+Model -->> Model: Checks if password is valid for username
+Model -->> GUI: User is valid
+GUI ->> User: GUI displays status window
+User ->> GUI: Select a project to view
+GUI ->> User: Display project window
+User ->> GUI: User selects task to edit
+GUI ->> User: Opens task edit windows
+User ->> GUI: Change task info
+GUI -->> Model: Sends new task info
+Model -->> Server: Asks if employee with employeeID exists
+Server -->> Model: Confirms employee exits
+Model -->> Server: Asks if project with projectID exists
+Server -->> Model: Confirms project exists
+Model -->> Server: Sends new task info
+Server -->> Server: Updates task with new info
+GUI -->> Server: GUI requests update.
+Server -->> GUI: Server sends update.
+GUI -->> GUI: GUI updates.
+GUI ->> User: Displays confirmation and new info.
+```
+
+### UC Start Task
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+Model -->> Server: Model requests employee info for username
+Server -->> Model: Sends employee info if username exists
+Model -->> Model: Checks if password is valid for username
+Model -->> GUI: User is valid
+GUI ->> User: GUI displays status window
+User ->>GUI: selects view project
+GUI ->> User : shows user project window
+User->>GUI : user selects task and starts work
+GUI --> Model: sends work session info
+Model -->Server: sends work log info and stores for record
+User ->>GUI: user stops work
+GUI-->User: requests work session summary
+User-->GUI: send work session summary
+GUI->> Model: sends work session summary
+Model ->> Server: records work session and stores
+```
+
+### UC Task Summary
+
+```mermaid
+sequenceDiagram
+User ->> GUI: User sends login info
+GUI -->> Model: GUI sends login info to Model
+ Model -->> Server: Model requests employee info for username
+ Server -->> Model: Sends employee info if username exists
+ Model -->> Model: Checks if password is valid for username
+ Model -->> GUI: User is valid
+ GUI ->> User: GUI displays status window
+User ->> GUI: selects a project
+GUI -->> Model: sends selected project info to the Model
+Model-->>Server: requests project info
+Server-->> Model: sends project info to the Model
+Model -->> GUI : display the project summary
+User ->> GUI : selects task from task list
+GUI -->> Model: sends selected task info to the Model
+Model-->>Server : request task info
+Server-->>Model :sends task info
+Model -->>GUI : displays the task summary
+```
