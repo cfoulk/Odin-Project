@@ -385,7 +385,7 @@ Event Flow for Extension:|- - -
 
 ## Domain Model
 
-###Generic Domain Model
+### Generic Domain Model
 
 ![alt text](https://github.com/CSUS-CSC-131-Spring2018/S3T3TM2/blob/master/Design%20Model/images/Generic%20Domain%20Model.png "Generic Domain Model")
 
@@ -601,3 +601,9 @@ Model-->>Server : request task info
 Server-->>Model :sends task info
 Model -->>GUI : displays the task summary
 ```
+
+## System Design
+
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/GeneralDiagramOverview.PNG "Generic Domain Model")
+
+![alt text](https://raw.githubusercontent.com/CSUS-CSC-131-Spring2018/S3T3TM2/master/Design%20Model/images/ServerClassDiagram.PNG "Generic Domain Model")
