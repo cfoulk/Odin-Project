@@ -175,7 +175,7 @@ Postconditions:|Changes are made to the task in accordance to what the Project L
 Event Flow for Main:|- - -
 1   |**Project Lead** arrives at the terminal and is prompted for a log in.
 2   |**Project Lead** supplies his login information.
-3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validitiy.
+3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validity.
 4   |**Odin** (a) displays options available to the **Project Lead**, (b) and prompts the **Project Lead** to make a selection.
 5   |**Project Lead** selects the "Edit a task" option and enters the task's name.
 6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
@@ -207,7 +207,7 @@ Postconditions:|The Actor sees a summary of the task.
 Event Flow for Main:|- - -
 1   |**Actor** arrives at the terminal and is prompted for a log in.
 2   |**Actor** supplies his login information.
-3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validitiy.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validity.
 4   |**Odin** (a) displays options available to the **Actor**, (b) and prompts the **Actor** to make a selection.
 5   |**Actor** selects the "See time spent on a task" option and enters the task's name.
 6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
@@ -237,7 +237,7 @@ Postconditions:|A timestamp of the start of work is logged.
 Event Flow for Main:|- - -
 1   |**Actor** arrives at the terminal and is prompted for a log in.
 2   |**Actor** supplies his login information.
-3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validitiy.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validity.
 4   |**Odin** (a) displays options available to the **Actor**, (b) and prompts the **Actor** to make a selection.
 5   |**Actor** selects the "Describe a task" option and enters the task's name.
 6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
@@ -267,7 +267,7 @@ Postconditions:|A timestamp of the end of work, and a quick summary of the work 
 Event Flow for Main:|- - -
 1   |**Actor** arrives at the terminal and is prompted for a log in.
 2   |**Actor** supplies his login information.
-3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validitiy.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validity.
 4   |**Odin** (a) displays options available to the **Actor**, (b) and prompts the **Actor** to make a selection.
 5   |**Actor** selects the "Describe a task" option and enters the task's name.
 6   |**Odin** (a) displays a list of projects with tasks of the given name, and (b) prompts the user to select a the project associated with the task.
@@ -299,7 +299,7 @@ Postconditions:|Changes are made to the task in accordance to what the **Project
 Event Flow for Main:|- - -
 1   |**Project Lead** arrives at the terminal and is prompted for a log in.
 2   |**Project Lead** supplies his login information.
-3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validitiy.
+3   |**Odin** (a) verifies the login information, and (b) signals the **Project Lead** of its validity.
 4   |**Odin** (a) displays options available to the **Project Lead**, (b) and prompts the **Project Lead** to make a selection.
 5   |**Project Lead** selects the "Edit a Work Log" option and enters the work log's ID.
 8   |**Odin** displays the work log with editable fields.
@@ -345,7 +345,7 @@ Postconditions:|Changes are made to the employee in accordance to what the manag
 Event Flow for Main:|- - -
 1   |**Manager** arrives at the terminal and is prompted for a log in.
 2   |**Manager** supplies his login information.
-3   |(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validitiy.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Manager** of its validity.
 4   |**Odin** (a) displays options available to the **Manager**, (b) and prompts the **Manager** to make a selection.
 5   |**Manager** selects the "Edit an employee" option and enters the employee's name.
 6   |**Odin** (a) verifies the employee exists, (b) displays options available to the **Manager**, and (c) prompts the **Manager** to make a selection.
@@ -361,13 +361,25 @@ Event Flow for Extension:|- - -
 2   |**Manager** enters the employee's name.
 3   |Same as in Step 6 above.
 
-Use Case UC - | Name
+Use Case UC - 12| Changing Login
 ---|---
-Initiating Actor:|
-Actor's Goal:|
-Participating Actors:|
-Preconditions:|
-Postconditions:|
+Initiating Actor:|Manager, Project Lead, or Employee
+Actor's Goal:|Change the login information for the actor.
+Participating Actors:|Odin
+Preconditions:|The actor is able to log in.
+Postconditions:|"The actor's login information is updated on the database.
 Event Flow for Main:|- - -
+1   |**Actor** arrives at the terminal and is prompted for a log in.
+2   |**Actor** supplies his login information.
+3   |(a) **Odin** verifies the login information, and (b) signals the **Actor** of its validity.
+4   |**Odin** (a) displays options available to the Actor, (b) and prompts the **Actor** to make a selection.
+5   |**Actor** selects the "Change Login".
+6   |**Odin** presents **Actor** with text fields for username and password.
+7   |**Actor** provides new login information.
+8   |**Odin** (a) stores the new information in the database, and (b) signals completion.
 Event Flow for Extension:|- - -
+2a  |**Actor** supplies invalid login information.
+1   |**Odin** (a) detects an error and (b) signals the **Actor**.
+2   |**Actor** supplies his login information.
+3   |Same as in step 3 above.
 
