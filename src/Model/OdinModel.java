@@ -28,6 +28,7 @@ public class OdinModel implements OdinInterface
             e.printStackTrace();
             return -1;
         }
+        if (emp == null) return -1;
         if (emp.passwordCheck(password)) return emp.employeeID;
         return -2;
     }
