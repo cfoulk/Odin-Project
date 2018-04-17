@@ -70,7 +70,7 @@ public class OdinModel implements OdinInterface
         Task task;
         try
         {
-            task = OS .getTask(taskID);
+            task = OS.getTask(taskID);
             if (task != null)
             {
                 OS.editTask(taskID,name,dueDate,employeeID,projectID,description,size);
@@ -81,7 +81,19 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description) {
+    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
+    {
+        WorkLog log;
+        try
+        {
+            log = OS.getWorkLog(logID);
+            if (log != null)
+            {
+                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
