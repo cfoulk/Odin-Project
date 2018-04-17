@@ -111,6 +111,19 @@ public class OdinServer
         return null;
     }
 
+    public Project getProjectLeadID(int projectLeadID) throws Exception
+    {
+        Project ret;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
+        if(myRS.next())
+        {
+            ret = new Project(myRS);
+            myRS.close();
+            return ret;
+        }
+        return null;
+    }
+
     public List<Task> getTasks() throws Exception
     {
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks;");
