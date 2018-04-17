@@ -30,15 +30,15 @@ public interface OdinInterface
 
     //Get Sets
     List<Employee> getEmployees();
-    List<Employee> getEmployeesGroup(int groupID);
+    List<Employee> getEmployees_Group(int groupID);
     List<Project> getProjects();
-    List<Project> getProjectsGroup(int groupID);
-    List<Project> getProjectsLead(int projectLeadID);
-    List<Project> getProjectsStatus(String status);
+    List<Project> getProjects_Group(int groupID);
+    List<Project> getProjects_Lead(int projectLeadID);
+    List<Project> getProjects_Status(String status);
     List<Task> getTasks();
-    List<Task> getTasksProject(int projectID);
-    List<Task> getTasksEmployee(int employeeID);
+    List<Task> getTasks_Project(int projectID);
+    List<Task> getTasks_Employee(int employeeID);
     List<WorkLog> getLogs();
-    List<WorkLog> getLogsEmployee(int employeeID);
-    List<WorkLog> getLogsTask(int taskID);
+    List<WorkLog> getLogs_Employee(int employeeID);
+    List<WorkLog> getLogs_Task(int taskID);
 }

@@ -185,7 +185,7 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public List<Employee> getEmployeesGroup(int groupID) {
+    public List<Employee> getEmployees_Group(int groupID) {
         List<Employee> ret;
         try { ret = OS.getEmployees(groupID); }
         catch (Exception e) { return null; }
@@ -199,15 +199,15 @@ public class OdinModel implements OdinInterface
         return projects;
     }
 
-    public List<Project> getProjectsGroup(int groupID) {
+    public List<Project> getProjects_Group(int groupID) {
         return null;
     }
 
-    public List<Project> getProjectsLead(int projectLeadID) {
+    public List<Project> getProjects_Lead(int projectLeadID) {
         return null;
     }
 
-    public List<Project> getProjectsStatus(String status) {
+    public List<Project> getProjects_Status(String status) {
         return null;
     }
 
@@ -215,11 +215,11 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<Task> getTasksProject(int projectID) {
+    public List<Task> getTasks_Project(int projectID) {
         return null;
     }
 
-    public List<Task> getTasksEmployee(int employeeID) {
+    public List<Task> getTasks_Employee(int employeeID) {
         return null;
     }
 
@@ -227,12 +227,11 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<WorkLog> getLogsEmployee(int employeeID) {
+    public List<WorkLog> getLogs_Employee(int employeeID) {
         return null;
     }
 
-    public List<WorkLog> getLogsTask(int taskID) {
-        return null;
+    public List<WorkLog> getLogs_Task(int taskID) { return null;
     }
 
     private void print() {
