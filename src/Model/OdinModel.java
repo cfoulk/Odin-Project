@@ -241,7 +241,7 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<WorkLog> getLogs_Task(int taskID) { return null;
+    public List<WorkLog> getLogs_Task(int taskID) { return null; //this was all me
     }
 
     private void print() {
