@@ -65,7 +65,19 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size)
+    {
+        Task task;
+        try
+        {
+            task = OS .getTask(taskID);
+            if (task != null)
+            {
+                OS.editTask(taskID,name,dueDate,employeeID,projectID,description,size);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
