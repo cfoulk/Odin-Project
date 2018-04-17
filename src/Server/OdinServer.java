@@ -223,7 +223,7 @@ public class OdinServer
                 "WHERE ProjectID = " + projectID + ";");
     }
 
-    public void editTasks (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
+    public void editTask (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeUpdate("Update tasks SET " +
                 "Name = '" + name + "', " +

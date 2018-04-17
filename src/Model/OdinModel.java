@@ -41,8 +41,11 @@ public class OdinModel implements OdinInterface
             emp = OS.getEmployee(employeeID);
             if(emp != null)
             {
-                OS.editEmployee(employeeID, name, position, groupID, username, password);
-                return true;
+                emp = OS.getEmployee(username);
+                if(emp ==null ) {
+                    OS.editEmployee(employeeID, name, position, groupID, username, password);
+                    return true;
+                }
             }
         }
         catch(Exception e) { e.printStackTrace(); }
@@ -52,10 +55,12 @@ public class OdinModel implements OdinInterface
     public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
     {
         Project proj;
+        Employee lead;
         try
         {
+            lead = OS.getEmployee(projectLeadID);
             proj = OS.getProject(projectID);
-            if ( proj != null)
+            if ( proj != null && lead.position.compareTo("Project Lead") == 0)
             {
                 OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
                 return true;
@@ -200,7 +205,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjects_Group(int groupID) {
-        return null;
+        List<Project> ret;
+        try { ret = OS.getProjects(groupID); }
+        catch(Exception e) { return null;}
+        return ret;
     }
 
     public List<Project> getProjects_Lead(int projectLeadID) {
