@@ -49,15 +49,51 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
+    {
+        Project proj;
+        try
+        {
+            proj = OS.getProject(projectID);
+            if ( proj != null)
+            {
+                OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace();}
         return false;
     }
 
-    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size)
+    {
+        Task task;
+        try
+        {
+            task = OS.getTask(taskID);
+            if (task != null)
+            {
+                OS.editTask(taskID,name,dueDate,employeeID,projectID,description,size);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
-    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description) {
+    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
+    {
+        WorkLog log;
+        try
+        {
+            log = OS.getWorkLog(logID);
+            if (log != null)
+            {
+                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
