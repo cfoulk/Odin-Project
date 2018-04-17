@@ -205,7 +205,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjectsGroup(int groupID) {
-        return null;
+        List<Project> ret;
+        try { ret = OS.getProjects(groupID); }
+        catch(Exception e) { return null;}
+        return ret;
     }
 
     public List<Project> getProjectsLead(int projectLeadID) {
