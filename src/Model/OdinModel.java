@@ -49,7 +49,19 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
+    {
+        Project proj;
+        try
+        {
+            proj = OS.getProject(projectID);
+            if ( proj != null)
+            {
+                OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace();}
         return false;
     }
 
