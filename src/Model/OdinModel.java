@@ -5,9 +5,7 @@ import Server.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class OdinModel implements OdinInterface
 {
@@ -59,7 +57,7 @@ public class OdinModel implements OdinInterface
         try
         {
             lead = OS.getEmployee(projectLeadID);
-            proj = OS.getProjectProjectID(projectID);
+            proj = OS.getProject_ProjectID(projectID);
             if ( proj != null && lead != null && lead.position.compareTo("Project Lead") == 0)
             {
                 OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
@@ -166,7 +164,7 @@ public class OdinModel implements OdinInterface
 
     public Project getProject(int projectID) {
         Project ret;
-        try { ret = OS.getProject(projectID); }
+        try { ret = OS.getProject_ProjectID(projectID); }
         catch (Exception e) { return null; }
         return ret;
     }
@@ -208,7 +206,7 @@ public class OdinModel implements OdinInterface
 
     public List<Project> getProjects_Group(int groupID) {
         List<Project> ret;
-        try { ret = OS.getProjectsGroupID(groupID); }
+        try { ret = OS.getProject_GroupID(groupID); }
         catch(Exception e) { return null;}
         return ret;
     }
@@ -238,7 +236,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<WorkLog> getLogs_Employee(int employeeID) {
-        return null;
+        List<WorkLog> ret;
+        try { ret = OS.getWorkLogs(employeeID); }
+        catch (Exception e) { return null;}
+        return ret;
     }
 
     public List<WorkLog> getLogs_Task(int taskID) { return null; //this was all me
