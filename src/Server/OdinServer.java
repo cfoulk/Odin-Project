@@ -98,13 +98,13 @@ public class OdinServer
         return null;
     }
 
-    public Project getProjectGroupID(int groupID) throws Exception
+    public List<Project> getProjectsGroupID(int groupID) throws Exception
     {
-        Project ret;
+        List<Project> ret = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
         if(myRS.next())
         {
-            ret = new Project(myRS);
+            while(myRS.next()) ret.add(new Project(myRS));
             myRS.close();
             return ret;
         }
