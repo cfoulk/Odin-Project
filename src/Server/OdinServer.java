@@ -85,10 +85,23 @@ public class OdinServer
         return projects;
     }
 
-    public Project getProject(int projectID) throws Exception
+    public Project getProjectProjectID(int projectID) throws Exception
     {
         Project ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
+        if(myRS.next())
+        {
+            ret = new Project(myRS);
+            myRS.close();
+            return ret;
+        }
+        return null;
+    }
+
+    public Project getProjectGroupID(int groupID) throws Exception
+    {
+        Project ret;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
         if(myRS.next())
         {
             ret = new Project(myRS);
