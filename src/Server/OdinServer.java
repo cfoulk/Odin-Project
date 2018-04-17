@@ -85,7 +85,7 @@ public class OdinServer
         return projects;
     }
 
-    public Project getProjectProjectID(int projectID) throws Exception
+    public Project getProject_ProjectID(int projectID) throws Exception
     {
         Project ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
@@ -98,7 +98,7 @@ public class OdinServer
         return null;
     }
 
-    public Project getProjectGroupID(int groupID) throws Exception
+    public Project getProject_GroupID(int groupID) throws Exception
     {
         Project ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
@@ -111,7 +111,7 @@ public class OdinServer
         return null;
     }
 
-    public Project getProjectLeadID(int projectLeadID) throws Exception
+    public Project getProject_LeadID(int projectLeadID) throws Exception
     {
         Project ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
