@@ -198,7 +198,7 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjects() {
-        List<Project> ret = null;
+        List<Project> ret;
         try { ret = OS.getProjects(); }
         catch(Exception e) { return null; }
         return ret;
