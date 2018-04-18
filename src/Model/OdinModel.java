@@ -119,9 +119,11 @@ public class OdinModel implements OdinInterface
 
     public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size)
     {
+        Employee emp;
         try
         {
-            OS.addTask(name, dueDate, employeeID, projectID, description, size);
+            emp = OS.getEmployee(employeeID);
+            if(emp != null) OS.addTask(name, dueDate, employeeID, projectID, description, size);
             return true;
         }
         catch (Exception e) { e.printStackTrace(); }
@@ -129,9 +131,11 @@ public class OdinModel implements OdinInterface
     }
 
     public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
+        Employee emp;
         try
         {
-            OS.addWorkLog(employeeID, entryType, taskID, description);
+            emp = OS.getEmployee(employeeID);
+            if(emp != null) OS.addWorkLog(employeeID, entryType, taskID, description);
             return true;
         }
         catch (Exception e) { e.printStackTrace(); }
@@ -235,6 +239,5 @@ public class OdinModel implements OdinInterface
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
