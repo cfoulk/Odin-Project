@@ -232,7 +232,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Task> getTasks_Employee(int employeeID) {
-        return null;
+        List<Task> ret;
+        try { ret = OS.getEmployee(employeeID); } //this is just a place holder, need to implement correct method into Odinserver
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<WorkLog> getLogs() {
