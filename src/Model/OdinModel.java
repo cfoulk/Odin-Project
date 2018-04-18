@@ -219,8 +219,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjects_Status(String status) {
-
-        return null;
+        List<Project> ret;
+        try { ret = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<Task> getTasks() {
