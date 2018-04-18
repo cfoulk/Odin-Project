@@ -5,9 +5,7 @@ import Server.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class OdinModel implements OdinInterface
 {
@@ -41,23 +39,66 @@ public class OdinModel implements OdinInterface
             emp = OS.getEmployee(employeeID);
             if(emp != null)
             {
-                OS.editEmployee(employeeID, name, position, groupID, username, password);
-                return true;
+                emp = OS.getEmployee(username);
+                if(emp ==null ) {
+                    OS.editEmployee(employeeID, name, position, groupID, username, password);
+                    return true;
+                }
             }
         }
         catch(Exception e) { e.printStackTrace(); }
         return false;
     }
 
-    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) {
+    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
+    {
+        Project proj;
+        Employee lead;
+        try
+        {
+            lead = OS.getEmployee(projectLeadID);
+            proj = OS.getProject_ProjectID(projectID);
+            if ( proj != null && lead != null && lead.position.compareTo("Project Lead") == 0)
+            {
+                OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace();}
         return false;
     }
 
-    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean editTask(int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size)
+    {
+        Task task;
+        Employee emp;
+        try
+        {
+            emp = OS.getEmployee(employeeID);
+            task = OS.getTask(taskID);
+            if (task != null && emp != null)
+            {
+                OS.editTask(taskID,name,dueDate,employeeID,projectID,description,size);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
-    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description) {
+    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
+    {
+        WorkLog log;
+        try
+        {
+            log = OS.getWorkLog(logID);
+            if (log != null)
+            {
+                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
         return false;
     }
 
@@ -93,11 +134,24 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) {
+    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size)
+    {
+        try
+        {
+            OS.addTask(name, dueDate, employeeID, projectID, description, size);
+            return true;
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
     public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
+        try
+        {
+            OS.addWorkLog(employeeID, entryType, taskID, description);
+            return true;
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
@@ -110,7 +164,7 @@ public class OdinModel implements OdinInterface
 
     public Project getProject(int projectID) {
         Project ret;
-        try { ret = OS.getProject(projectID); }
+        try { ret = OS.getProject_ProjectID(projectID); }
         catch (Exception e) { return null; }
         return ret;
     }
@@ -136,7 +190,7 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public List<Employee> getEmployeesGroup(int groupID) {
+    public List<Employee> getEmployees_Group(int groupID) {
         List<Employee> ret;
         try { ret = OS.getEmployees(groupID); }
         catch (Exception e) { return null; }
@@ -144,46 +198,66 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjects() {
-        List<Project> projects = null;
-        try { projects = OS.getProjects(); }
+        List<Project> ret;
+        try { ret = OS.getProjects(); }
         catch(Exception e) { return null; }
-        return projects;
+        return ret;
     }
 
-    public List<Project> getProjectsGroup(int groupID) {
-        return null;
+    public List<Project> getProjects_Group(int groupID) {
+        List<Project> ret;
+        try { ret = OS.getProject_GroupID(groupID); }
+        catch(Exception e) { return null;}
+        return ret;
     }
 
-    public List<Project> getProjectsLead(int projectLeadID) {
-        return null;
+    public List<Project> getProjects_Lead(int projectLeadID) {
+        List<Project> ret;
+        try { ret = OS.getProject_LeadID(projectLeadID); }
+        catch(Exception e) { return null; }
+        return ret;
     }
 
-    public List<Project> getProjectsStatus(String status) {
-        return null;
+    public List<Project> getProjects_Status(String status) {
+        List<Project> ret;
+        try { ret = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<Task> getTasks() {
         return null;
     }
 
-    public List<Task> getTasksProject(int projectID) {
-        return null;
+    public List<Task> getTasks_Project(int projectID) {
+        List<Task> ret;
+        try { ret = OS.getTasks(projectID); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
-    public List<Task> getTasksEmployee(int employeeID) {
-        return null;
+    public List<Task> getTasks_Employee(int employeeID) {
+        List<Task> ret;
+        try { ret = OS.getEmployee(employeeID); } //this is just a place holder, need to implement correct method into Odinserver
+        catch (Exception e) { return null; }
+        return ret;
     }
 
     public List<WorkLog> getLogs() {
-        return null;
+        List<WorkLog> ret;
+        try { ret = OS.getWorkLogs(); }
+        catch (Exception e) { return null; }
+        return ret;
     }
 
-    public List<WorkLog> getLogsEmployee(int employeeID) {
-        return null;
+    public List<WorkLog> getLogs_Employee(int employeeID) {
+        List<WorkLog> ret;
+        try { ret = OS.getWorkLogs(employeeID); }
+        catch (Exception e) { return null;}
+        return ret;
     }
 
-    public List<WorkLog> getLogsTask(int taskID) {
-        return null;
+    public List<WorkLog> getLogs_Task(int taskID) { return null; //this was all me
     }
 
     private void print() {

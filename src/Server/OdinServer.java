@@ -29,9 +29,6 @@ public class OdinServer
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(FILENAME));
         stk = new StringTokenizer(reader.readLine(), "\t");
-//        System.out.println(stk.nextToken());
-//        System.out.println(stk.nextToken());
-//        System.out.println(stk.nextToken());
         con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
         reader.close();
         return con;
@@ -88,10 +85,39 @@ public class OdinServer
         return projects;
     }
 
-    public Project getProject(int projectID) throws Exception
+    public Project getProject_ProjectID(int projectID) throws Exception
     {
         Project ret;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
+        if(myRS.next())
+        {
+            ret = new Project(myRS);
+            myRS.close();
+            return ret;
+        }
+        return null;
+    }
+
+
+
+    public List<Project> getProject_GroupID(int groupID) throws Exception
+
+    {
+        List<Project> ret = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
+        if(myRS.next())
+        {
+            while(myRS.next()) ret.add(new Project(myRS));
+            myRS.close();
+            return ret;
+        }
+        return null;
+    }
+
+    public Project getProject_LeadID(int projectLeadID) throws Exception
+    {
+        Project ret;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
         if(myRS.next())
         {
             ret = new Project(myRS);
@@ -176,7 +202,7 @@ public class OdinServer
                 "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
     }
 
-    public void addTasks(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
+    public void addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
@@ -213,7 +239,7 @@ public class OdinServer
                 "WHERE ProjectID = " + projectID + ";");
     }
 
-    public void editTasks (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
+    public void editTask (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
     {
         this.stmt.executeUpdate("Update tasks SET " +
                 "Name = '" + name + "', " +
