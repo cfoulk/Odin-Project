@@ -35,51 +35,51 @@ public class OdinServer
     }
 
     public List<Employee> getEmployees() throws SQLException {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
         return employees;
     }
 
-    public List<Employee> getEmployees(int groupID) throws Exception
+    public List<Employee> getEmployees_GroupID(int groupID) throws Exception
     {
-        List<Employee> ret = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
-        while(myRS.next()) ret.add(new Employee(myRS));
+        while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
-        return ret;
+        return employees;
     }
 
     public Employee getEmployee(int employeeID) throws SQLException
     {
-        Employee ret;
+        Employee employee;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
         if(myRS.next())
         {
-            ret = new Employee(myRS);
+            employee = new Employee(myRS);
             myRS.close();
-            return ret;
+            return employee;
         }
         return null;
     }
 
-    public Employee getEmployee(String username) throws SQLException {
-        Employee ret;
+    public Employee getEmployee_Username(String username) throws SQLException {
+        Employee employee;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
         if(myRS.next())
         {
-            ret = new Employee(myRS);
+            employee = new Employee(myRS);
             myRS.close();
-            return ret;
+            return employee;
         }
         return null;
     }
 
     public List<Project> getProjects() throws Exception
     {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
         List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
         while(myRS.next()) projects.add(new Project(myRS));
         myRS.close();
         return projects;
@@ -87,13 +87,13 @@ public class OdinServer
 
     public Project getProject_ProjectID(int projectID) throws Exception
     {
-        Project ret;
+        Project project;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
         if(myRS.next())
         {
-            ret = new Project(myRS);
+            project = new Project(myRS);
             myRS.close();
-            return ret;
+            return project;
         }
         return null;
     }
@@ -103,43 +103,44 @@ public class OdinServer
     public List<Project> getProject_GroupID(int groupID) throws Exception
 
     {
-        List<Project> ret = new ArrayList<>();
+        List<Project> projects = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
-        if(myRS.next())
-        {
-            while(myRS.next()) ret.add(new Project(myRS));
-            myRS.close();
-            return ret;
-        }
-        return null;
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
     }
 
-    public Project getProject_LeadID(int projectLeadID) throws Exception
+    public List<Project> getProject_ProjectLeadID(int projectLeadID) throws Exception
     {
-        Project ret;
+        List<Project> projects = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
-        if(myRS.next())
-        {
-            ret = new Project(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
     }
 
     public List<Task> getTasks() throws Exception
     {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks;");
         List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks;");
         while(myRS.next()) tasks.add(new Task(myRS));
         myRS.close();
         return tasks;
     }
 
-    public List<Task> getTasks(int projectID) throws Exception
+    public List<Task> getTasks_ProjectID(int projectID) throws Exception
     {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
         List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
+        while(myRS.next()) tasks.add(new Task(myRS));
+        myRS.close();
+        return tasks;
+    }
+
+    public List<Task> getTasks_EmployeeID(int employeeID) throws Exception
+    {
+        List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE EmployeeID = " + employeeID + ";");
         while(myRS.next()) tasks.add(new Task(myRS));
         myRS.close();
         return tasks;
@@ -147,31 +148,30 @@ public class OdinServer
 
     public Task getTask(int taskID) throws Exception
     {
-        Task ret;
+        Task task;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
         if(myRS.next())
         {
-            ret = new Task(myRS);
+            task = new Task(myRS);
             myRS.close();
-            return ret;
+            return task;
         }
         return null;
     }
 
     public List<WorkLog> getWorkLogs() throws Exception
     {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs;");
         List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs;");
         while(myRS.next()) workLogs.add(new WorkLog(myRS));
         myRS.close();
         return workLogs;
     }
 
-    public List<WorkLog> getWorkLogs(int employeeID) throws Exception
+    public List<WorkLog> getWorkLogs_EmployeeID(int employeeID) throws Exception
     {
-        ResultSet myRS =
-                this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
         List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
         while(myRS.next()) workLogs.add(new WorkLog(myRS));
         myRS.close();
         return workLogs;
@@ -179,13 +179,13 @@ public class OdinServer
 
     public WorkLog getWorkLog(int workLogID) throws Exception
     {
-        WorkLog ret;
+        WorkLog workLog;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
         if(myRS.next())
         {
-            ret = new WorkLog(myRS);
+            workLog = new WorkLog(myRS);
             myRS.close();
-            return ret;
+            return workLog;
         }
         return null;
     }
@@ -208,7 +208,7 @@ public class OdinServer
             "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
     }
 
-    public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
+    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
             "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");

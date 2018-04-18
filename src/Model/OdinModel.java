@@ -21,7 +21,7 @@ public class OdinModel implements OdinInterface
     public int getUserID(String userName, String password) {
         Employee emp;
         try {
-            emp = OS.getEmployee(userName);
+            emp = OS.getEmployee_Username(userName);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
@@ -39,7 +39,7 @@ public class OdinModel implements OdinInterface
             emp = OS.getEmployee(employeeID);
             if(emp != null)
             {
-                emp = OS.getEmployee(username);
+                emp = OS.getEmployee_Username(username);
                 if(emp ==null ) {
                     OS.editEmployee(employeeID, name, position, groupID, username, password);
                     return true;
@@ -107,7 +107,7 @@ public class OdinModel implements OdinInterface
         Employee emp;
         try
         {
-            emp = OS.getEmployee(username);
+            emp = OS.getEmployee_Username(username);
             if (emp == null)
             {
                 OS.addEmployee(name, position, groupID, username, password);
@@ -147,7 +147,7 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addWorkLog(String employeeID, String entryType, int taskID, String description) {
+    public boolean addWorkLog(int employeeID, String entryType, int taskID, String description) {
         Employee emp;
         try
         {
@@ -180,7 +180,7 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public WorkLog getLog(int logID) {
+    public WorkLog getWorkLog(int logID) {
         WorkLog ret;
         try { ret = OS.getWorkLog(logID); }
         catch (Exception e) { return null; }
@@ -194,9 +194,9 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public List<Employee> getEmployees_Group(int groupID) {
+    public List<Employee> getEmployees_GroupID(int groupID) {
         List<Employee> ret;
-        try { ret = OS.getEmployees(groupID); }
+        try { ret = OS.getEmployees_GroupID(groupID); }
         catch (Exception e) { return null; }
         return ret;
     }
@@ -208,16 +208,16 @@ public class OdinModel implements OdinInterface
         return ret;
     }
 
-    public List<Project> getProjects_Group(int groupID) {
+    public List<Project> getProjects_GroupID(int groupID) {
         List<Project> ret;
         try { ret = OS.getProject_GroupID(groupID); }
         catch(Exception e) { return null;}
         return ret;
     }
 
-    public List<Project> getProjects_Lead(int projectLeadID) {
+    public List<Project> getProjects_ProjectLeadID(int projectLeadID) {
         List<Project> ret;
-        try { ret = OS.getProject_LeadID(projectLeadID); }
+        try { ret = OS.getProject_ProjectLeadID(projectLeadID); }
         catch(Exception e) { return null; }
         return ret;
     }
@@ -233,35 +233,35 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<Task> getTasks_Project(int projectID) {
+    public List<Task> getTasks_ProjectID(int projectID) {
         List<Task> ret;
-        try { ret = OS.getTasks(projectID); }
+        try { ret = OS.getTasks_ProjectID(projectID); }
         catch (Exception e) { return null; }
         return ret;
     }
 
-    public List<Task> getTasks_Employee(int employeeID) {
+    public List<Task> getTasks_EmployeeID(int employeeID) {
         List<Task> ret;
-        try { ret = OS.getEmployee(employeeID); } //this is just a place holder, need to implement correct method into Odinserver
+        try { ret = OS.getTasks_EmployeeID(employeeID); }
         catch (Exception e) { return null; }
         return ret;
     }
 
-    public List<WorkLog> getLogs() {
+    public List<WorkLog> getWorkLogs() {
         List<WorkLog> ret;
         try { ret = OS.getWorkLogs(); }
         catch (Exception e) { return null; }
         return ret;
     }
 
-    public List<WorkLog> getLogs_Employee(int employeeID) {
+    public List<WorkLog> getWorkLogs_EmployeeID(int employeeID) {
         List<WorkLog> ret;
-        try { ret = OS.getWorkLogs(employeeID); }
+        try { ret = OS.getWorkLogs_EmployeeID(employeeID); }
         catch (Exception e) { return null;}
         return ret;
     }
 
-    public List<WorkLog> getLogs_Task(int taskID) { return null; //this was all me
+    public List<WorkLog> getWorkLogs_TaskID(int taskID) { return null; //this was all me
     }
 
     private void print() {
