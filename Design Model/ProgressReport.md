@@ -31,6 +31,6 @@ to more accurately estimate future dates.
 * GUI Work: David Henning
 * Edit Methods: Yusuf Amani
 * Add Methods: Joel Sanchez
-* Get Methods: Ramya Singamsetty & Charles Foulke
+* Get Methods: Ramya Singamsetty & Charles Foulk
 * Coordinator/Server: Joel Sanchez
-* Testing: Charles Foulke
+* Testing: Charles Foulk
