@@ -58,15 +58,15 @@
                </children>
             </VBox>
          </children></AnchorPane>
-      <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+      <ScrollPane fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0">
         <content>
-          <AnchorPane prefHeight="438.0" prefWidth="688.0">
+          <AnchorPane prefHeight="422.0" prefWidth="585.0" style="-fx-background-color: #254d87;">
                <children>
                   <VBox prefHeight="283.0" prefWidth="526.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
                      <children>
                         <VBox prefHeight="140.0" prefWidth="526.0">
                            <children>
-                              <JFXTreeTableView prefHeight="114.0" prefWidth="526.0" />
+                              <JFXTreeTableView />
                            </children>
                         </VBox>
                         <JFXTreeTableView />
