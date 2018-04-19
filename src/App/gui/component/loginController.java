@@ -8,10 +8,16 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -70,6 +76,7 @@ public class loginController {
         }
         //No connection
         catch (SQLException e) {
+            switchToScene(event);
             connection.setStyle("-fx-background-color: #D32F2F");
             e.printStackTrace();
         }
@@ -84,6 +91,18 @@ public class loginController {
         } catch (IOException e) {
             connection.setStyle("-fx-background-color: #D32F2F");
         }
+    }
+
+    public void switchToScene(ActionEvent event){
+        Window root = loginButton.getScene().getWindow();
+        try {
+            Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(new Scene(dashboard));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void initialize() throws Exception {
