@@ -1,7 +1,6 @@
 package App.gui.component;
 
-
-import Server.OdinServer;
+import Model.OdinModel;
 import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -9,22 +8,13 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
-import Model.OdinModel;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.zip.CheckedOutputStream;
 
 public class loginController {
 
@@ -59,9 +49,13 @@ public class loginController {
             switch (userID) {
                 case -2:
                     System.out.println("Wrong Password");
+                    usernameField.setStyle("-fx-background-color: #FFFFFF");
+                    passwordField.setStyle("-fx-background-color: #FFCDD2");
                     break;
                 case -1:
                     System.out.println("Wrong User");
+                    usernameField.setStyle("-fx-background-color: #FFCDD2");
+                    passwordField.setStyle("-fx-background-color: #FFCDD2");
                     break;
                 default:
                     System.out.println("Success");
@@ -81,6 +75,17 @@ public class loginController {
         }
     }
 
+    void checkConnection(ActionEvent event) {
+        try {
+            new OdinModel();
+            connection.setStyle("-fx-background-color: #00E676");
+        } catch (SQLException e) {
+            connection.setStyle("-fx-background-color: #D32F2F");
+        } catch (IOException e) {
+            connection.setStyle("-fx-background-color: #D32F2F");
+        }
+    }
+
     public void initialize() throws Exception {
         //Throws Exception
         SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin01");
@@ -95,6 +100,8 @@ public class loginController {
         connectionStatus.setStyle("-jfx-mask-type: CIRCLE");
 //        connectionStatus.setShape();
         connectionStatus.setGraphic(connection);
+
+        connectionStatus.setOnAction(this::checkConnection);
 
         ((HBox) loginButton.getParent()).getChildren().add(connectionStatus);
 

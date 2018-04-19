@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
+        //Load icons
         new Thread(() -> {
             try {
                 //Prefix is the prefix to the name to be called (e.g. icomoon.svg.OdinLogo)
@@ -20,6 +21,7 @@ public class Main extends Application {
                 ioExc.printStackTrace();
             }
         }).start();
+        
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
         primaryStage.setTitle("Odin Management");
         primaryStage.setScene(new Scene(root));
