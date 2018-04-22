@@ -160,17 +160,17 @@ public class OdinModel implements OdinInterface
     }
 
     public Employee getEmployee(int employeeID) {
-        Employee ret;
-        try { ret = OS.getEmployee(employeeID); }
+        Employee employee;
+        try { employee = OS.getEmployee(employeeID); }
         catch (Exception e) { return null; }
-        return ret;
+        return employee;
     }
 
     public Project getProject(int projectID) {
-        Project ret;
-        try { ret = OS.getProject_ProjectID(projectID); }
+        Project project;
+        try { project = OS.getProject_ProjectID(projectID); }
         catch (Exception e) { return null; }
-        return ret;
+        return project;
     }
 
     public Task getTask(int taskID) {
