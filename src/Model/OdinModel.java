@@ -166,27 +166,6 @@ public class OdinModel implements OdinInterface
         return employee;
     }
 
-    public Project getProject(int projectID) {
-        Project project;
-        try { project = OS.getProject_ProjectID(projectID); }
-        catch (Exception e) { return null; }
-        return project;
-    }
-
-    public Task getTask(int taskID) {
-        Task task;
-        try { task = OS.getTask(taskID); }
-        catch (Exception e) { return null; }
-        return task;
-    }
-
-    public WorkLog getWorkLog(int logID) {
-        WorkLog workLog;
-        try { workLog = OS.getWorkLog(logID); }
-        catch (Exception e) { return null; }
-        return workLog;
-    }
-
     public List<Employee> getEmployees() {
         List<Employee> emp;
         try { emp = OS.getEmployees(); }
@@ -199,6 +178,13 @@ public class OdinModel implements OdinInterface
         try { empGroupID = OS.getEmployees_GroupID(groupID); }
         catch (Exception e) { return null; }
         return empGroupID;
+    }
+
+    public Project getProject(int projectID) {
+        Project project;
+        try { project = OS.getProject_ProjectID(projectID); }
+        catch (Exception e) { return null; }
+        return project;
     }
 
     public List<Project> getProjects() {
@@ -229,6 +215,13 @@ public class OdinModel implements OdinInterface
         return projStatus;
     }
 
+    public Task getTask(int taskID) {
+        Task task;
+        try { task = OS.getTask(taskID); }
+        catch (Exception e) { return null; }
+        return task;
+    }
+
     public List<Task> getTasks() {
         List<Task> tasks;
         try { tasks = OS.getTasks(); }
@@ -248,6 +241,13 @@ public class OdinModel implements OdinInterface
         try { empID = OS.getTasks_EmployeeID(employeeID); }
         catch (Exception e) { return null; }
         return empID;
+    }
+
+    public WorkLog getWorkLog(int logID) {
+        WorkLog workLog;
+        try { workLog = OS.getWorkLog(logID); }
+        catch (Exception e) { return null; }
+        return workLog;
     }
 
     public List<WorkLog> getWorkLogs() {
