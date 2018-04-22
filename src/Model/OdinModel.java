@@ -216,17 +216,17 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Project> getProjects_ProjectLeadID(int projectLeadID) {
-        List<Project> ret;
-        try { ret = OS.getProject_ProjectLeadID(projectLeadID); }
+        List<Project> leadID;
+        try { leadID = OS.getProject_ProjectLeadID(projectLeadID); }
         catch(Exception e) { return null; }
-        return ret;
+        return leadID;
     }
 
     public List<Project> getProjects_Status(String status) {
-        List<Project> ret;
-        try { ret = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
+        List<Project> projStatus;
+        try { projStatus = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
         catch (Exception e) { return null; }
-        return ret;
+        return projStatus;
     }
 
     public List<Task> getTasks() {
