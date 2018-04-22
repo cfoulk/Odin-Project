@@ -234,17 +234,17 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Task> getTasks_ProjectID(int projectID) {
-        List<Task> ret;
-        try { ret = OS.getTasks_ProjectID(projectID); }
+        List<Task> projID;
+        try { projID = OS.getTasks_ProjectID(projectID); }
         catch (Exception e) { return null; }
-        return ret;
+        return projID;
     }
 
     public List<Task> getTasks_EmployeeID(int employeeID) {
-        List<Task> ret;
-        try { ret = OS.getTasks_EmployeeID(employeeID); }
+        List<Task> empID;
+        try { empID = OS.getTasks_EmployeeID(employeeID); }
         catch (Exception e) { return null; }
-        return ret;
+        return empID;
     }
 
     public List<WorkLog> getWorkLogs() {
