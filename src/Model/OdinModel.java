@@ -188,17 +188,17 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Employee> getEmployees() {
-        List<Employee> ret;
-        try { ret = OS.getEmployees(); }
+        List<Employee> emp;
+        try { emp = OS.getEmployees(); }
         catch (Exception e) { return null; }
-        return ret;
+        return emp;
     }
 
     public List<Employee> getEmployees_GroupID(int groupID) {
-        List<Employee> ret;
-        try { ret = OS.getEmployees_GroupID(groupID); }
+        List<Employee> groupID;
+        try { groupID = OS.getEmployees_GroupID(groupID); }
         catch (Exception e) { return null; }
-        return ret;
+        return groupID;
     }
 
     public List<Project> getProjects() {
