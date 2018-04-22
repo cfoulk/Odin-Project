@@ -34,6 +34,19 @@ public class OdinServer
         return con;
     }
 
+    public Employee getEmployee(int employeeID) throws SQLException
+    {
+        Employee employee;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
+        if(myRS.next())
+        {
+            employee = new Employee(myRS);
+            myRS.close();
+            return employee;
+        }
+        return null;
+    }
+
     public List<Employee> getEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
@@ -49,19 +62,6 @@ public class OdinServer
         while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
         return employees;
-    }
-
-    public Employee getEmployee(int employeeID) throws SQLException
-    {
-        Employee employee;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
-        if(myRS.next())
-        {
-            employee = new Employee(myRS);
-            myRS.close();
-            return employee;
-        }
-        return null;
     }
 
     public Employee getEmployee_Username(String username) throws SQLException {
