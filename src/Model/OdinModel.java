@@ -174,17 +174,17 @@ public class OdinModel implements OdinInterface
     }
 
     public Task getTask(int taskID) {
-        Task ret;
-        try { ret = OS.getTask(taskID); }
+        Task task;
+        try { task = OS.getTask(taskID); }
         catch (Exception e) { return null; }
-        return ret;
+        return task;
     }
 
     public WorkLog getWorkLog(int logID) {
-        WorkLog ret;
-        try { ret = OS.getWorkLog(logID); }
+        WorkLog workLog;
+        try { workLog = OS.getWorkLog(logID); }
         catch (Exception e) { return null; }
-        return ret;
+        return workLog;
     }
 
     public List<Employee> getEmployees() {
@@ -195,10 +195,10 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Employee> getEmployees_GroupID(int groupID) {
-        List<Employee> groupID;
-        try { groupID = OS.getEmployees_GroupID(groupID); }
+        List<Employee> empGroupID;
+        try { empGroupID = OS.getEmployees_GroupID(groupID); }
         catch (Exception e) { return null; }
-        return groupID;
+        return empGroupID;
     }
 
     public List<Project> getProjects() {
