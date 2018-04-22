@@ -248,17 +248,17 @@ public class OdinModel implements OdinInterface
     }
 
     public List<WorkLog> getWorkLogs() {
-        List<WorkLog> ret;
-        try { ret = OS.getWorkLogs(); }
+        List<WorkLog> workLogs;
+        try { workLogs = OS.getWorkLogs(); }
         catch (Exception e) { return null; }
-        return ret;
+        return workLogs;
     }
 
     public List<WorkLog> getWorkLogs_EmployeeID(int employeeID) {
-        List<WorkLog> ret;
-        try { ret = OS.getWorkLogs_EmployeeID(employeeID); }
+        List<WorkLog> empID;
+        try { empID = OS.getWorkLogs_EmployeeID(employeeID); }
         catch (Exception e) { return null;}
-        return ret;
+        return empID;
     }
 
     public List<WorkLog> getWorkLogs_TaskID(int taskID) { return null; //this was all me
