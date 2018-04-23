@@ -294,70 +294,105 @@ public class OdinModel implements OdinInterface
     { return null; //this was all me
     }
 
-    public Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID) {
-        List<Employee> employee = new ArrayList<>();
-        list.forEach(p ->
-        {
-            if(p.employeeID == employeeID){ employee.add(p); }
-        });
-        if(employee.size() == 1) return employee.get(0);
-        return null;
+    public Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID)
+    {
+        Employee employee = null;
+        for (Employee emp : list) if(emp.employeeID == employeeID) return emp;
+        return employee;
     }
 
-    public List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID) {
-        return null;
+    public Employee filterEmployees_Username(List<Employee> list, String username)
+    {
+        Employee employee = null;
+        for (Employee emp : list) if(emp.username.toLowerCase().compareTo(username.toLowerCase()) == 0) return emp;
+        return employee;
     }
 
-    public List<Employee> filterEmployees_Position(List<Employee> list, String position) {
-        return null;
+    public List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID)
+    {
+        List<Employee> employees = new ArrayList<>();
+        list.forEach(p -> { if(p.groupID == groupID) employees.add(p); });
+        return employees;
     }
 
-    public List<Employee> filterEmployees_Username(List<Employee> list, String username) {
-        return null;
+    public List<Employee> filterEmployees_Position(List<Employee> list, String position)
+    {
+        List<Employee> employees = new ArrayList<>();
+        list.forEach(p -> { if(p.position.compareTo(position) == 0) employees.add(p); });
+        return employees;
     }
 
-    public Project filterProjects_ProjectID(List<Project> list, int projectID) {
-        return null;
+    public Project filterProjects_ProjectID(List<Project> list, int projectID)
+    {
+        Project project = null;
+        for (Project proj : list) if(proj.projectID == projectID) return proj;
+        return project;
     }
 
-    public List<Project> filterProjects_DueDate(List<Project> list, String dueDate) {
-        return null;
+    public List<Project> filterProjects_DueDate(List<Project> list, String dueDate)
+    {
+        List<Project> projects = new ArrayList<>();
+        list.forEach(p -> { if(p.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) projects.add(p); });
+        return projects;
     }
 
-    public List<Project> filterProjects_GroupID(List<Project> list, int groupID) {
-        return null;
+    public List<Project> filterProjects_GroupID(List<Project> list, int groupID)
+    {
+        List<Project> projects = new ArrayList<>();
+        list.forEach(p -> { if(p.groupID == groupID) projects.add(p); });
+        return projects;
     }
 
-    public List<Project> filterProjects_ProjectLeadID(List<Project> list, int projectLeadID) {
-        return null;
+    public List<Project> filterProjects_ProjectLeadID(List<Project> list, int projectLeadID)
+    {
+        List<Project> projects = new ArrayList<>();
+        list.forEach(p -> { if(p.projectLeadID == projectLeadID) projects.add(p); });
+        return projects;
     }
 
-    public List<Project> filterProjects_Status(List<Project> list, String status) {
-        return null;
+    public List<Project> filterProjects_Status(List<Project> list, String status)
+    {
+        List<Project> projects = new ArrayList<>();
+        list.forEach(p -> { if(p.status.toLowerCase().compareTo(status.toLowerCase()) == 0) projects.add(p); });
+        return projects;
     }
 
-    public Task filterTasks_TaskID(List<Task> list, int taskID) {
-        return null;
+    public Task filterTasks_TaskID(List<Task> list, int taskID)
+    {
+        Task task = null;
+        for (Task tsk : list) if(tsk.taskID == taskID) return tsk;
+        return task;
     }
 
-    public List<Task> filterTasks_DueDate(List<Task> list, String dueDate) {
-        return null;
+    public List<Task> filterTasks_DueDate(List<Task> list, String dueDate)
+    {
+        List<Task> tasks = new ArrayList<>();
+        list.forEach(p -> { if(p.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) tasks.add(p); });
+        return tasks;
     }
 
-    public List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID) {
+    public List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID)
+    {
+        //We need to talk about this one bfore going forward.
         return null;
     }
 
     public List<Task> filterTasks_ProjectID(List<Task> list, int projectID) {
-        return null;
+        List<Task> tasks = new ArrayList<>();
+        list.forEach(p -> { if(p.projectID == projectID) tasks.add(p); });
+        return tasks;
     }
 
     public List<Task> filterTasks_Status(List<Task> list, String status) {
-        return null;
+        List<Task> tasks = new ArrayList<>();
+        list.forEach(p -> { if(p.status.toLowerCase().compareTo(status.toLowerCase()) == 0) tasks.add(p); });
+        return tasks;
     }
 
-    public List<Task> filterTasks_Size(List<Task> list, String size) {
-        return null;
+    public List<Task> filterTasks_Size(List<Task> list, int size) {
+        List<Task> tasks = new ArrayList<>();
+        list.forEach(p -> { if(p.size == size) tasks.add(p); });
+        return tasks;
     }
 
     public WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID) {

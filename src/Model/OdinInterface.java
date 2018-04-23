@@ -46,9 +46,9 @@ public interface OdinInterface
 
     //Filter sets
     Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID);
+    Employee filterEmployees_Username(List<Employee> list, String username);
     List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID);
     List<Employee> filterEmployees_Position(List<Employee> list, String position);
-    List<Employee> filterEmployees_Username(List<Employee> list, String username);
     Project filterProjects_ProjectID(List<Project> list, int projectID);
     List<Project> filterProjects_DueDate(List<Project> list, String dueDate);
     List<Project> filterProjects_GroupID(List<Project> list, int groupID);
@@ -59,7 +59,7 @@ public interface OdinInterface
     List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID);
     List<Task> filterTasks_ProjectID(List<Task> list, int projectID);
     List<Task> filterTasks_Status(List<Task> list, String status);
-    List<Task> filterTasks_Size(List<Task> list, String size);
+    List<Task> filterTasks_Size(List<Task> list, int size);
     WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID);
     List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
