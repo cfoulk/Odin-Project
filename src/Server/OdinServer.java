@@ -34,6 +34,19 @@ public class OdinServer
         return con;
     }
 
+    public Employee getEmployee(int employeeID) throws SQLException
+    {
+        Employee employee;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
+        if(myRS.next())
+        {
+            employee = new Employee(myRS);
+            myRS.close();
+            return employee;
+        }
+        return null;
+    }
+
     public List<Employee> getEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
@@ -49,19 +62,6 @@ public class OdinServer
         while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
         return employees;
-    }
-
-    public Employee getEmployee(int employeeID) throws SQLException
-    {
-        Employee employee;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
-        if(myRS.next())
-        {
-            employee = new Employee(myRS);
-            myRS.close();
-            return employee;
-        }
-        return null;
     }
 
     public Employee getEmployee_Username(String username) throws SQLException {
@@ -119,6 +119,19 @@ public class OdinServer
         return projects;
     }
 
+    public Task getTask(int taskID) throws Exception
+    {
+        Task task;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
+        if(myRS.next())
+        {
+            task = new Task(myRS);
+            myRS.close();
+            return task;
+        }
+        return null;
+    }
+
     public List<Task> getTasks() throws Exception
     {
         List<Task> tasks = new ArrayList<>();
@@ -146,15 +159,15 @@ public class OdinServer
         return tasks;
     }
 
-    public Task getTask(int taskID) throws Exception
+    public WorkLog getWorkLog(int workLogID) throws Exception
     {
-        Task task;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
+        WorkLog workLog;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
         if(myRS.next())
         {
-            task = new Task(myRS);
+            workLog = new WorkLog(myRS);
             myRS.close();
-            return task;
+            return workLog;
         }
         return null;
     }
@@ -175,19 +188,6 @@ public class OdinServer
         while(myRS.next()) workLogs.add(new WorkLog(myRS));
         myRS.close();
         return workLogs;
-    }
-
-    public WorkLog getWorkLog(int workLogID) throws Exception
-    {
-        WorkLog workLog;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
-        if(myRS.next())
-        {
-            workLog = new WorkLog(myRS);
-            myRS.close();
-            return workLog;
-        }
-        return null;
     }
 
     public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
@@ -213,7 +213,6 @@ public class OdinServer
         this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
             "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
     }
-
 
     //Edit functions
     public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
