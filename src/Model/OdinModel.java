@@ -1,6 +1,7 @@
 package Model;
 
 import Server.*;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -291,83 +292,94 @@ public class OdinModel implements OdinInterface
     }
 
     public List<WorkLog> getWorkLogs_TaskID(int taskID)
-    { return null; //this was all me
+    {
+        List<WorkLog> workLogs;
+        try { workLogs = OS.getWorkLogs_TaskID(taskID); }
+        catch (Exception e) { return null; }
+        return workLogs;
     }
 
     public Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID)
     {
-        Employee employee = null;
-        for (Employee emp : list) if(emp.employeeID == employeeID) return emp;
-        return employee;
+        for (Employee employee : list)
+            { if(employee.employeeID == employeeID) return employee; }
+        return null;
     }
 
     public Employee filterEmployees_Username(List<Employee> list, String username)
     {
-        Employee employee = null;
-        for (Employee emp : list) if(emp.username.toLowerCase().compareTo(username.toLowerCase()) == 0) return emp;
-        return employee;
+        for (Employee employee : list)
+            { if(employee.username.toLowerCase().compareTo(username.toLowerCase()) == 0) return employee; }
+        return null;
     }
 
     public List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID)
     {
         List<Employee> employees = new ArrayList<>();
-        list.forEach(p -> { if(p.groupID == groupID) employees.add(p); });
+        for (Employee employee : list)
+            { if(employee.groupID == groupID) employees.add(employee); }
         return employees;
     }
 
     public List<Employee> filterEmployees_Position(List<Employee> list, String position)
     {
         List<Employee> employees = new ArrayList<>();
-        list.forEach(p -> { if(p.position.compareTo(position) == 0) employees.add(p); });
+        for (Employee employee : list)
+            { if(employee.position.compareTo(position) == 0) employees.add(employee); }
         return employees;
     }
 
     public Project filterProjects_ProjectID(List<Project> list, int projectID)
     {
-        Project project = null;
-        for (Project proj : list) if(proj.projectID == projectID) return proj;
-        return project;
+        for (Project project : list)
+            { if(project.projectID == projectID) return project; }
+        return null;
     }
 
     public List<Project> filterProjects_DueDate(List<Project> list, String dueDate)
     {
         List<Project> projects = new ArrayList<>();
-        list.forEach(p -> { if(p.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) projects.add(p); });
+        for(Project project : list)
+        { if(project.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) projects.add(project); }
         return projects;
     }
 
     public List<Project> filterProjects_GroupID(List<Project> list, int groupID)
     {
         List<Project> projects = new ArrayList<>();
-        list.forEach(p -> { if(p.groupID == groupID) projects.add(p); });
+        for(Project project : list)
+        { if(project.groupID == groupID) projects.add(project); }
         return projects;
     }
 
     public List<Project> filterProjects_ProjectLeadID(List<Project> list, int projectLeadID)
     {
         List<Project> projects = new ArrayList<>();
-        list.forEach(p -> { if(p.projectLeadID == projectLeadID) projects.add(p); });
+        for(Project project : list)
+            { if(project.projectLeadID == projectLeadID) projects.add(project); }
         return projects;
     }
 
     public List<Project> filterProjects_Status(List<Project> list, String status)
     {
         List<Project> projects = new ArrayList<>();
-        list.forEach(p -> { if(p.status.toLowerCase().compareTo(status.toLowerCase()) == 0) projects.add(p); });
+        for(Project project : list)
+        { if(project.status.toLowerCase().compareTo(status.toLowerCase()) == 0) projects.add(project); }
         return projects;
     }
 
     public Task filterTasks_TaskID(List<Task> list, int taskID)
     {
-        Task task = null;
-        for (Task tsk : list) if(tsk.taskID == taskID) return tsk;
-        return task;
+        for (Task tsk : list)
+            { if(tsk.taskID == taskID) return tsk; }
+        return null;
     }
 
     public List<Task> filterTasks_DueDate(List<Task> list, String dueDate)
     {
         List<Task> tasks = new ArrayList<>();
-        list.forEach(p -> { if(p.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) tasks.add(p); });
+        for(Task task : list)
+            { if(task.dueDate.toLowerCase().compareTo(dueDate.toLowerCase()) == 0) tasks.add(task); }
         return tasks;
     }
 
@@ -377,38 +389,57 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<Task> filterTasks_ProjectID(List<Task> list, int projectID) {
+    public List<Task> filterTasks_ProjectID(List<Task> list, int projectID)
+    {
         List<Task> tasks = new ArrayList<>();
-        list.forEach(p -> { if(p.projectID == projectID) tasks.add(p); });
+        for(Task task : list)
+            { if(task.projectID == projectID) tasks.add(task); }
         return tasks;
     }
 
-    public List<Task> filterTasks_Status(List<Task> list, String status) {
+    public List<Task> filterTasks_Status(List<Task> list, String status)
+    {
         List<Task> tasks = new ArrayList<>();
-        list.forEach(p -> { if(p.status.toLowerCase().compareTo(status.toLowerCase()) == 0) tasks.add(p); });
+        for(Task task : list)
+            { if(task.status.toLowerCase().compareTo(status.toLowerCase()) == 0) tasks.add(task); }
         return tasks;
     }
 
-    public List<Task> filterTasks_Size(List<Task> list, int size) {
+    public List<Task> filterTasks_Size(List<Task> list, int size)
+    {
         List<Task> tasks = new ArrayList<>();
-        list.forEach(p -> { if(p.size == size) tasks.add(p); });
+        for(Task task : list)
+            { if(task.size == size) tasks.add(task); }
         return tasks;
     }
 
-    public WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID) {
+    public WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID)
+    {
+        for(WorkLog log : list)
+            { if(log.logID == logID) return log; }
         return null;
     }
 
-    public List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType) {
-        return null;
+    public List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType)
+    {
+        List<WorkLog> workLogs = new ArrayList<>();
+        for(WorkLog workLog : list)
+            { if(workLog.entryType.toLowerCase().compareTo(entryType.toLowerCase()) == 0) workLogs.add(workLog); }
+        return workLogs;
     }
 
     public List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID) {
-        return null;
+        List<WorkLog> workLogs = new ArrayList<>();
+        for(WorkLog workLog : list)
+            { if(workLog.taskID == taskID) workLogs.add(workLog); }
+        return workLogs;
     }
 
-    public List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID) {
-        return null;
+    public List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int employeeID) {
+        List<WorkLog> workLogs = new ArrayList<>();
+        for(WorkLog workLog : list)
+        { if(workLog.employeeID == employeeID) workLogs.add(workLog); }
+        return workLogs;
     }
 
     public void closeConnection()

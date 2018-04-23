@@ -190,6 +190,15 @@ public class OdinServer
         return workLogs;
     }
 
+    public List<WorkLog> getWorkLogs_TaskID(int taskID) throws Exception
+    {
+        List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklog WHERE TaskID = " + taskID + ";");
+        while(myRS.next()) workLogs.add(new WorkLog(myRS));
+        myRS.close();
+        return workLogs;
+    }
+
     public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
