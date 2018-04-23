@@ -10,6 +10,7 @@ public class Employee
     public String name;
     public String position;
     String password;
+    String status;
 
     public Employee(ResultSet myRS) throws SQLException {
         this.employeeID = myRS.getInt("EmployeeID");
@@ -17,6 +18,7 @@ public class Employee
         this.name = myRS.getString("Name");
         this.position = myRS.getString("Position");
         this.password = myRS.getString("Password");
+        //this.status = myRS.getString("Status");
     }
 
     public boolean passwordCheck(String input) { return (this.password.compareTo(input) == 0); }

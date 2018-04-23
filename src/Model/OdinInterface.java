@@ -5,6 +5,7 @@ import Server.Employee;
 import Server.Project;
 import Server.Task;
 import Server.WorkLog;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.util.List;
 
@@ -23,10 +24,11 @@ public interface OdinInterface
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
 
     //Get Singles
-    Employee getEmployee(int employeeID);
-    Project getProject(int projectID);
-    Task getTask(int taskID);
-    WorkLog getWorkLog(int logID);
+    Employee getEmployee_EmployeeID(int employeeID);
+    Employee getEmployee_Username(String username);
+    Project getProject_ProjectID(int projectID);
+    Task getTask_TaskID(int taskID);
+    WorkLog getWorkLog_LogID(int logID);
 
     //Get Sets
     List<Employee> getEmployees();
@@ -41,4 +43,25 @@ public interface OdinInterface
     List<WorkLog> getWorkLogs();
     List<WorkLog> getWorkLogs_EmployeeID(int employeeID);
     List<WorkLog> getWorkLogs_TaskID(int taskID);
+
+    //Filter sets
+    Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID);
+    List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID);
+    List<Employee> filterEmployees_Position(List<Employee> list, String position);
+    List<Employee> filterEmployees_Username(List<Employee> list, String username);
+    Project filterProjects_ProjectID(List<Project> list, int projectID);
+    List<Project> filterProjects_DueDate(List<Project> list, String dueDate);
+    List<Project> filterProjects_GroupID(List<Project> list, int groupID);
+    List<Project> filterProjects_ProjectLeadID(List<Project> list, int projectLeadID);
+    List<Project> filterProjects_Status(List<Project> list, String status);
+    Task filterTasks_TaskID(List<Task> list, int taskID);
+    List<Task> filterTasks_DueDate(List<Task> list, String dueDate);
+    List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID);
+    List<Task> filterTasks_ProjectID(List<Task> list, int projectID);
+    List<Task> filterTasks_Status(List<Task> list, String status);
+    List<Task> filterTasks_Size(List<Task> list, String size);
+    WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID);
+    List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
+    List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
+    List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
 }

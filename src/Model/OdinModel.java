@@ -5,13 +5,15 @@ import Server.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OdinModel implements OdinInterface
 {
     OdinServer OS;
 
-    public OdinModel() throws IOException, SQLException {
+    public OdinModel() throws IOException, SQLException
+    {
         OS = new OdinServer();
     }
 
@@ -147,7 +149,8 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addWorkLog(int employeeID, String entryType, int taskID, String description) {
+    public boolean addWorkLog(int employeeID, String entryType, int taskID, String description)
+    {
         Employee emp;
         try
         {
@@ -159,113 +162,218 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public Employee getEmployee(int employeeID) {
-        Employee ret;
-        try { ret = OS.getEmployee(employeeID); }
+    public Employee getEmployee_EmployeeID(int employeeID)
+    {
+        Employee employee;
+        try { employee = OS.getEmployee(employeeID); }
         catch (Exception e) { return null; }
-        return ret;
+        return employee;
     }
 
-    public Project getProject(int projectID) {
-        Project ret;
-        try { ret = OS.getProject_ProjectID(projectID); }
+    public Employee getEmployee_Username(String username)
+    {
+        Employee employee;
+        try { employee = OS.getEmployee_Username(username); }
         catch (Exception e) { return null; }
-        return ret;
+        return employee;
     }
 
-    public Task getTask(int taskID) {
-        Task ret;
-        try { ret = OS.getTask(taskID); }
+    public Project getProject_ProjectID(int projectID)
+    {
+        Project project;
+        try { project = OS.getProject_ProjectID(projectID); }
         catch (Exception e) { return null; }
-        return ret;
+        return project;
     }
 
-    public WorkLog getWorkLog(int logID) {
-        WorkLog ret;
-        try { ret = OS.getWorkLog(logID); }
+    public Task getTask_TaskID(int taskID)
+    {
+        Task task;
+        try { task = OS.getTask(taskID); }
         catch (Exception e) { return null; }
-        return ret;
+        return task;
     }
 
-    public List<Employee> getEmployees() {
-        List<Employee> ret;
-        try { ret = OS.getEmployees(); }
+    public WorkLog getWorkLog_LogID(int logID)
+    {
+        WorkLog workLog;
+        try { workLog = OS.getWorkLog(logID); }
         catch (Exception e) { return null; }
-        return ret;
+        return workLog;
     }
 
-    public List<Employee> getEmployees_GroupID(int groupID) {
-        List<Employee> ret;
-        try { ret = OS.getEmployees_GroupID(groupID); }
+    public List<Employee> getEmployees()
+    {
+        List<Employee> employees;
+        try { employees = OS.getEmployees(); }
         catch (Exception e) { return null; }
-        return ret;
+        return employees;
     }
 
-    public List<Project> getProjects() {
-        List<Project> ret;
-        try { ret = OS.getProjects(); }
+    public List<Employee> getEmployees_GroupID(int groupID)
+    {
+        List<Employee> employees;
+        try { employees = OS.getEmployees_GroupID(groupID); }
+        catch (Exception e) { return null; }
+        return employees;
+    }
+
+    public List<Project> getProjects()
+    {
+        List<Project> projects;
+        try { projects = OS.getProjects(); }
         catch(Exception e) { return null; }
-        return ret;
+        return projects;
     }
 
-    public List<Project> getProjects_GroupID(int groupID) {
-        List<Project> ret;
-        try { ret = OS.getProject_GroupID(groupID); }
+    public List<Project> getProjects_GroupID(int groupID)
+    {
+        List<Project> projects;
+        try { projects = OS.getProject_GroupID(groupID); }
         catch(Exception e) { return null;}
-        return ret;
+        return projects;
     }
 
-    public List<Project> getProjects_ProjectLeadID(int projectLeadID) {
-        List<Project> ret;
-        try { ret = OS.getProject_ProjectLeadID(projectLeadID); }
+    public List<Project> getProjects_ProjectLeadID(int projectLeadID)
+    {
+        List<Project> projects;
+        try { projects = OS.getProject_ProjectLeadID(projectLeadID); }
         catch(Exception e) { return null; }
-        return ret;
+        return projects;
     }
 
-    public List<Project> getProjects_Status(String status) {
-        List<Project> ret;
-        try { ret = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
+    public List<Project> getProjects_Status(String status)
+    {
+        List<Project> projects;
+        try { projects = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
         catch (Exception e) { return null; }
-        return ret;
+        return projects;
     }
 
-    public List<Task> getTasks() {
+    public List<Task> getTasks()
+    {
+        List<Task> tasks;
+        try { tasks = OS.getTasks(); }
+        catch (Exception e) { return null; }
+        return tasks;
+    }
+
+    public List<Task> getTasks_ProjectID(int projectID)
+    {
+        List<Task> tasks;
+        try { tasks = OS.getTasks_ProjectID(projectID); }
+        catch (Exception e) { return null; }
+        return tasks;
+    }
+
+    public List<Task> getTasks_EmployeeID(int employeeID)
+    {
+        List<Task> tasks;
+        try { tasks = OS.getTasks_EmployeeID(employeeID); }
+        catch (Exception e) { return null; }
+        return tasks;
+    }
+
+    public List<WorkLog> getWorkLogs()
+    {
+        List<WorkLog> workLogs;
+        try { workLogs = OS.getWorkLogs(); }
+        catch (Exception e) { return null; }
+        return workLogs;
+    }
+
+    public List<WorkLog> getWorkLogs_EmployeeID(int employeeID)
+    {
+        List<WorkLog> workLogs;
+        try { workLogs = OS.getWorkLogs_EmployeeID(employeeID); }
+        catch (Exception e) { return null;}
+        return workLogs;
+    }
+
+    public List<WorkLog> getWorkLogs_TaskID(int taskID)
+    { return null; //this was all me
+    }
+
+    public Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID) {
+        List<Employee> employee = new ArrayList<>();
+        list.forEach(p ->
+        {
+            if(p.employeeID == employeeID){ employee.add(p); }
+        });
+        if(employee.size() == 1) return employee.get(0);
         return null;
     }
 
-    public List<Task> getTasks_ProjectID(int projectID) {
-        List<Task> ret;
-        try { ret = OS.getTasks_ProjectID(projectID); }
-        catch (Exception e) { return null; }
-        return ret;
+    public List<Employee> filterEmployees_GroupID(List<Employee> list, int groupID) {
+        return null;
     }
 
-    public List<Task> getTasks_EmployeeID(int employeeID) {
-        List<Task> ret;
-        try { ret = OS.getTasks_EmployeeID(employeeID); }
-        catch (Exception e) { return null; }
-        return ret;
+    public List<Employee> filterEmployees_Position(List<Employee> list, String position) {
+        return null;
     }
 
-    public List<WorkLog> getWorkLogs() {
-        List<WorkLog> ret;
-        try { ret = OS.getWorkLogs(); }
-        catch (Exception e) { return null; }
-        return ret;
+    public List<Employee> filterEmployees_Username(List<Employee> list, String username) {
+        return null;
     }
 
-    public List<WorkLog> getWorkLogs_EmployeeID(int employeeID) {
-        List<WorkLog> ret;
-        try { ret = OS.getWorkLogs_EmployeeID(employeeID); }
-        catch (Exception e) { return null;}
-        return ret;
+    public Project filterProjects_ProjectID(List<Project> list, int projectID) {
+        return null;
     }
 
-    public List<WorkLog> getWorkLogs_TaskID(int taskID) { return null; //this was all me
+    public List<Project> filterProjects_DueDate(List<Project> list, String dueDate) {
+        return null;
     }
 
-    private void print() {
-        //TODO shorter print statement
+    public List<Project> filterProjects_GroupID(List<Project> list, int groupID) {
+        return null;
+    }
+
+    public List<Project> filterProjects_ProjectLeadID(List<Project> list, int projectLeadID) {
+        return null;
+    }
+
+    public List<Project> filterProjects_Status(List<Project> list, String status) {
+        return null;
+    }
+
+    public Task filterTasks_TaskID(List<Task> list, int taskID) {
+        return null;
+    }
+
+    public List<Task> filterTasks_DueDate(List<Task> list, String dueDate) {
+        return null;
+    }
+
+    public List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID) {
+        return null;
+    }
+
+    public List<Task> filterTasks_ProjectID(List<Task> list, int projectID) {
+        return null;
+    }
+
+    public List<Task> filterTasks_Status(List<Task> list, String status) {
+        return null;
+    }
+
+    public List<Task> filterTasks_Size(List<Task> list, String size) {
+        return null;
+    }
+
+    public WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID) {
+        return null;
+    }
+
+    public List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType) {
+        return null;
+    }
+
+    public List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID) {
+        return null;
+    }
+
+    public List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID) {
+        return null;
     }
 
     public void closeConnection()
