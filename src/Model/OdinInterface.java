@@ -20,7 +20,7 @@ public interface OdinInterface
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
-    boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size);
+    boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
 
     //Get Singles

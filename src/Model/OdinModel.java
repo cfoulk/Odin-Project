@@ -68,13 +68,13 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addTask(String name, String dueDate, int employeeID, int projectID, String description, int size)
+    public boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status)
     {
         Employee emp;
         try
         {
-            emp = OS.getEmployee(employeeID);
-            if(emp != null) OS.addTask(name, dueDate, employeeID, projectID, description, size);
+            emp = OS.getEmployees_GroupID(projectID);
+            if(emp != null) OS.addTask(name, dueDate, projectID, employees, description, size, status);
             return true;
         }
         catch (Exception e) { e.printStackTrace(); }
