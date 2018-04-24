@@ -70,7 +70,7 @@ public class OdinModel implements OdinInterface
 
     public boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status)
     {
-        Employee emp;
+        List<Employee> emp;
         try
         {
             emp = OS.getEmployees_GroupID(projectID);
