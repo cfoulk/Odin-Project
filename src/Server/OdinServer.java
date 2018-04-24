@@ -17,13 +17,15 @@ public class OdinServer
     public Connection con;
     public Statement stmt;
 
-    public OdinServer() throws IOException, SQLException {
+    public OdinServer() throws IOException, SQLException
+    {
         this.con = connect();
         this.stmt = con.createStatement();
 
     }
 
-    public Connection connect() throws SQLException, IOException {
+    public Connection connect() throws SQLException, IOException
+    {
         StringTokenizer stk;
         Connection con;
         BufferedReader reader;
@@ -34,6 +36,79 @@ public class OdinServer
         return con;
     }
 
+    //Add methods
+    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
+                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
+    }
+
+    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
+    }
+
+    public void addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, Employees, Description, Size, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employees + ", '" + description + "', " + size + ", '" + status + "');");
+    }
+
+    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
+                "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
+    }
+
+    //Edit methods
+    public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
+    {
+        this.stmt.executeUpdate(  "UPDATE employees SET " +
+                "Name = '" + name + "', " +
+                "Position = '" + position + "', " +
+                "GroupID = " + groupID  + ", " +
+                "Username = '"  + username + "', " +
+                "Password = '" + password + "' " +
+                "WHERE EmployeeID = " + employeeID + ";");
+    }
+
+    public void editProject (int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
+    {
+        this.stmt.executeUpdate ( "UPDATE projects SET " +
+                "Name = '" + name + "', " +
+                "DueDate = " + dueDate + "', " +
+                "GroupID = " + groupID + ", " +
+                "ProjectLeadID = " + projectLeadID + ", " +
+                "Description = '" + description + "', " +
+                "Status = '" + status + "' " +
+                "WHERE ProjectID = " + projectID + ";");
+    }
+
+    public void editTask (int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
+    {
+        this.stmt.executeUpdate("UPDATE tasks SET " +
+                "Name = '" + name + "', " +
+                "DueDate = '" + dueDate + "', " +
+                "ProjectID = " + projectID + ", " +
+                "Employees = '" + employees + "', " +
+                "Description = '" + description + "', " +
+                "Size = " + size + ", " +
+                "Status = '" + status + "' " +
+                "WHERE TaskID = " + taskID + ";");
+    }
+
+    public void editWorkLog (int logID, String employeeID, String entryType, int taskID, String description) throws Exception
+    {
+        this.stmt.executeUpdate("UPDATE work log SET " +
+                "EmployeeID = " + employeeID + ", " +
+                "EntryType = '" + entryType + "', " +
+                "TaskID = " + taskID + ", " +
+                "Description = '" + description + "', " +
+                "WHERE LogID = " + logID + ";" );
+    }
+
+    //Get methods
     public Employee getEmployee(int employeeID) throws SQLException
     {
         Employee employee;
@@ -47,7 +122,8 @@ public class OdinServer
         return null;
     }
 
-    public List<Employee> getEmployees() throws SQLException {
+    public List<Employee> getEmployees() throws SQLException
+    {
         List<Employee> employees = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
         while(myRS.next()) employees.add(new Employee(myRS));
@@ -64,7 +140,8 @@ public class OdinServer
         return employees;
     }
 
-    public Employee getEmployee_Username(String username) throws SQLException {
+    public Employee getEmployee_Username(String username) throws SQLException
+    {
         Employee employee;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
         if(myRS.next())
@@ -98,10 +175,7 @@ public class OdinServer
         return null;
     }
 
-
-
     public List<Project> getProject_GroupID(int groupID) throws Exception
-
     {
         List<Project> projects = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
@@ -197,75 +271,5 @@ public class OdinServer
         while(myRS.next()) workLogs.add(new WorkLog(myRS));
         myRS.close();
         return workLogs;
-    }
-
-    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                        "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
-    }
-
-    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
-    }
-
-    public void addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
-            "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
-    }
-
-    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
-            "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
-    }
-
-    //Edit functions
-    public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
-    {
-        this.stmt.executeUpdate(  "UPDATE employees SET " +
-                "Name = '" + name + "', " +
-                "Position = '" + position + "', " +
-                "GroupID = " + groupID  + ", " +
-                "Username = '"  + username + "', " +
-                "Password = '" + password + "' " +
-                "WHERE EmployeeID = " + employeeID + ";");
-    }
-
-    public void editProject (int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
-    {
-        this.stmt.executeUpdate ( "UPDATE projects SET " +
-                "Name = '" + name + "', " +
-                "DueDate = " + dueDate + "', " +
-                "GroupID = " + groupID + ", " +
-                "ProjectLeadID = " + projectLeadID + ", " +
-                "Description = '" + description + "', " +
-                "Status = '" + status + "' " +
-                "WHERE ProjectID = " + projectID + ";");
-    }
-
-    public void editTask (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
-    {
-        this.stmt.executeUpdate("Update tasks SET " +
-                "Name = '" + name + "', " +
-                "Duedate = '" + dueDate + "', " +
-                "EmployeeID = " + employeeID + ", " +
-                "ProjectID = " + projectID + ", " +
-                "Description = '" + description + "', " +
-                "Size = " + size + ", " +
-                "WHERE TaskID = " + taskID + ";");
-    }
-
-    public void editWorkLog (int logID, String employeeID, String entryType, int taskID, String description) throws Exception
-    {
-        this.stmt.executeUpdate("UPDATE work log SET " +
-                "EmployeeID = " + employeeID + ", " +
-                "EntryType = '" + entryType + "', " +
-                "TaskID = " + taskID + ", " +
-                "Description = '" + description + "', " +
-                "WHERE LogID = " + logID + ";" );
     }
 }
