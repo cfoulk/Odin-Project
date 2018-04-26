@@ -132,15 +132,19 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
+    //Why is it like this?
     public boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status)
     {
         Task task;
-        List<Employee> emp;
+        List<Employee> emp = null;
         try
         {
-            emp = OS.getEmployees_GroupID(projectID);
+            //1,6,12,15 employeeID string
+            /*
+            for(each ID in employees) emp.add(getEmployee(employeeID));
+            */
             task = OS.getTask(taskID);
-            if (task != null && emp != null)
+            if (task != null && emp != null /*emp.count() == numberOfEmployeeIDs*/)
             {
                 OS.editTask(taskID,name,dueDate,projectID,employees,description,size, status);
                 return true;
