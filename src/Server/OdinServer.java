@@ -1,6 +1,5 @@
 package Server;
 
-//import sun.plugin2.message.Message;
 import sun.plugin2.message.Serializer;
 
 import java.io.BufferedReader;

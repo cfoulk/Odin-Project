@@ -2,7 +2,6 @@ package Model;
 
 import Server.*;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
-//import sun.plugin2.message.Message;
 
 import java.io.IOException;
 import java.sql.Date;
