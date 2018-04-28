@@ -1,5 +1,8 @@
 package Server;
 
+//import sun.plugin2.message.Message;
+import sun.plugin2.message.Serializer;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -286,5 +289,14 @@ public class OdinServer
         while(myRS.next()) workLogs.add(new WorkLog(myRS));
         myRS.close();
         return workLogs;
+    }
+
+    public List<Message> getMessages_EmployeeID(int employeeID) throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE employeeID = " + employeeID + ";");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
     }
 }

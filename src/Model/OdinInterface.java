@@ -5,6 +5,8 @@ import Server.Employee;
 import Server.Project;
 import Server.Task;
 import Server.WorkLog;
+import Server.Message;
+//import sun.plugin2.message.Message;
 
 import java.util.List;
 
@@ -43,6 +45,7 @@ public interface OdinInterface
     List<WorkLog> getWorkLogs();
     List<WorkLog> getWorkLogs_EmployeeID(int employeeID);
     List<WorkLog> getWorkLogs_TaskID(int taskID);
+    List<Message> getMessages_EmployeeID(int employeeID);
 
     //Filter sets
     Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID);

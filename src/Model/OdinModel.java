@@ -2,7 +2,7 @@ package Model;
 
 import Server.*;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
-import sun.plugin2.message.Message;
+//import sun.plugin2.message.Message;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -322,6 +322,14 @@ public class OdinModel implements OdinInterface
         try { workLogs = OS.getWorkLogs_TaskID(taskID); }
         catch (Exception e) { return null; }
         return workLogs;
+    }
+
+    public List<Message> getMessages_EmployeeID(int employeeID)
+    {
+        List<Message> messages;
+        try { messages = OS.getMessages_EmployeeID(employeeID); }
+        catch (Exception e) { return null; }
+        return messages;
     }
 
     //Filters
