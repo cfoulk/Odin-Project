@@ -299,4 +299,13 @@ public class OdinServer
         myRS.close();
         return messages;
     }
+
+    public List<Message> getMessages_SenderID(int senderID) throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE senderID = " + senderID + ";");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
+    }
 }
