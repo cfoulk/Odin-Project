@@ -254,7 +254,7 @@ public class OdinModel implements OdinInterface
     public List<Project> getProjects_Status(String status)
     {
         List<Project> projects;
-        try { projects = OS.getProjects(); } //place holder, need to implement correct method into Odinserver
+        try { projects = OS.getProjects_Status(status); } //place holder, need to implement correct method into Odinserver
         catch (Exception e) { return null; }
         return projects;
     }

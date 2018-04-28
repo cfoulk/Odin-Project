@@ -193,6 +193,15 @@ public class OdinServer
         return projects;
     }
 
+    public List<Project> getProjects_Status(String status) throws Exception
+    {
+        List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE status = " + status + ";");
+        while (myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
     public Task getTask(int taskID) throws Exception
     {
         Task task;
