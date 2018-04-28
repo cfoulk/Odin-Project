@@ -140,15 +140,6 @@ public class OdinServer
         return employees;
     }
 
-    public List<Employee> getEmployees_GroupID(int groupID) throws Exception
-    {
-        List<Employee> employees = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
-        while(myRS.next()) employees.add(new Employee(myRS));
-        myRS.close();
-        return employees;
-    }
-
     public Employee getEmployee_Username(String username) throws SQLException
     {
         Employee employee;
@@ -160,6 +151,15 @@ public class OdinServer
             return employee;
         }
         return null;
+    }
+
+    public List<Employee> getEmployees_GroupID(int groupID) throws Exception
+    {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
     }
 
     public List<Project> getProjects() throws Exception
