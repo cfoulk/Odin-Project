@@ -291,6 +291,15 @@ public class OdinServer
         return workLogs;
     }
 
+    public List<Message> getMessages() throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages;");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
+    }
+
     public List<Message> getMessages_EmployeeID(int employeeID) throws Exception
     {
         List<Message> messages = new ArrayList<>();
@@ -304,6 +313,15 @@ public class OdinServer
     {
         List<Message> messages = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE senderID = " + senderID + ";");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
+    }
+
+    public List<Message> getMessages_MessageID(int messageID) throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE messageID = " + messageID + ";");
         while(myRS.next()) messages.add(new Message(myRS));
         myRS.close();
         return messages;

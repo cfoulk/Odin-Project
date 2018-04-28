@@ -324,6 +324,13 @@ public class OdinModel implements OdinInterface
         return workLogs;
     }
 
+    public List<Message> getMessages()
+    {
+        List<Message> messages;
+        try { messages = OS.getMessages(); }
+        catch (Exception e) { return null; }
+        return messages;
+    }
     public List<Message> getMessages_EmployeeID(int employeeID)
     {
         List<Message> messages;
@@ -336,6 +343,14 @@ public class OdinModel implements OdinInterface
     {
         List<Message> messages;
         try { messages = OS.getMessages_SenderID(senderID); }
+        catch (Exception e) { return null; }
+        return messages;
+    }
+
+    public List<Message> getMessages_MessageID(int messageID)
+    {
+        List<Message> messages;
+        try { messages = OS.getMessages_MessageID(messageID); }
         catch (Exception e) { return null; }
         return messages;
     }
