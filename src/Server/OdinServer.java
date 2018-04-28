@@ -38,43 +38,6 @@ public class OdinServer
         return con;
     }
 
-    //Add methods
-    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
-    }
-
-    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
-    }
-
-    public void addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, Employees, Description, Size, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employees + ", '" + description + "', " + size + ", '" + status + "');");
-    }
-
-    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
-                "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
-    }
-
-    public void addMessage(String message, int messageID, String status, int employeeID, int senderID) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO messages (message, messageID, status, employeeID, senderID) " +
-                "VALUES (" + message + ", '" + messageID + "', " + status + ", '" + employeeID + ", '" + senderID + "');");
-    }
-
-    //deletes
-    public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
-    {
-        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID);
-    }
-
     //Edit methods
     public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
     {
@@ -122,8 +85,45 @@ public class OdinServer
                 "WHERE LogID = " + logID + ";" );
     }
 
-    //Get methods
-    public Employee getEmployee(int employeeID) throws SQLException
+    //Add methods
+    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
+                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
+    }
+
+    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
+    }
+
+    public void addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, Employees, Description, Size, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employees + ", '" + description + "', " + size + ", '" + status + "');");
+    }
+
+    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
+                "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
+    }
+
+    public void addMessage(String message, int messageID, String status, int employeeID, int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO messages (message, messageID, status, employeeID, senderID) " +
+                "VALUES (" + message + ", '" + messageID + "', " + status + ", '" + employeeID + ", '" + senderID + "');");
+    }
+
+    //deletes
+    public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID);
+    }
+
+    //Get Singles
+    public Employee getEmployee_EmployeeID(int employeeID) throws SQLException
     {
         Employee employee;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
@@ -134,15 +134,6 @@ public class OdinServer
             return employee;
         }
         return null;
-    }
-
-    public List<Employee> getEmployees() throws SQLException
-    {
-        List<Employee> employees = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
-        while(myRS.next()) employees.add(new Employee(myRS));
-        myRS.close();
-        return employees;
     }
 
     public Employee getEmployee_Username(String username) throws SQLException
@@ -156,6 +147,68 @@ public class OdinServer
             return employee;
         }
         return null;
+    }
+
+    public Project getProject_ProjectID(int projectID) throws Exception
+    {
+        Project project;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
+        if(myRS.next())
+        {
+            project = new Project(myRS);
+            myRS.close();
+            return project;
+        }
+        return null;
+    }
+
+    public Task getTask_TaskID(int taskID) throws Exception
+    {
+        Task task;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
+        if(myRS.next())
+        {
+            task = new Task(myRS);
+            myRS.close();
+            return task;
+        }
+        return null;
+    }
+
+    public WorkLog getWorkLog_LogID(int workLogID) throws Exception
+    {
+        WorkLog workLog;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
+        if(myRS.next())
+        {
+            workLog = new WorkLog(myRS);
+            myRS.close();
+            return workLog;
+        }
+        return null;
+    }
+
+    public Message getMessage_MessageID(int messageID) throws Exception
+    {
+        Message message;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE messageID = " + messageID + ";");
+        if(myRS.next())
+        {
+            message = new Message(myRS);
+            myRS.close();
+            return message;
+        }
+        return null;
+    }
+
+    //Get Sets
+    public List<Employee> getEmployees() throws SQLException
+    {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
     }
 
     public List<Employee> getEmployees_GroupID(int groupID) throws Exception
@@ -174,19 +227,6 @@ public class OdinServer
         while(myRS.next()) projects.add(new Project(myRS));
         myRS.close();
         return projects;
-    }
-
-    public Project getProject_ProjectID(int projectID) throws Exception
-    {
-        Project project;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
-        if(myRS.next())
-        {
-            project = new Project(myRS);
-            myRS.close();
-            return project;
-        }
-        return null;
     }
 
     public List<Project> getProject_GroupID(int groupID) throws Exception
@@ -216,19 +256,6 @@ public class OdinServer
         return projects;
     }
 
-    public Task getTask(int taskID) throws Exception
-    {
-        Task task;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
-        if(myRS.next())
-        {
-            task = new Task(myRS);
-            myRS.close();
-            return task;
-        }
-        return null;
-    }
-
     public List<Task> getTasks() throws Exception
     {
         List<Task> tasks = new ArrayList<>();
@@ -254,19 +281,6 @@ public class OdinServer
         while(myRS.next()) tasks.add(new Task(myRS));
         myRS.close();
         return tasks;
-    }
-
-    public WorkLog getWorkLog(int workLogID) throws Exception
-    {
-        WorkLog workLog;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
-        if(myRS.next())
-        {
-            workLog = new WorkLog(myRS);
-            myRS.close();
-            return workLog;
-        }
-        return null;
     }
 
     public List<WorkLog> getWorkLogs() throws Exception
@@ -321,18 +335,5 @@ public class OdinServer
         while(myRS.next()) messages.add(new Message(myRS));
         myRS.close();
         return messages;
-    }
-
-    public Message getMessages_MessageID(int messageID) throws Exception
-    {
-        Message message;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE messageID = " + messageID + ";");
-        if(myRS.next())
-        {
-            message = new Message(myRS);
-            myRS.close();
-            return message;
-        }
-        return null;
     }
 }

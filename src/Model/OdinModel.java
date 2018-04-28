@@ -1,7 +1,6 @@
 package Model;
 
 import Server.*;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -35,6 +34,82 @@ public class OdinModel implements OdinInterface
         return -2;
     }
 
+    //Edit methods
+    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password)
+    {
+        Employee emp;
+        try
+        {
+            emp = OS.getEmployee_EmployeeID(employeeID);
+            if(emp != null)
+            {
+                emp = OS.getEmployee_Username(username);
+                if(emp ==null ) {
+                    OS.editEmployee(employeeID, name, position, groupID, username, password);
+                    return true;
+                }
+            }
+        }
+        catch(Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
+    {
+        Project proj;
+        Employee lead;
+        try
+        {
+            lead = OS.getEmployee_EmployeeID(projectLeadID);
+            proj = OS.getProject_ProjectID(projectID);
+            if ( proj != null && lead != null && lead.position.compareTo("Project Lead") == 0)
+            {
+                OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace();}
+        return false;
+    }
+
+    //Why is it like this?
+    public boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status)
+    {
+        Task task;
+        List<Employee> emp = null;
+        try
+        {
+            //1,6,12,15 employeeID string
+            /*
+            for(each ID in employees) emp.add(getEmployee_EmployeeID(employeeID));
+            */
+            task = OS.getTask_TaskID(taskID);
+            if (task != null && emp != null /*emp.count() == numberOfEmployeeIDs*/)
+            {
+                OS.editTask(taskID,name,dueDate,projectID,employees,description,size, status);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
+        return false;
+    }
+
+    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
+    {
+        WorkLog log;
+        try
+        {
+            log = OS.getWorkLog_LogID(logID);
+            if (log != null)
+            {
+                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
+                return true;
+            }
+        }
+        catch (Exception e) {e.printStackTrace() ;}
+        return false;
+    }
+
     //Add methods
     public boolean addEmployee(String name, String position, int groupID, String username, String password)
     {
@@ -57,7 +132,7 @@ public class OdinModel implements OdinInterface
         Employee lead;
         try
         {
-            lead = OS.getEmployee(projectLeadID);
+            lead = OS.getEmployee_EmployeeID(projectLeadID);
             if(lead != null && lead.position.compareTo("Project Lead") == 0)
             {
                 OS.addProject(name, Date.valueOf(dueDate), groupID, projectLeadID, description, status);
@@ -86,7 +161,7 @@ public class OdinModel implements OdinInterface
         Employee emp;
         try
         {
-            emp = OS.getEmployee(employeeID);
+            emp = OS.getEmployee_EmployeeID(employeeID);
             if(emp != null) OS.addWorkLog(employeeID, entryType, taskID, description);
             return true;
         }
@@ -99,7 +174,7 @@ public class OdinModel implements OdinInterface
         Employee emp;
         try
         {
-            emp = OS.getEmployee(employeeID);
+            emp = OS.getEmployee_EmployeeID(employeeID);
             if (emp == null)
             {
                 OS.addMessage(message, messageID, status, employeeID, senderID);
@@ -110,88 +185,12 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    //Edit methods
-    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password)
-    {
-        Employee emp;
-        try
-        {
-            emp = OS.getEmployee(employeeID);
-            if(emp != null)
-            {
-                emp = OS.getEmployee_Username(username);
-                if(emp ==null ) {
-                    OS.editEmployee(employeeID, name, position, groupID, username, password);
-                    return true;
-                }
-            }
-        }
-        catch(Exception e) { e.printStackTrace(); }
-        return false;
-    }
-
-    public boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status)
-    {
-        Project proj;
-        Employee lead;
-        try
-        {
-            lead = OS.getEmployee(projectLeadID);
-            proj = OS.getProject_ProjectID(projectID);
-            if ( proj != null && lead != null && lead.position.compareTo("Project Lead") == 0)
-            {
-                OS.editProject(projectID,name,dueDate,groupID,projectLeadID,description,status);
-                return true;
-            }
-        }
-        catch (Exception e) {e.printStackTrace();}
-        return false;
-    }
-
-    //Why is it like this?
-    public boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status)
-    {
-        Task task;
-        List<Employee> emp = null;
-        try
-        {
-            //1,6,12,15 employeeID string
-            /*
-            for(each ID in employees) emp.add(getEmployee(employeeID));
-            */
-            task = OS.getTask(taskID);
-            if (task != null && emp != null /*emp.count() == numberOfEmployeeIDs*/)
-            {
-                OS.editTask(taskID,name,dueDate,projectID,employees,description,size, status);
-                return true;
-            }
-        }
-        catch (Exception e) {e.printStackTrace() ;}
-        return false;
-    }
-
-    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
-    {
-        WorkLog log;
-        try
-        {
-            log = OS.getWorkLog(logID);
-            if (log != null)
-            {
-                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
-                return true;
-            }
-        }
-        catch (Exception e) {e.printStackTrace() ;}
-        return false;
-    }
-
     //deletes
     public boolean deleteMessage(int messageID) {
         Message message;
         try
         {
-            message = OS.getMessages_MessageID(messageID);
+            message = OS.getMessage_MessageID(messageID);
             if(message != null)
             {
                 OS.deleteMessage(messageID);
@@ -202,11 +201,11 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    //Gets
+    //Get Singles
     public Employee getEmployee_EmployeeID(int employeeID)
     {
         Employee employee;
-        try { employee = OS.getEmployee(employeeID); }
+        try { employee = OS.getEmployee_EmployeeID(employeeID); }
         catch (Exception e) { return null; }
         return employee;
     }
@@ -230,7 +229,7 @@ public class OdinModel implements OdinInterface
     public Task getTask_TaskID(int taskID)
     {
         Task task;
-        try { task = OS.getTask(taskID); }
+        try { task = OS.getTask_TaskID(taskID); }
         catch (Exception e) { return null; }
         return task;
     }
@@ -238,11 +237,20 @@ public class OdinModel implements OdinInterface
     public WorkLog getWorkLog_LogID(int logID)
     {
         WorkLog workLog;
-        try { workLog = OS.getWorkLog(logID); }
+        try { workLog = OS.getWorkLog_LogID(logID); }
         catch (Exception e) { return null; }
         return workLog;
     }
 
+    public Message getMessage_MessageID(int messageID)
+    {
+        Message message;
+        try { message = OS.getMessage_MessageID(messageID); }
+        catch (Exception e) { return null; }
+        return message;
+    }
+
+    //Get Sets
     public List<Employee> getEmployees()
     {
         List<Employee> employees;
@@ -360,14 +368,6 @@ public class OdinModel implements OdinInterface
         try { messages = OS.getMessages_SenderID(senderID); }
         catch (Exception e) { return null; }
         return messages;
-    }
-
-    public Message getMessages_MessageID(int messageID)
-    {
-        Message message;
-        try { message = OS.getMessages_MessageID(messageID); }
-        catch (Exception e) { return null; }
-        return message;
     }
 
     //Filters

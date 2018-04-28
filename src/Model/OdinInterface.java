@@ -33,7 +33,7 @@ public interface OdinInterface
     Project getProject_ProjectID(int projectID);
     Task getTask_TaskID(int taskID);
     WorkLog getWorkLog_LogID(int logID);
-    Message getMessages_MessageID(int messageID);
+    Message getMessage_MessageID(int messageID);
 
     //Get Sets
     List<Employee> getEmployees();
