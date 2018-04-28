@@ -501,6 +501,22 @@ public class OdinModel implements OdinInterface
         return workLogs;
     }
 
+    public List<Message> filterMessages_EmployeeID(List<Message> list, int employeeID)
+    {
+        List<Message> messages = new ArrayList<>();
+        for(Message message : list)
+        { if(message.employeeID == employeeID) messages.add(message); }
+        return messages;
+    }
+
+    public List<Message> filterMessages_SenderID(List<Message> list, int senderID)
+    {
+        List<Message> messages = new ArrayList<>();
+        for(Message message : list)
+        { if(message.senderID == senderID) messages.add(message); }
+        return messages;
+    }
+
     public void closeConnection()
     {
         try {

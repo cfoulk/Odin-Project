@@ -70,4 +70,7 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
+    List<Message> filterMessages_EmployeeID(List<Message> list, int EmployeeID);
+    List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
+
 }
