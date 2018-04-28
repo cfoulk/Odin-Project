@@ -61,6 +61,12 @@ public class OdinServer
                 "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
     }
 
+    public void addMessage(String message, int messageID, String status, int employeeID, int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO messages (message, messageID, status, employeeID, senderID) " +
+                "VALUES (" + message + ", '" + messageID + "', " + status + ", '" + employeeID + ", '" + senderID + "');");
+    }
+
     //Edit methods
     public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
     {

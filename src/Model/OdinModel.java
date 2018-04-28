@@ -2,6 +2,7 @@ package Model;
 
 import Server.*;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
+import sun.plugin2.message.Message;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -91,6 +92,22 @@ public class OdinModel implements OdinInterface
             return true;
         }
         catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean addMessage(String message, int messageID, String status, int employeeID, int senderID)
+    {
+        Employee emp;
+        try
+        {
+            emp = OS.getEmployee(employeeID);
+            if (emp == null)
+            {
+                OS.addMessage(message, messageID, status, employeeID, senderID);
+                return true;
+            }
+        }
+        catch(Exception e) { e.printStackTrace(); }
         return false;
     }
 
@@ -254,7 +271,7 @@ public class OdinModel implements OdinInterface
     public List<Project> getProjects_Status(String status)
     {
         List<Project> projects;
-        try { projects = OS.getProjects_Status(status); } //place holder, need to implement correct method into Odinserver
+        try { projects = OS.getProjects_Status(status); }
         catch (Exception e) { return null; }
         return projects;
     }
