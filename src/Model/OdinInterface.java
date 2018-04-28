@@ -24,12 +24,16 @@ public interface OdinInterface
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
     boolean addMessage(String message, int messageID, String status, int employeeID, int senderID);
 
+    //deletes
+    boolean deleteMessage(int messageID); //
+
     //Get Singles
     Employee getEmployee_EmployeeID(int employeeID);
     Employee getEmployee_Username(String username);
     Project getProject_ProjectID(int projectID);
     Task getTask_TaskID(int taskID);
     WorkLog getWorkLog_LogID(int logID);
+    Message getMessages_MessageID(int messageID);
 
     //Get Sets
     List<Employee> getEmployees();
@@ -47,7 +51,6 @@ public interface OdinInterface
     List<Message> getMessages();
     List<Message> getMessages_EmployeeID(int employeeID);
     List<Message> getMessages_SenderID(int senderID);
-    List<Message> getMessages_MessageID(int messageID);
 
     //Filter sets
     Employee filterEmployees_EmployeeID(List<Employee> list, int employeeID);

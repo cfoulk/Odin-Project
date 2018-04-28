@@ -69,6 +69,12 @@ public class OdinServer
                 "VALUES (" + message + ", '" + messageID + "', " + status + ", '" + employeeID + ", '" + senderID + "');");
     }
 
+    //deletes
+    public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID);
+    }
+
     //Edit methods
     public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
     {
@@ -317,12 +323,16 @@ public class OdinServer
         return messages;
     }
 
-    public List<Message> getMessages_MessageID(int messageID) throws Exception
+    public Message getMessages_MessageID(int messageID) throws Exception
     {
-        List<Message> messages = new ArrayList<>();
+        Message message;
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE messageID = " + messageID + ";");
-        while(myRS.next()) messages.add(new Message(myRS));
-        myRS.close();
-        return messages;
+        if(myRS.next())
+        {
+            message = new Message(myRS);
+            myRS.close();
+            return message;
+        }
+        return null;
     }
 }
