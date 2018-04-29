@@ -108,8 +108,8 @@ public class loginController {
 
     public void initialize() throws Exception {
         //Throws Exception
-        SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin01");
-        connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.connection-good");
+        SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
+        connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Connection-Good");
         connection.setSize(35);
         connection.setFill(Color.valueOf("#9E9E9E"));
         connection.setStyle("-fx-cursor: hand");
