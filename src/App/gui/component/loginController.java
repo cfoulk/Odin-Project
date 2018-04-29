@@ -47,6 +47,7 @@ public class loginController {
 
     @FXML
     void login(ActionEvent event) {
+//        switchToScene(event);
         OdinModel a = null;
         try {
 
@@ -99,6 +100,7 @@ public class loginController {
         try {
             Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
             window.setScene(new Scene(dashboard));
         } catch (IOException e) {
             e.printStackTrace();
