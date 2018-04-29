@@ -1,9 +1,24 @@
 //text field line
 .input-line{
-    -fx-pref-height:0;
+    -fx-pref-height: 0;
 }
 
 //text focused field line
 .input-focused-line{
-    -fx-pref-height:0;
+    -fx-pref-height: 0;
+}
+
+#loginfieldstandard{
+    -fx-background-color: #FFFFFF;
+}
+
+#loginfielderror{
+    -fx-background-color: #FFCDD2;
+}
+
+#account {
+    -fx-background-color: #FFCDD2;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
 }
