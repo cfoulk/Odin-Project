@@ -201,6 +201,36 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
+    public boolean deleteMessages_EmployeeID(int employeeID) {
+        List<Message> message;
+        try
+        {
+            message = OS.getMessages_EmployeeID(employeeID);
+            if(message != null)
+            {
+                OS.deleteMessages_EmployeeID(employeeID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean deleteMessages_SenderID(int senderID) {
+        List<Message> message;
+        try
+        {
+            message = OS.getMessages_SenderID(senderID);
+            if(message != null)
+            {
+                OS.deleteMessages_SenderID(senderID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
     //Get Singles
     public Employee getEmployee_EmployeeID(int employeeID)
     {
@@ -531,36 +561,6 @@ public class OdinModel implements OdinInterface
         for(Message message : list)
         { if(message.senderID == senderID) messages.add(message); }
         return messages;
-    }
-
-    public boolean deleteMessages_EmployeeID(int employeeID) {
-        List<Message> message;
-        try
-        {
-            message = OS.getMessages_EmployeeID(employeeID);
-            if(message != null)
-            {
-                OS.deleteMessages_EmployeeID(employeeID);
-                return true;
-            }
-        }
-        catch (Exception e){ e.printStackTrace(); }
-        return false;
-    }
-
-    public boolean deleteMessages_SenderID(int senderID) {
-        List<Message> message;
-        try
-        {
-            message = OS.getMessages_SenderID(senderID);
-            if(message != null)
-            {
-                OS.deleteMessages_SenderID(senderID);
-                return true;
-            }
-        }
-        catch (Exception e){ e.printStackTrace(); }
-        return false;
     }
 
     public void closeConnection()
