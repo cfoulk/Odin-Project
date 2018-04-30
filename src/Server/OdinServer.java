@@ -117,9 +117,9 @@ public class OdinServer
     }
 
     //deletes
-    public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
+    public void deleteMessage_MessageID(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
     {
-        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID);
+        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + "');");
     }
 
     //Get Singles
@@ -199,6 +199,16 @@ public class OdinServer
             return message;
         }
         return null;
+    }
+
+    public void deleteMessages_EmployeeID(int employeeID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE employeeID = " + employeeID + "');");
+    }
+
+    public void deleteMessages_SenderID(int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE senderID = " + senderID + "');");
     }
 
     //Get Sets

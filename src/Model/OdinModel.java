@@ -186,14 +186,14 @@ public class OdinModel implements OdinInterface
     }
 
     //deletes
-    public boolean deleteMessage(int messageID) {
+    public boolean deleteMessage_MessageID(int messageID) {
         Message message;
         try
         {
             message = OS.getMessage_MessageID(messageID);
             if(message != null)
             {
-                OS.deleteMessage(messageID);
+                OS.deleteMessage_MessageID(messageID);
                 return true;
             }
         }
@@ -354,6 +354,7 @@ public class OdinModel implements OdinInterface
         catch (Exception e) { return null; }
         return messages;
     }
+
     public List<Message> getMessages_EmployeeID(int employeeID)
     {
         List<Message> messages;
@@ -530,6 +531,36 @@ public class OdinModel implements OdinInterface
         for(Message message : list)
         { if(message.senderID == senderID) messages.add(message); }
         return messages;
+    }
+
+    public boolean deleteMessages_EmployeeID(int employeeID) {
+        List<Message> message;
+        try
+        {
+            message = OS.getMessages_EmployeeID(employeeID);
+            if(message != null)
+            {
+                OS.deleteMessages_EmployeeID(employeeID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean deleteMessages_SenderID(int senderID) {
+        List<Message> message;
+        try
+        {
+            message = OS.getMessages_SenderID(senderID);
+            if(message != null)
+            {
+                OS.deleteMessages_SenderID(senderID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
     }
 
     public void closeConnection()
