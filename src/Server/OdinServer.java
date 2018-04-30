@@ -117,9 +117,19 @@ public class OdinServer
     }
 
     //Deletes
-    public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
+    public void deleteMessage_MessageID(int messageID) throws Exception
     {
         this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");
+    }
+
+    public void deleteMessages_EmployeeID(int employeeID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE employeeID = " + employeeID + ";");
+    }
+
+    public void deleteMessages_SenderID(int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE senderID = " + senderID + ";");
     }
 
     //Get Singles
