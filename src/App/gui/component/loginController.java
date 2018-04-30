@@ -103,7 +103,6 @@ public class loginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void initialize() throws Exception {
