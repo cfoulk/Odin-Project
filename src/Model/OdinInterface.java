@@ -6,7 +6,6 @@ import Server.Project;
 import Server.Task;
 import Server.WorkLog;
 import Server.Message;
-//import sun.plugin2.message.Message;
 
 import java.util.List;
 
@@ -25,12 +24,16 @@ public interface OdinInterface
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
     boolean addMessage(String message, int messageID, String status, int employeeID, int senderID);
 
+    //deletes
+    boolean deleteMessage(int messageID); //
+
     //Get Singles
     Employee getEmployee_EmployeeID(int employeeID);
     Employee getEmployee_Username(String username);
     Project getProject_ProjectID(int projectID);
     Task getTask_TaskID(int taskID);
     WorkLog getWorkLog_LogID(int logID);
+    Message getMessage_MessageID(int messageID);
 
     //Get Sets
     List<Employee> getEmployees();
@@ -45,6 +48,7 @@ public interface OdinInterface
     List<WorkLog> getWorkLogs();
     List<WorkLog> getWorkLogs_EmployeeID(int employeeID);
     List<WorkLog> getWorkLogs_TaskID(int taskID);
+    List<Message> getMessages();
     List<Message> getMessages_EmployeeID(int employeeID);
     List<Message> getMessages_SenderID(int senderID);
 
@@ -68,4 +72,7 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
+    List<Message> filterMessages_EmployeeID(List<Message> list, int EmployeeID);
+    List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
+
 }

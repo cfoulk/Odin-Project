@@ -47,6 +47,7 @@ public class loginController {
 
     @FXML
     void login(ActionEvent event) {
+//        switchToScene(event);
         OdinModel a = null;
         try {
 
@@ -99,6 +100,7 @@ public class loginController {
         try {
             Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
             window.setScene(new Scene(dashboard));
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,8 +109,8 @@ public class loginController {
 
     public void initialize() throws Exception {
         //Throws Exception
-        SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin01");
-        connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.connection-good");
+        SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
+        connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Connection-Good");
         connection.setSize(35);
         connection.setFill(Color.valueOf("#9E9E9E"));
         connection.setStyle("-fx-cursor: hand");

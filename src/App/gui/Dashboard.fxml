@@ -60,7 +60,7 @@
          </children></AnchorPane>
       <ScrollPane fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0">
         <content>
-          <AnchorPane prefHeight="422.0" prefWidth="585.0" style="-fx-background-color: #254d87;">
+          <AnchorPane prefHeight="422.0" prefWidth="585.0" style="-fx-background-color: #2b5797;">
                <children>
                   <VBox prefHeight="283.0" prefWidth="526.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
                      <children>
