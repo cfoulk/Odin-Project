@@ -116,10 +116,10 @@ public class OdinServer
                 "VALUES (" + message + ", '" + messageID + "', " + status + ", '" + employeeID + ", '" + senderID + "');");
     }
 
-    //deletes
+    //Deletes
     public void deleteMessage(int messageID) throws Exception //don't know if this is correct, would be great if someone critiqued it
     {
-        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID);
+        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");
     }
 
     //Get Singles
