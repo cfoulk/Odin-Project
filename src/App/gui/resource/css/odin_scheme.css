@@ -22,20 +22,22 @@
 }
 
 .scroll-pane{
-    -fx-background-color: #254d87
+    -fx-background-color: #FFFFFF
 }
 
 .split-pane-divider {
   -fx-padding: 2 ;
 }
 
-.scroll-bar:vertical{
-    -fx-background-color: #254d87;
+.scroll-bar{
+    -fx-background-color: white;
     -fx-padding: 3;
 }
 
 .thumb{
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 0;
+    -fx-background-insets: 2;
 }
 
 #loginfieldstandard{

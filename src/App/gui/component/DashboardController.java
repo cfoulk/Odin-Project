@@ -7,10 +7,13 @@ import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import javax.tools.Tool;
 
 public class DashboardController {
 
@@ -26,9 +29,9 @@ public class DashboardController {
     public double heightHeader;
 
     public void initialize() throws Exception {
-        UserBar.getChildren().add(createIconButton("Message"));
-        UserBar.getChildren().add(createIconButton("Gear"));
-        UserBar.getChildren().add(createIconButton("Exit"));
+        UserBar.getChildren().add(createIconButton("Message", "Messenger"));
+        UserBar.getChildren().add(createIconButton("Gear", "Settings"));
+        UserBar.getChildren().add(createIconButton("Exit", "Logout"));
 
 
 
@@ -44,8 +47,7 @@ public class DashboardController {
 
     }
 
-    private JFXRippler createIconButton(String iconName) throws Exception {
-
+    private JFXRippler createIconButton(String iconName, String message) throws Exception {
 
         SVGGlyph glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
         StackPane pane = new StackPane();
@@ -59,6 +61,13 @@ public class DashboardController {
         rippler.getRipplerRadius();
         rippler.getStyleClass().add("icon-rippler");
 //        rippler.setRipplerFill(Color.valueOf("#254d87"));
+
+        if(message != null || message != "") {
+            Tooltip tooltip = new Tooltip(message);
+            Tooltip.install(rippler,tooltip);
+        }
+
+
 
         return rippler;
     }
