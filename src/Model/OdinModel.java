@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class OdinModel implements OdinInterface
 {
@@ -14,7 +16,7 @@ public class OdinModel implements OdinInterface
 
     public OdinModel() throws IOException, SQLException
     {
-        OS = new OdinServer();
+        //OS = new OdinServer();
     }
 
     //Returns the employee's ID number on success.
@@ -44,7 +46,8 @@ public class OdinModel implements OdinInterface
             if(emp != null)
             {
                 emp = OS.getEmployee_Username(username);
-                if(emp ==null ) {
+                if(emp == null )
+                {
                     OS.editEmployee(employeeID, name, position, groupID, username, password);
                     return true;
                 }
@@ -386,8 +389,7 @@ public class OdinModel implements OdinInterface
     }
 
     public List<Message> getMessages_EmployeeID(int employeeID)
-    {
-        List<Message> messages;
+    { List<Message> messages;
         try { messages = OS.getMessages_EmployeeID(employeeID); }
         catch (Exception e) { return null; }
         return messages;
@@ -561,6 +563,18 @@ public class OdinModel implements OdinInterface
         for(Message message : list)
         { if(message.senderID == senderID) messages.add(message); }
         return messages;
+    }
+
+    public String sortEmployeeIDs(String employees)
+    {
+        List<Integer> list = new ArrayList<>();
+        StringTokenizer stk = new StringTokenizer(employees, ",");
+        String hold = "";
+        while(stk.hasMoreTokens()) list.add(Integer.valueOf(stk.nextToken()));
+        Collections.sort(list);
+        hold += list.remove(0);
+        while(!list.isEmpty()) hold += "," + list.remove(0);
+        return hold;
     }
 
     public void closeConnection()
