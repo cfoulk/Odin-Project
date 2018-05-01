@@ -1,9 +1,58 @@
 //text field line
 .input-line{
-    -fx-pref-height:0;
+    -fx-pref-height: 0;
 }
 
 //text focused field line
 .input-focused-line{
-    -fx-pref-height:0;
+    -fx-pref-height: 0;
+}
+
+.icon-rippler{
+   -jfx-mask-type: CIRCLE;
+   -jfx-rippler-fill: #FFFFFF;
+   -fx-cursor: hand;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: #254d87;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: #254d87;
+}
+
+.scroll-pane{
+    -fx-background-color: #FFFFFF
+}
+
+.split-pane-divider {
+  -fx-padding: 2 ;
+}
+
+.scroll-bar{
+    -fx-background-color: white;
+    -fx-padding: 3;
+}
+
+.thumb{
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 0;
+    -fx-background-insets: 2;
+}
+
+#loginfieldstandard{
+    -fx-background-color: #FFFFFF;
+}
+
+#loginfielderror{
+    -fx-background-color: #FFCDD2;
+}
+
+
+
+#account {
+    -fx-background-color: #FFCDD2;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
 }

@@ -4,11 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 public class OdinServer
@@ -17,13 +14,15 @@ public class OdinServer
     public Connection con;
     public Statement stmt;
 
-    public OdinServer() throws IOException, SQLException {
+    public OdinServer() throws IOException, SQLException
+    {
         this.con = connect();
         this.stmt = con.createStatement();
 
     }
 
-    public Connection connect() throws SQLException, IOException {
+    public Connection connect() throws SQLException, IOException
+    {
         StringTokenizer stk;
         Connection con;
         BufferedReader reader;
@@ -34,188 +33,7 @@ public class OdinServer
         return con;
     }
 
-    public List<Employee> getEmployees() throws SQLException {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
-        List<Employee> employees = new ArrayList<>();
-        while(myRS.next()) employees.add(new Employee(myRS));
-        myRS.close();
-        return employees;
-    }
-
-    public List<Employee> getEmployees(int groupID) throws Exception
-    {
-        List<Employee> ret = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
-        while(myRS.next()) ret.add(new Employee(myRS));
-        myRS.close();
-        return ret;
-    }
-
-    public Employee getEmployee(int employeeID) throws SQLException
-    {
-        Employee ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
-        if(myRS.next())
-        {
-            ret = new Employee(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public Employee getEmployee(String username) throws SQLException {
-        Employee ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
-        if(myRS.next())
-        {
-            ret = new Employee(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public List<Project> getProjects() throws Exception
-    {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
-        List<Project> projects = new ArrayList<>();
-        while(myRS.next()) projects.add(new Project(myRS));
-        myRS.close();
-        return projects;
-    }
-
-    public Project getProject_ProjectID(int projectID) throws Exception
-    {
-        Project ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
-        if(myRS.next())
-        {
-            ret = new Project(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-
-
-    public List<Project> getProject_GroupID(int groupID) throws Exception
-
-    {
-        List<Project> ret = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
-        if(myRS.next())
-        {
-            while(myRS.next()) ret.add(new Project(myRS));
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public List<Project> getProject_LeadID(int projectLeadID) throws Exception
-    {
-        List<Project> ret = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
-        if(myRS.next())
-        {
-            while(myRS.next())ret.add(new Project(myRS));
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public List<Task> getTasks() throws Exception
-    {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks;");
-        List<Task> tasks = new ArrayList<>();
-        while(myRS.next()) tasks.add(new Task(myRS));
-        myRS.close();
-        return tasks;
-    }
-
-    public List<Task> getTasks(int projectID) throws Exception
-    {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
-        List<Task> tasks = new ArrayList<>();
-        while(myRS.next()) tasks.add(new Task(myRS));
-        myRS.close();
-        return tasks;
-    }
-
-    public Task getTask(int taskID) throws Exception
-    {
-        Task ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
-        if(myRS.next())
-        {
-            ret = new Task(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public List<WorkLog> getWorkLogs() throws Exception
-    {
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs;");
-        List<WorkLog> workLogs = new ArrayList<>();
-        while(myRS.next()) workLogs.add(new WorkLog(myRS));
-        myRS.close();
-        return workLogs;
-    }
-
-    public List<WorkLog> getWorkLogs(int employeeID) throws Exception
-    {
-        ResultSet myRS =
-                this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
-        List<WorkLog> workLogs = new ArrayList<>();
-        while(myRS.next()) workLogs.add(new WorkLog(myRS));
-        myRS.close();
-        return workLogs;
-    }
-
-    public WorkLog getWorkLog(int workLogID) throws Exception
-    {
-        WorkLog ret;
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
-        if(myRS.next())
-        {
-            ret = new WorkLog(myRS);
-            myRS.close();
-            return ret;
-        }
-        return null;
-    }
-
-    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                        "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
-    }
-
-    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
-    }
-
-    public void addTask(String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, EmployeeID, Description, Size) " +
-            "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employeeID + ", '" + description + "', '" + size + "');");
-    }
-
-    public void addWorkLog(String employeeID, String entryType, int taskID, String description) throws Exception
-    {
-        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
-            "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
-    }
-
-
-    //Edit functions
+    //Edit methods
     public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
     {
         this.stmt.executeUpdate(  "UPDATE employees SET " +
@@ -239,15 +57,16 @@ public class OdinServer
                 "WHERE ProjectID = " + projectID + ";");
     }
 
-    public void editTask (int taskID, String name, String dueDate, int employeeID, int projectID, String description, int size) throws Exception
+    public void editTask (int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
     {
-        this.stmt.executeUpdate("Update tasks SET " +
+        this.stmt.executeUpdate("UPDATE tasks SET " +
                 "Name = '" + name + "', " +
-                "Duedate = '" + dueDate + "', " +
-                "EmployeeID = " + employeeID + ", " +
+                "DueDate = '" + dueDate + "', " +
                 "ProjectID = " + projectID + ", " +
+                "Employees = '" + employees + "', " +
                 "Description = '" + description + "', " +
                 "Size = " + size + ", " +
+                "Status = '" + status + "' " +
                 "WHERE TaskID = " + taskID + ";");
     }
 
@@ -259,5 +78,267 @@ public class OdinServer
                 "TaskID = " + taskID + ", " +
                 "Description = '" + description + "', " +
                 "WHERE LogID = " + logID + ";" );
+    }
+
+    //Add methods
+    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
+                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
+    }
+
+    public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO projects (Name, DueDate, GroupID, ProjectLeadID, Description, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + groupID + ", " + projectLeadID + ", '" + description + "', '" + status + "');");
+    }
+
+    public void addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, Employees, Description, Size, Status) " +
+                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employees + ", '" + description + "', " + size + ", '" + status + "');");
+    }
+
+    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
+                "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
+    }
+
+    public void addMessage(String message, int employeeID, int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO messages (message, status, employeeID, senderID) " +
+                "VALUES ('" + message + "', " + employeeID + ", " + senderID + ");");
+    }
+
+    //Deletes
+    public void deleteMessage_MessageID(int messageID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");
+    }
+
+    public void deleteMessages_EmployeeID(int employeeID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE employeeID = " + employeeID + ";");
+    }
+
+    public void deleteMessages_SenderID(int senderID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM messages WHERE senderID = " + senderID + ";");
+    }
+
+    //Get Singles
+    public Employee getEmployee_EmployeeID(int employeeID) throws SQLException
+    {
+        Employee employee;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE EmployeeID = " + employeeID + ";");
+        if(myRS.next())
+        {
+            employee = new Employee(myRS);
+            myRS.close();
+            return employee;
+        }
+        return null;
+    }
+
+    public Employee getEmployee_Username(String username) throws SQLException
+    {
+        Employee employee;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE Username = '" + username + "';");
+        if(myRS.next())
+        {
+            employee = new Employee(myRS);
+            myRS.close();
+            return employee;
+        }
+        return null;
+    }
+
+    public Project getProject_ProjectID(int projectID) throws Exception
+    {
+        Project project;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectID = " + projectID + ";");
+        if(myRS.next())
+        {
+            project = new Project(myRS);
+            myRS.close();
+            return project;
+        }
+        return null;
+    }
+
+    public Task getTask_TaskID(int taskID) throws Exception
+    {
+        Task task;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE TaskID = " + taskID + ";");
+        if(myRS.next())
+        {
+            task = new Task(myRS);
+            myRS.close();
+            return task;
+        }
+        return null;
+    }
+
+    public WorkLog getWorkLog_LogID(int workLogID) throws Exception
+    {
+        WorkLog workLog;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs WHERE LogID = " + workLogID + ";");
+        if(myRS.next())
+        {
+            workLog = new WorkLog(myRS);
+            myRS.close();
+            return workLog;
+        }
+        return null;
+    }
+
+    public Message getMessage_MessageID(int messageID) throws Exception
+    {
+        Message message;
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE messageID = " + messageID + ";");
+        if(myRS.next())
+        {
+            message = new Message(myRS);
+            myRS.close();
+            return message;
+        }
+        return null;
+    }
+
+    //Get Sets
+    public List<Employee> getEmployees() throws SQLException
+    {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees;");
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
+    }
+
+    public List<Employee> getEmployees_GroupID(int groupID) throws Exception
+    {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
+    }
+
+    public List<Project> getProjects() throws Exception
+    {
+        List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects;");
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    public List<Project> getProject_GroupID(int groupID) throws Exception
+    {
+        List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE GroupID = " + groupID + ";");
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    public List<Project> getProject_ProjectLeadID(int projectLeadID) throws Exception
+    {
+        List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
+        while(myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    public List<Project> getProjects_Status(String status) throws Exception
+    {
+        List<Project> projects = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE status = " + status + ";");
+        while (myRS.next()) projects.add(new Project(myRS));
+        myRS.close();
+        return projects;
+    }
+
+    public List<Task> getTasks() throws Exception
+    {
+        List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks;");
+        while(myRS.next()) tasks.add(new Task(myRS));
+        myRS.close();
+        return tasks;
+    }
+
+    public List<Task> getTasks_ProjectID(int projectID) throws Exception
+    {
+        List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE ProjectID = " + projectID + ";");
+        while(myRS.next()) tasks.add(new Task(myRS));
+        myRS.close();
+        return tasks;
+    }
+
+    public List<Task> getTasks_EmployeeID(int employeeID) throws Exception
+    {
+        List<Task> tasks = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM tasks WHERE EmployeeID = " + employeeID + ";");
+        while(myRS.next()) tasks.add(new Task(myRS));
+        myRS.close();
+        return tasks;
+    }
+
+    public List<WorkLog> getWorkLogs() throws Exception
+    {
+        List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklogs;");
+        while(myRS.next()) workLogs.add(new WorkLog(myRS));
+        myRS.close();
+        return workLogs;
+    }
+
+    public List<WorkLog> getWorkLogs_EmployeeID(int employeeID) throws Exception
+    {
+        List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklog WHERE EmployeeID = " + employeeID + ";");
+        while(myRS.next()) workLogs.add(new WorkLog(myRS));
+        myRS.close();
+        return workLogs;
+    }
+
+    public List<WorkLog> getWorkLogs_TaskID(int taskID) throws Exception
+    {
+        List<WorkLog> workLogs = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM worklog WHERE TaskID = " + taskID + ";");
+        while(myRS.next()) workLogs.add(new WorkLog(myRS));
+        myRS.close();
+        return workLogs;
+    }
+
+    public List<Message> getMessages() throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages;");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
+    }
+
+    public List<Message> getMessages_EmployeeID(int employeeID) throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE employeeID = " + employeeID + ";");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
+    }
+
+    public List<Message> getMessages_SenderID(int senderID) throws Exception
+    {
+        List<Message> messages = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE senderID = " + senderID + ";");
+        while(myRS.next()) messages.add(new Message(myRS));
+        myRS.close();
+        return messages;
     }
 }
