@@ -114,13 +114,13 @@ public class OdinServer
         return null;
     }
 
-    public Project getProject_LeadID(int projectLeadID) throws Exception
+    public List<Project> getProject_LeadID(int projectLeadID) throws Exception
     {
-        Project ret;
+        List<Project> ret = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM projects WHERE ProjectLeadID = " + projectLeadID + ";");
         if(myRS.next())
         {
-            ret = new Project(myRS);
+            while(myRS.next())ret.add(new Project(myRS));
             myRS.close();
             return ret;
         }
