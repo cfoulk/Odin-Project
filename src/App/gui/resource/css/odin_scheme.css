@@ -8,6 +8,12 @@
     -fx-pref-height: 0;
 }
 
+.icon-rippler{
+   -jfx-mask-type: CIRCLE;
+   -jfx-rippler-fill: #FFFFFF;
+   -fx-cursor: hand;
+}
+
 .split-pane:horizontal > .split-pane-divider {
    -fx-background-color: #254d87;
 }

@@ -47,41 +47,41 @@ public class loginController {
 
     @FXML
     void login(ActionEvent event) {
-//        switchToScene(event);
-        OdinModel a = null;
-        try {
-
-            a = new OdinModel();
-
-            int userID = a.getUserID(usernameField.getText(), passwordField.getText());
-            switch (userID) {
-                case -2:
-                    System.out.println("Wrong Password");
-                    usernameField.setStyle("-fx-background-color: #FFFFFF");
-                    passwordField.setStyle("-fx-background-color: #FFCDD2");
-                    break;
-                case -1:
-                    System.out.println("Wrong User");
-                    usernameField.setStyle("-fx-background-color: #FFCDD2");
-                    passwordField.setStyle("-fx-background-color: #FFCDD2");
-                    break;
-                default:
-                    System.out.println("Success");
-                    switchToScene(event);
-                    break;
-            }
-            connection.setStyle("-fx-background-color: #00E676");
-        }
-        //No file
-        catch (IOException e) {
-            connection.setStyle("-fx-background-color: #D32F2F");
-            e.printStackTrace();
-        }
-        //No connection
-        catch (SQLException e) {
-            connection.setStyle("-fx-background-color: #D32F2F");
-            e.printStackTrace();
-        }
+        switchToScene(event);
+//        OdinModel a = null;
+//        try {
+//
+//            a = new OdinModel();
+//
+//            int userID = a.getUserID(usernameField.getText(), passwordField.getText());
+//            switch (userID) {
+//                case -2:
+//                    System.out.println("Wrong Password");
+//                    usernameField.setStyle("-fx-background-color: #FFFFFF");
+//                    passwordField.setStyle("-fx-background-color: #FFCDD2");
+//                    break;
+//                case -1:
+//                    System.out.println("Wrong User");
+//                    usernameField.setStyle("-fx-background-color: #FFCDD2");
+//                    passwordField.setStyle("-fx-background-color: #FFCDD2");
+//                    break;
+//                default:
+//                    System.out.println("Success");
+//                    switchToScene(event);
+//                    break;
+//            }
+//            connection.setStyle("-fx-background-color: #00E676");
+//        }
+//        //No file
+//        catch (IOException e) {
+//            connection.setStyle("-fx-background-color: #D32F2F");
+//            e.printStackTrace();
+//        }
+//        //No connection
+//        catch (SQLException e) {
+//            connection.setStyle("-fx-background-color: #D32F2F");
+//            e.printStackTrace();
+//        }
     }
 
     void checkConnection(ActionEvent event) {

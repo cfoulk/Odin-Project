@@ -16,7 +16,7 @@ public class OdinModel implements OdinInterface
 
     public OdinModel() throws IOException, SQLException
     {
-        //OS = new OdinServer();
+        OS = new OdinServer();
     }
 
     //Returns the employee's ID number on success.
