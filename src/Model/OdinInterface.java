@@ -22,7 +22,7 @@ public interface OdinInterface
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
-    boolean addMessage(String message, int messageID, String status, int employeeID, int senderID);
+    boolean addMessage(String message, int employeeID, int senderID);
 
     //deletes
     boolean deleteMessage_MessageID(int messageID); //
