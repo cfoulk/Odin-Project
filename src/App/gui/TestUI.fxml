@@ -58,8 +58,24 @@
                                     <children>
                                         <VBox prefHeight="256.8" prefWidth="295.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Button mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Add User" />
-                                                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Edit User" />
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Add User">
+                                                    <graphic>
+                                                        <ImageView fitHeight="57.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../OneDrive/Desktop/AddIcon.PNG" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                                <Button contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Edit User">
+                                                    <graphic>
+                                                        <ImageView fitHeight="51.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../OneDrive/Desktop/EditIcon.PNG" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
                                                 <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Cancel" />
                                             </children>
                                         </VBox>
