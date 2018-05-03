@@ -17,4 +17,12 @@ public class Message {
         this.employeeID = myRS.getInt("employeeID");
         this.senderID = myRS.getInt("senderID");
     }
+
+    public Message(int messageID, String message, String status, int employeeID, int senderID) {
+        this.messageID = messageID;
+        this.message = message;
+        this.status = status;
+        this.employeeID = employeeID;
+        this.senderID = senderID;
+    }
 }

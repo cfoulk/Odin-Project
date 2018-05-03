@@ -24,6 +24,17 @@ public class Task {
         this.status = myRS.getString("Status");
     }
 
+    public Task(String employees, int projectID, int size, int taskID, String name, String description, String dueDate, String status) {
+        this.employees = employees;
+        this.projectID = projectID;
+        this.size = size;
+        this.taskID = taskID;
+        this.name = name;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.status = status;
+    }
+
     String taskLine()
     {
         return (this.employees + "\t" + this.name + "\t" + this.projectID + "\t" +

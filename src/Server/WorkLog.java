@@ -19,5 +19,11 @@ public class WorkLog
         this.description = myRS.getString("Description");
     }
 
-
+    public WorkLog(int employeeID, int taskID, int logID, String entryType, String description) {
+        this.employeeID = employeeID;
+        this.taskID = taskID;
+        this.logID = logID;
+        this.entryType = entryType;
+        this.description = description;
+    }
 }

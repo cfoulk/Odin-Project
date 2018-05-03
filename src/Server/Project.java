@@ -23,6 +23,16 @@ public class Project
         this.dueDate = myRS.getString("DueDate");
     }
 
+    public Project(int projectID, int groupID, int projectLeadID, String name, String description, String status, String dueDate) {
+        this.projectID = projectID;
+        this.groupID = groupID;
+        this.projectLeadID = projectLeadID;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.dueDate = dueDate;
+    }
+
     String projectLine()
     {
         return (this.projectID + "\t" + this.name + "\t" + this.status + "\t" +

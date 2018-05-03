@@ -23,5 +23,15 @@ public class Employee
         this.status = myRS.getString("Status");
     }
 
+    public Employee(int employeeID, int groupID, String name, String position, String username, String password, String status) {
+        this.employeeID = employeeID;
+        this.groupID = groupID;
+        this.name = name;
+        this.position = position;
+        this.username = username;
+        this.password = password;
+        this.status = status;
+    }
+
     public boolean passwordCheck(String input) { return (this.password.compareTo(input) == 0); }
 }

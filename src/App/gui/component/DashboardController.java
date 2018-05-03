@@ -38,12 +38,8 @@ public class DashboardController {
         heightHeader = 0.162;
         p(heightHeader);
         p(splitPane.getDividers().get(0).getPosition());
-
         splitPane.setDividerPosition(0,heightHeader);
-
         p(splitPane.getDividers().get(0).getPosition());
-
-
 
     }
 
@@ -72,9 +68,8 @@ public class DashboardController {
         return rippler;
     }
 
-    private void p(Object a){
-        System.out.println(a);
-    }
+    //Easy Debug print statement
+    private void p(Object a){ System.out.println(a); }
 
 
 }
