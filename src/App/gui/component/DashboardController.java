@@ -1,5 +1,7 @@
 package App.gui.component;
 
+import App.gui.persistentUser;
+import Server.Project;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
@@ -14,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.tools.Tool;
+import java.util.List;
 
 public class DashboardController {
 
@@ -33,6 +36,9 @@ public class DashboardController {
         UserBar.getChildren().add(createIconButton("Gear", "Settings"));
         UserBar.getChildren().add(createIconButton("Exit", "Logout"));
 
+        persistentUser.initiateSampleData();
+
+        List<Project> a = persistentUser.projectList;
 
 
         heightHeader = 0.162;
