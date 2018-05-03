@@ -9,23 +9,26 @@ public class TestUIController {
     private Menu exit;
 
     @FXML
-    private Button add;
+    private JFXButton Add;
 
     @FXML
-    private Button edit;
+    private JFXButton Edit;
 
     @FXML
-    void edituser(ActionEvent event) {
+    void AddUser(ActionEvent event)
+    {
 
     }
 
     @FXML
-    void exitProgram(ActionEvent event) {
+    void EditUser(ActionEvent event)
+    {
 
     }
 
     @FXML
-    void makeuser(ActionEvent event) {
+    void exitProgram(ActionEvent event)
+    {
 
     }
 }
