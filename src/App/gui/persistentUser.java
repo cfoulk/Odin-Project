@@ -10,6 +10,7 @@ import java.util.List;
 public class persistentUser {
 
     public static Employee currentUser;
+    public static List<Employee> employeeList;
     public static List<Project> projectList = new ArrayList<>();
     public static List<Task> taskList;
     public static List<WorkLog> workLogList;
@@ -22,8 +23,7 @@ public class persistentUser {
         projectList.add(user2);
     }
 
-    public static void getSessionData(OdinModel OM, String username)
-    {
+    public static void getServerData(OdinModel OM, String username) {/*
         List<Task> holdTasks;
         currentUser = OM.getEmployee_Username(username);
         projectList = OM.getProjects_GroupID(currentUser.groupID);
@@ -34,5 +34,12 @@ public class persistentUser {
         }
         workLogList = OM.getWorkLogs_EmployeeID(currentUser.employeeID);
         messageList = OM.getMessages_EmployeeID(currentUser.employeeID);
+    }*/
+        currentUser = OM.getEmployee_Username(username);
+        employeeList = OM.getEmployees();
+        projectList = OM.getProjects();
+        taskList = OM.getTasks();
+        workLogList = OM.getWorkLogs();
+        messageList = OM.getMessages();
     }
 }
