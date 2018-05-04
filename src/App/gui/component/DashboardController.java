@@ -1,6 +1,7 @@
 package App.gui.component;
 
 import App.gui.persistentUser;
+import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
 import Server.Task;
@@ -47,6 +48,7 @@ public class DashboardController {
     @FXML
     private VBox View;
 
+    @FXML
     private StackPane stackPane;
 
     public double heightHeader;
@@ -60,7 +62,11 @@ public class DashboardController {
 
         persistentUser.initiateSampleData();
 
-        List<Project> a = persistentUser.projectList;
+        OdinModel b = new OdinModel();
+
+//        List<Project> a = persistentUser.projectList;
+        List<Project> a = b.getProjects();
+
 
         initProjectButtons();
 
@@ -78,6 +84,8 @@ public class DashboardController {
     //Should initialize ProjectButtons based on PRIVILEGES
     public void initProjectButtons() throws Exception {
         projectLineButtons.getChildren().add(createIconButton("View","View Project"));
+        projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
+        projectLineButtons.getChildren().add(createIconButton("ArrowheadHollow-Down","Expand"));
         projectLineButtons.getStyleClass().add("projectLineButtons");
         HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
     }
