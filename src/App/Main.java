@@ -1,8 +1,10 @@
 package App;
 
+import App.gui.component.loginController;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,7 +25,12 @@ public class Main extends Application {
             }
         }).start();
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
+        Parent root = loader.load();
+        //TODO
+        ((loginController) loader.getController()).setStage(primaryStage);
+
+
         primaryStage.setTitle("Odin Management");
 //        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
 //        primaryStage.setScene(new Scene(decorator));
