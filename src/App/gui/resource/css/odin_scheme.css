@@ -1,3 +1,28 @@
+.label{
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+//Project Line
+.projectLine{
+    -fx-background-color: #2b5797;
+    -fx-padding: 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8;
+}
+
+.projectLine:hover{
+    -fx-background-color: #00838F;
+}
+
+//ProjectLineButtons
+.projectLineButtons{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-background-color: #00838F;
+    -fx-pref-width: Infinity;
+}
+
 //text field line
 .input-line{
     -fx-pref-height: 0;
