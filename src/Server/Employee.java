@@ -10,7 +10,7 @@ public class Employee
     public String name;
     public String position;
     public String username;
-    String password;
+    public String password;
     public String status;
 
     public Employee(ResultSet myRS) throws SQLException {

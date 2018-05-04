@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -11,7 +11,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
@@ -52,38 +51,38 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                     <children>
-                        <SplitPane dividerPositions="0.4996646545942321" layoutX="165.0" layoutY="57.0" prefHeight="258.4" prefWidth="598.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" layoutX="165.0" layoutY="57.0" prefHeight="258.4" prefWidth="598.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <items>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                     <children>
                                         <VBox prefHeight="256.8" prefWidth="295.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Add User">
+                                                <JFXButton fx:id="Add" buttonType="RAISED" contentDisplay="TOP" onAction="#AddUser" style="-fx-background-color: #2b5797;" text="Add User" textFill="WHITE">
                                                     <graphic>
-                                                        <ImageView fitHeight="57.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
+                                                        <ImageView fitHeight="89.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                             <image>
                                                                 <Image url="@../OneDrive/Desktop/AddIcon.PNG" />
                                                             </image>
                                                         </ImageView>
                                                     </graphic>
-                                                </Button>
-                                                <Button contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Edit User">
+                                                </JFXButton>
+                                                <JFXButton fx:id="Edit" buttonType="RAISED" contentDisplay="TOP" onAction="#EditUser" style="-fx-background-color: #2b5797;" text="Edit User" textFill="WHITE">
                                                     <graphic>
-                                                        <ImageView fitHeight="51.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                                                        <ImageView fitHeight="91.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                                             <image>
                                                                 <Image url="@../OneDrive/Desktop/EditIcon.PNG" />
                                                             </image>
                                                         </ImageView>
                                                     </graphic>
-                                                </Button>
-                                                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="150.0" text="Cancel" />
+                                                </JFXButton>
+                                                <JFXButton buttonType="RAISED" text="Cancel" />
                                             </children>
                                         </VBox>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                     <children>
-                                        <ImageView layoutX="20.0" layoutY="-29.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView layoutY="-27.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
                                                 <Image url="@../OneDrive/Desktop/odinLogo.PNG" />
                                             </image>
