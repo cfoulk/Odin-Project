@@ -2,6 +2,7 @@ package App.gui.component;
 
 import App.gui.persistentUser;
 import Server.Project;
+import Server.Task;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
@@ -17,6 +18,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -64,18 +66,22 @@ public class DashboardController {
 
     }
 
-    public void initProjectButtons() throws Exception {
-        projectLineButtons.getChildren().add(createIconButton("View","ViewProject"));
 
+    //Should initialize ProjectButtons based on PRIVILEGES
+    public void initProjectButtons() throws Exception {
+        projectLineButtons.getChildren().add(createIconButton("View","View Project"));
         projectLineButtons.getStyleClass().add("projectLineButtons");
+        HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
     }
 
+    //Should initialize view (with collapsed projects)
     private void initView(List<Project> projects){
         for(int i = 0; i < projects.size();i++ ){
             View.getChildren().add(createProjectLine(projects.get(i)));
         }
     }
 
+    //Creates a project line
     public HBox createProjectLine(Project project){
         //Start project line with Project name
         HBox projectLine = new HBox(new Label(project.name));
@@ -98,9 +104,16 @@ public class DashboardController {
         return projectLine;
     }
 
-//    public EventHandler ProjectHover(){
-//
-//    }
+    //Create a task line
+    public HBox createTaskLine(Task task){
+        return null;
+    }
+
+    //Create a Worklog line
+    public HBox createWorkLogLine(Task task){
+        return null;
+    }
+
 
 
     private JFXRippler createIconButton(String iconName, String tooltip) throws Exception {
