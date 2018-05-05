@@ -186,15 +186,15 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addMessage(String message, int employeeID, int senderID)
+    public boolean addMessage(String message, int recipientID, int senderID)
     {
         Employee emp;
         try
         {
-            emp = OS.getEmployee_EmployeeID(employeeID);
+            emp = OS.getEmployee_EmployeeID(recipientID);
             if (emp == null)
             {
-                OS.addMessage(message, employeeID, senderID);
+                OS.addMessage(message, recipientID, senderID);
                 return true;
             }
         }
@@ -219,15 +219,15 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean deleteMessages_EmployeeID(int employeeID)
+    public boolean deleteMessages_RecipientID(int recipientID)
     {
         List<Message> message;
         try
         {
-            message = OS.getMessages_EmployeeID(employeeID);
+            message = OS.getMessages_RecipientID(recipientID);
             if(message != null)
             {
-                OS.deleteMessages_EmployeeID(employeeID);
+                OS.deleteMessages_RecipientID(recipientID);
                 return true;
             }
         }
@@ -407,7 +407,7 @@ public class OdinModel implements OdinInterface
 
     public List<Message> getMessages_EmployeeID(int employeeID)
     { List<Message> messages;
-        try { messages = OS.getMessages_EmployeeID(employeeID); }
+        try { messages = OS.getMessages_RecipientID(employeeID); }
         catch (Exception e) { return null; }
         return messages;
     }

@@ -22,11 +22,11 @@ public interface OdinInterface
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
-    boolean addMessage(String message, int employeeID, int senderID);
+    boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
     boolean deleteMessage_MessageID(int messageID); //
-    boolean deleteMessages_EmployeeID(int employeeID);
+    boolean deleteMessages_RecipientID(int recipientID);
     boolean deleteMessages_SenderID(int senderID);
 
     //Get Singles

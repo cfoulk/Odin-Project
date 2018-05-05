@@ -105,10 +105,10 @@ public class OdinServer
                 "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
     }
 
-    public void addMessage(String message, int employeeID, int senderID) throws Exception
+    public void addMessage(String message, int recipientID, int senderID) throws Exception
     {
-        this.stmt.executeUpdate("INSERT INTO messages (message, status, employeeID, senderID) " +
-                "VALUES ('" + message + "', " + employeeID + ", " + senderID + ");");
+        this.stmt.executeUpdate("INSERT INTO messages (message, recipientID, senderID) " +
+                "VALUES ('" + message + "', " + recipientID + ", " + senderID + ");");
     }
 
     //Deletes
@@ -117,9 +117,9 @@ public class OdinServer
         this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");
     }
 
-    public void deleteMessages_EmployeeID(int employeeID) throws Exception
+    public void deleteMessages_RecipientID(int recipientID) throws Exception
     {
-        this.stmt.executeUpdate("DELETE FROM messages WHERE employeeID = " + employeeID + ";");
+        this.stmt.executeUpdate("DELETE FROM messages WHERE recipientID = " + recipientID + ";");
     }
 
     public void deleteMessages_SenderID(int senderID) throws Exception
@@ -324,10 +324,10 @@ public class OdinServer
         return messages;
     }
 
-    public List<Message> getMessages_EmployeeID(int employeeID) throws Exception
+    public List<Message> getMessages_RecipientID(int recipientID) throws Exception
     {
         List<Message> messages = new ArrayList<>();
-        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE employeeID = " + employeeID + ";");
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM messages WHERE recipientID = " + recipientID + ";");
         while(myRS.next()) messages.add(new Message(myRS));
         myRS.close();
         return messages;
