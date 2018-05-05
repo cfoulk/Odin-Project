@@ -566,11 +566,11 @@ public class OdinModel implements OdinInterface
         return workLogs;
     }
 
-    public List<Message> filterMessages_EmployeeID(List<Message> list, int employeeID)
+    public List<Message> filterMessages_EmployeeID(List<Message> list, int recipientID)
     {
         List<Message> messages = new ArrayList<>();
         for(Message message : list)
-        { if(message.employeeID == employeeID) messages.add(message); }
+        { if(message.recipientID == recipientID) messages.add(message); }
         return messages;
     }
 
