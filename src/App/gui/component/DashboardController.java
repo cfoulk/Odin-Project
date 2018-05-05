@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
@@ -74,19 +73,19 @@ public class DashboardController {
         initView(a);
 
         heightHeader = 0.162;
-//        p(heightHeader);
-//        p(splitPane.getDividers().get(0).getPosition());
+        p(heightHeader);
+        p(splitPane.getDividers().get(0).getPosition());
         splitPane.setDividerPosition(0,heightHeader);
-//        p(splitPane.getDividers().get(0).getPosition());
+        p(splitPane.getDividers().get(0).getPosition());
 
     }
 
 
     //Should initialize ProjectButtons based on PRIVILEGES
-    public void initProjectButtons() {
+    public void initProjectButtons() throws Exception {
         projectLineButtons.getChildren().add(createIconButton("View","View Project"));
         projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
-        projectLineButtons.getChildren().add(createIconButton("Arrowhead-Down","Expand"));
+        projectLineButtons.getChildren().add(createIconButton("ArrowheadHollow-Down","Expand"));
         projectLineButtons.getStyleClass().add("projectLineButtons");
         HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
     }
@@ -94,10 +93,7 @@ public class DashboardController {
     //Should initialize view (with collapsed projects)
     private void initView(List<Project> projects){
         for(int i = 0; i < projects.size();i++ ){
-            HBox projectline = createProjectLine(projects.get(i));
-            //Set id of Hbox as related to the array list
-            projectline.setId(Integer.toString(i));
-            View.getChildren().add(projectline);
+            View.getChildren().add(createProjectLine(projects.get(i)));
         }
     }
 
@@ -136,22 +132,13 @@ public class DashboardController {
 
 
 
-    private JFXRippler createIconButton(String iconName, String tooltip) {
+    private JFXRippler createIconButton(String iconName, String tooltip) throws Exception {
 
-        Node glyph = null;
-
-        //We will try and load glyph. If not available replace glyph with text
-        try {
-            glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
-            ((SVGGlyph)glyph).setSize(27);
-            ((SVGGlyph)glyph).setFill(Color.valueOf("#FFFFFF"));
-        } catch (Exception e) {
-            p("Glyph does not exist!");
-            glyph = new Text(iconName);
-            ((Text) glyph).setFill(Color.valueOf("#FFFFFF"));
-        }
-
+        SVGGlyph glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
         StackPane pane = new StackPane();
+
+        glyph.setSize(27);
+        glyph.setFill(Color.valueOf("#FFFFFF"));
         pane.getChildren().add(glyph);
         pane.setPadding(new Insets(10));
 
@@ -164,6 +151,7 @@ public class DashboardController {
             Tooltip toolTip = new Tooltip(tooltip);
             Tooltip.install(rippler,toolTip);
         }
+
 
         return rippler;
     }
@@ -185,7 +173,8 @@ public class DashboardController {
         loadEmployeeDialog(oldEmployee);
     }
 
-    void loadEmployeeDialog(Employee employee) {
+    void loadEmployeeDialog(Employee employee)
+    {
         JFXDialogLayout content = new JFXDialogLayout();
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXTextField    name = new JFXTextField(),
@@ -193,8 +182,8 @@ public class DashboardController {
                         groupID = new JFXTextField(),
                         username = new JFXTextField(),
                         password = new JFXTextField();
-        JFXRippler confirm = createIconButton("Check", "Save");
-        JFXRippler cancel = createIconButton("Cancel", "Cancel");
+        JFXButton confirm = new JFXButton("Confirm");
+        JFXButton cancel = new JFXButton("Cancel");
         name.setPromptText("Name");
         position.setPromptText("Position");
         groupID.setPromptText("Group Number");
@@ -208,13 +197,13 @@ public class DashboardController {
             groupID.setText(Integer.toString(employee.groupID));
             username.setText(employee.username);
             password.setText(employee.password);
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
+            confirm.setOnAction(event -> dialog.close());
         }
         else {
             content.setHeading(new Text("Add Employee"));
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
+            confirm.setOnAction(event -> dialog.close());
         }
-        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
+        cancel.setOnAction(event -> dialog.close());
         content.setBody(new VBox(name, position, groupID, username, password));
         content.setActions(confirm, cancel);
         dialog.show();

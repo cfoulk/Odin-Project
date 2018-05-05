@@ -26,7 +26,7 @@ import java.sql.SQLException;
 
 public class loginController {
 
-    private Stage stage;
+    private JFXDecorator stage;
 
     @FXML
     private JFXTextField usernameField;
@@ -56,7 +56,7 @@ public class loginController {
     }
 
     //Used to pass in stage to controller (Used by main)
-    public void setStage(Stage stage){
+    public void setStage(JFXDecorator stage){
         this.stage = stage;
     }
 
@@ -113,7 +113,9 @@ public class loginController {
         try {
             Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
             dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-            stage.setScene(new Scene(dashboard));
+            stage.setContent(dashboard);
+            //Resizes window the scene
+            stage.getScene().getWindow().sizeToScene();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -27,16 +27,17 @@ public class Main extends Application {
 
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Login.fxml"));
         Parent root = loader.load();
-        //TODO
-        ((loginController) loader.getController()).setStage(primaryStage);
-
 
         primaryStage.setTitle("Odin Management");
-//        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
-//        primaryStage.setScene(new Scene(decorator));
-        primaryStage.setScene(new Scene(root));
+        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
+        primaryStage.setScene(new Scene(decorator));
+//        primaryStage.setScene(new Scene(root));
+        ((loginController) loader.getController()).setStage(decorator);
 
+        //Addisng style classes
         root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+        decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+
         primaryStage.show();
     }
 }
