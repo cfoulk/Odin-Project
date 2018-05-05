@@ -52,7 +52,7 @@ public interface OdinInterface
     List<WorkLog> getWorkLogs_EmployeeID(int employeeID);
     List<WorkLog> getWorkLogs_TaskID(int taskID);
     List<Message> getMessages();
-    List<Message> getMessages_EmployeeID(int employeeID);
+    List<Message> getMessages_RecipientID(int employeeID);
     List<Message> getMessages_SenderID(int senderID);
 
     //Filter sets

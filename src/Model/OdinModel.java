@@ -421,14 +421,14 @@ public class OdinModel implements OdinInterface
         return messages;
     }
 
-    public List<Message> getMessages_EmployeeID(int employeeID)
+    public List<Message> getMessages_RecipientID(int recipientID)
     { List<Message> messages;
-        try { messages = OS.getMessages_RecipientID(employeeID); }
+        try { messages = OS.getMessages_RecipientID(recipientID); }
         catch (Exception e) { return null; }
         return messages;
     }
 
-    public List<Message> getMessages_SenderID(int senderID) //the idea is to get all the messages sent from a certain user
+    public List<Message> getMessages_SenderID(int senderID)
     {
         List<Message> messages;
         try { messages = OS.getMessages_SenderID(senderID); }
