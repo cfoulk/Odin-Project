@@ -9,24 +9,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class loginController {
 
-    private JFXDecorator stage;
+    private JFXDecorator decorator;
 
     @FXML
     private JFXTextField usernameField;
@@ -55,47 +51,47 @@ public class loginController {
         login();
     }
 
-    //Used to pass in stage to controller (Used by main)
-    public void setStage(JFXDecorator stage){
-        this.stage = stage;
+    //Used to pass in decorator to controller (Used by main)
+    public void setDecorator(JFXDecorator decorator) {
+        this.decorator = decorator;
     }
 
-    void login(){
-    OdinModel a = null;
+    void login() {
+        OdinModel a = null;
         try {
 
-        a = new OdinModel();
+            a = new OdinModel();
 
-        int userID = a.getUserID(usernameField.getText(), passwordField.getText());
-        switch (userID) {
-            case -2:
-                System.out.println("Wrong Password");
-                usernameField.setStyle("-fx-background-color: #FFFFFF");
-                passwordField.setStyle("-fx-background-color: #FFCDD2");
-                break;
-            case -1:
-                System.out.println("Wrong User");
-                usernameField.setStyle("-fx-background-color: #FFCDD2");
-                passwordField.setStyle("-fx-background-color: #FFCDD2");
-                break;
-            default:
-                System.out.println("Success");
-                switchToScene();
-                break;
+            int userID = a.getUserID(usernameField.getText(), passwordField.getText());
+            switch (userID) {
+                case -2:
+                    System.out.println("Wrong Password");
+                    usernameField.setStyle("-fx-background-color: #FFFFFF");
+                    passwordField.setStyle("-fx-background-color: #FFCDD2");
+                    break;
+                case -1:
+                    System.out.println("Wrong User");
+                    usernameField.setStyle("-fx-background-color: #FFCDD2");
+                    passwordField.setStyle("-fx-background-color: #FFCDD2");
+                    break;
+                default:
+                    System.out.println("Success");
+                    switchToScene();
+                    break;
+            }
+            connection.setStyle("-fx-background-color: #00E676");
         }
-        connection.setStyle("-fx-background-color: #00E676");
-    }
-    //No file
+        //No file
         catch (IOException e) {
-        connection.setStyle("-fx-background-color: #D32F2F");
-        e.printStackTrace();
-    }
-    //No connection
+            connection.setStyle("-fx-background-color: #D32F2F");
+            e.printStackTrace();
+        }
+        //No connection
         catch (SQLException e) {
-        connection.setStyle("-fx-background-color: #D32F2F");
-        e.printStackTrace();
+            connection.setStyle("-fx-background-color: #D32F2F");
+            e.printStackTrace();
+        }
     }
-}
 
     void checkConnection(ActionEvent event) {
         try {
@@ -108,14 +104,13 @@ public class loginController {
         }
     }
 
-    public void switchToScene(){
-        Window root = loginButton.getScene().getWindow();
+    public void switchToScene() {
         try {
             Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
             dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-            stage.setContent(dashboard);
+            decorator.setContent(dashboard);
             //Resizes window the scene
-            stage.getScene().getWindow().sizeToScene();
+            decorator.getScene().getWindow().sizeToScene();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,10 +142,11 @@ public class loginController {
         contentArray.getChildren().add(0, logo);
 
         passwordField.addEventHandler(KeyEvent.KEY_PRESSED,
-                event -> {if(event.getCode().equals(KeyCode.ENTER)) {
-                    login();
-                }
-        });
+                event -> {
+                    if (event.getCode().equals(KeyCode.ENTER)) {
+                        login();
+                    }
+                });
 //        usernameField.requestFocus(); //Doesn't work
         Platform.runLater(() -> usernameField.requestFocus());
 //        Platform.runLater(new Runnable() {
@@ -161,6 +157,4 @@ public class loginController {
 //        });
 
     }
-
-
 }
