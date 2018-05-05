@@ -118,6 +118,22 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
+    public boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID)
+    {
+        Message mes;
+        try
+        {
+            mes = OS.getMessage_MessageID(MessageID);
+            if (mes != null)
+            {
+                OS.setMessage_Read(MessageID, message, recipientID, senderID);
+                return true;
+            }
+        }
+        catch(Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
     //Add methods
     public boolean addEmployee(String name, String position, int groupID, String username, String password)
     {
@@ -566,7 +582,7 @@ public class OdinModel implements OdinInterface
         return workLogs;
     }
 
-    public List<Message> filterMessages_EmployeeID(List<Message> list, int recipientID)
+    public List<Message> filterMessages_RecipientID(List<Message> list, int recipientID)
     {
         List<Message> messages = new ArrayList<>();
         for(Message message : list)

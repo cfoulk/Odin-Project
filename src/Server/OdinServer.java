@@ -80,6 +80,18 @@ public class OdinServer
                 "WHERE LogID = " + logID + ";" );
     }
 
+    public void setMessage_Read (int MessageID, String message, int recipientID, int senderID) throws Exception
+    {
+        //this probably is going to need to be worked on, i don't know where to take it
+        String status = "read";
+        this.stmt.executeUpdate(  "UPDATE messages SET " +
+                "MessageID = '" + MessageID + "', " +
+                "Message = '" + message + "', " +
+                "Status = " + status  + ", " +
+                "RecipientID = " + recipientID  + ", " +
+                "SenderID = '"  + senderID + ";");
+    }
+
     //Add methods
     public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
     {

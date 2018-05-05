@@ -16,6 +16,7 @@ public interface OdinInterface
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status);
     boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description);
+    boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password);
@@ -74,7 +75,7 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
-    List<Message> filterMessages_EmployeeID(List<Message> list, int EmployeeID);
+    List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
     List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
 
 }
