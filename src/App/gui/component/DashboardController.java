@@ -29,6 +29,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import javax.tools.Tool;
@@ -187,22 +188,34 @@ public class DashboardController {
 
     void loadEmployeeDialog(Employee employee) {
         JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXTextField    name = new JFXTextField(),
                         position = new JFXTextField(),
                         groupID = new JFXTextField(),
                         username = new JFXTextField(),
                         password = new JFXTextField();
+
+
         JFXRippler confirm = createIconButton("Check", "Save");
         JFXRippler cancel = createIconButton("Cancel", "Cancel");
+
+        //TODO JOEL Validator for String vs. Integer
         name.setPromptText("Name");
         position.setPromptText("Position");
         groupID.setPromptText("Group Number");
         username.setPromptText("Username");
         password.setPromptText("Password");
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
         if(employee != null)
         {
-            content.setHeading(new Text("Edit Employee"));
+            text.setText("Edit Employee");
+            content.setHeading(text);
             name.setText(employee.name);
             position.setText(employee.position);
             groupID.setText(Integer.toString(employee.groupID));
@@ -211,11 +224,14 @@ public class DashboardController {
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
         }
         else {
-            content.setHeading(new Text("Add Employee"));
+            text.setText("Add Employee");
+            content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
         }
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
-        content.setBody(new VBox(name, position, groupID, username, password));
+        VBox vBox = new VBox(name, position, groupID, username, password);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
         content.setActions(confirm, cancel);
         dialog.show();
         /*

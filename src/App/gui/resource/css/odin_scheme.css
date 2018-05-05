@@ -1,5 +1,5 @@
 .jfx-decorator {
-    -fx-decorator-color: #254d87;
+    -fx-decorator-color: #23497f;
 }
 
 .jfx-decorator .jfx-decorator-buttons-container {
@@ -11,10 +11,15 @@
     -fx-border-width: 0 4 4 4;
 }
 
+.dialog{
+    -fx-background-color: #23497f;
+}
+
 .label{
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 15;
     -fx-font-weight: bold;
+    -fx-padding: 9;
 }
 
 //Project Line
@@ -26,12 +31,18 @@
 }
 
 .projectLine:hover{
-    -fx-background-color: #00838F;
+    -fx-background-color: #00695C;
 }
 
 //ProjectLineButtons
 .projectLineButtons{
     -fx-alignment: CENTER_RIGHT;
+}
+
+.jfx-text-field{
+    -fx-background-color: #FFFFFF;
+    -fx-font: 13px "System";
+    -fx-focus-traversable: true;
 }
 
 //text field line
@@ -51,10 +62,10 @@
 }
 
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: #254d87;
+   -fx-background-color: #23497f;
 }
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: #254d87;
+   -fx-background-color: #23497f;
 }
 
 .scroll-pane{
@@ -83,8 +94,6 @@
 #loginfielderror{
     -fx-background-color: #FFCDD2;
 }
-
-
 
 #account {
     -fx-background-color: #FFCDD2;
