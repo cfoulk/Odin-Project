@@ -25,9 +25,10 @@
 //Project Line
 .projectLine{
     -fx-background-color: #2b5797;
-    -fx-padding: 10;
+//    -fx-padding: 10;
     -fx-alignment: CENTER_LEFT;
     -fx-background-radius: 8;
+    -fx-background-insets: 3;
 }
 
 .projectLine:hover{

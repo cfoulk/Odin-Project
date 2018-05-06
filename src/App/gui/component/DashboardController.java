@@ -24,10 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -55,7 +52,15 @@ public class DashboardController {
 
     public double heightHeader;
 
+    public int selectedProject;
+
     private HBox projectLineButtons = new HBox();
+
+    private HBox taskLineButtons = new HBox();
+
+    private List<Project> Projects;
+
+    private List<Task> Tasks;
 
     public void initialize() throws Exception {
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
@@ -66,13 +71,15 @@ public class DashboardController {
 
         OdinModel b = new OdinModel();
 
-//        List<Project> a = persistentUser.projectList;
-        List<Project> a = b.getProjects();
-
+//        Projects = persistentUser.projectList;
+//        Tasks = persistentUser.taskList;
+        Projects = b.getProjects();
+        Tasks = b.getTasks();
 
         initProjectButtons();
+        initTaskButtons();
 
-        initView(a);
+        initView();
 
         heightHeader = 0.162;
 //        p(heightHeader);
@@ -82,20 +89,34 @@ public class DashboardController {
 
     }
 
+    //Should initialize taskButtons based on PRIVILEGES of User
+    public void initTaskButtons() {
+        taskLineButtons.getChildren().add(createIconButton("View","View Project"));
+        taskLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
+        taskLineButtons.getChildren().add(createIconButton("Arrowhead-Down","Expand"));
+        taskLineButtons.getStyleClass().add("projectLineButtons");
+        HBox.setHgrow(taskLineButtons,Priority.ALWAYS);
+    }
 
-    //Should initialize ProjectButtons based on PRIVILEGES
+    //Should initialize ProjectButtons based on PRIVILEGES of User
     public void initProjectButtons() {
         projectLineButtons.getChildren().add(createIconButton("View","View Project"));
         projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
-        projectLineButtons.getChildren().add(createIconButton("Arrowhead-Down","Expand"));
+
+        JFXRippler expand = createIconButton("Arrowhead-Down","Expand");
+        expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+            showTasks((HBox) expand.getParent().getParent());
+        });
+        projectLineButtons.getChildren().add(expand);
+
         projectLineButtons.getStyleClass().add("projectLineButtons");
         HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
     }
 
     //Should initialize view (with collapsed projects)
-    private void initView(List<Project> projects){
-        for(int i = 0; i < projects.size();i++ ){
-            HBox projectline = createProjectLine(projects.get(i));
+    private void initView(){
+        for(int i = 0; i < Projects.size();i++ ){
+            HBox projectline = createProjectLine(Projects.get(i));
             //Set id of Hbox as related to the array list
             projectline.setId(Integer.toString(i));
             View.getChildren().add(projectline);
@@ -125,8 +146,57 @@ public class DashboardController {
         return projectLine;
     }
 
+    //Will show the tasks in the project
+    public void showTasks(HBox projectLine){
+        VBox taskBox = new VBox();
+
+        Project project = Projects.get(Integer.parseInt(projectLine.getId()));
+
+        int projID = project.projectID;
+
+        for(int i = 0; i < Tasks.size(); i++){
+            if(projID == Tasks.get(i).projectID){
+                HBox taskLine = createTaskLine(Tasks.get(i));
+                taskBox.getChildren().add(taskLine);
+                taskLine.setId(String.valueOf(i));
+            }
+        }
+        taskBox.setPadding(new Insets(0,5,0,20));
+        taskBox.setSpacing(2);
+        if(taskBox.getChildren().size() != 0) {
+            View.getChildren().add(View.getChildren().indexOf(projectLine) + 1, taskBox);
+        }
+
+    }
+
     //Create a task line
     public HBox createTaskLine(Task task){
+        //Start task line with Project name
+        HBox taskLine = new HBox(new Label(task.name));
+        taskLine.getStyleClass().add("projectLine");
+
+        //add Listener
+        EventHandler a = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                    taskLine.getChildren().add(taskLineButtons);
+                }
+                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                    taskLine.getChildren().remove(taskLineButtons);
+                }
+                if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)){
+
+                }
+            }
+        };
+        taskLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
+        taskLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        return taskLine;
+    }
+
+    //TODO
+    public VBox workLog(){
         return null;
     }
 

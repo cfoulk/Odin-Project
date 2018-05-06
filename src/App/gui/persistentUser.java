@@ -12,6 +12,7 @@ public class persistentUser {
     public static Employee currentUser;
     public static List<Employee> employeeList;
     public static List<Project> projectList = new ArrayList<>();
+    public static List<Task>
     public static List<Task> taskList;
     public static List<WorkLog> workLogList;
     public static List<Message> messageList;
@@ -19,6 +20,7 @@ public class persistentUser {
     public static void initiateSampleData(){
         Project user1 = new Project(33,22,131,"Finish Dashboard", "Testing class", "In-Progress", "5/11/2018");
         Project user2 = new Project(33,22,131,"Show Headers", "Testing class", "In-Progress", "5/4/2018");
+        Task task1 = new Task("Employee",1,5,3,"Task Name", "Task description", "", "status");
         projectList.add(user1);
         projectList.add(user2);
     }
