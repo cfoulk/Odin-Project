@@ -76,6 +76,6 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
     List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
-    List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
+    List<Message> filterMessages_SenderID(List<Message> list, int SenderID, int RecipientID);
 
 }
