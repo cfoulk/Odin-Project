@@ -28,7 +28,7 @@
 //    -fx-padding: 10;
     -fx-alignment: CENTER_LEFT;
     -fx-background-radius: 8;
-    -fx-background-insets: 3;
+//    -fx-background-insets: 3;
 }
 
 .projectLine:hover{
@@ -57,7 +57,7 @@
 }
 
 .icon-rippler{
-   -jfx-mask-type: CIRCLE;
+//   -jfx-mask-type: CIRCLE;
    -jfx-rippler-fill: #FFFFFF;
    -fx-cursor: hand;
 }

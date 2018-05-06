@@ -69,12 +69,12 @@ public class DashboardController {
 
         persistentUser.initiateSampleData();
 
-        OdinModel b = new OdinModel();
+        Projects = persistentUser.projectList;
+        Tasks = persistentUser.taskList;
 
-//        Projects = persistentUser.projectList;
-//        Tasks = persistentUser.taskList;
-        Projects = b.getProjects();
-        Tasks = b.getTasks();
+//        OdinModel b = new OdinModel();
+//        Projects = b.getProjects();
+//        Tasks = b.getTasks();
 
         initProjectButtons();
         initTaskButtons();
@@ -105,8 +105,20 @@ public class DashboardController {
 
         JFXRippler expand = createIconButton("Arrowhead-Down","Expand");
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-            showTasks((HBox) expand.getParent().getParent());
+            double rotate = expand.getRotate();
+            p(rotate);
+            if(rotate == (double) 0) {
+                showTasks((HBox) expand.getParent().getParent());
+                expand.setRotate(180);
+                p(expand.getRotate());
+            }
+            else if(rotate == (double) 180){
+                closeTasks((HBox) expand.getParent().getParent());
+                expand.setRotate(0);
+            }
         });
+//        expand.setRotate();
+        p(expand.getRotate());
         projectLineButtons.getChildren().add(expand);
 
         projectLineButtons.getStyleClass().add("projectLineButtons");
@@ -144,6 +156,13 @@ public class DashboardController {
         projectLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
         projectLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
         return projectLine;
+    }
+
+    public void closeTasks(HBox projectLine){
+        Object nxtItem;
+        if((nxtItem = View.getChildren().get(View.getChildren().indexOf(projectLine)+1)) instanceof  VBox){
+            View.getChildren().remove(nxtItem);
+        }
     }
 
     //Will show the tasks in the project
