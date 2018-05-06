@@ -26,6 +26,8 @@ public interface OdinInterface
     boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
+    boolean deleteEmployee_EmployeeID(int employeeID);
+    boolean deleteTask_TaskID(int taskID);
     boolean deleteMessage_MessageID(int messageID); //
     boolean deleteMessages_RecipientID(int recipientID);
     boolean deleteMessages_SenderID(int senderID);

@@ -219,6 +219,38 @@ public class OdinModel implements OdinInterface
     }
 
     //deletes
+    public boolean deleteEmployee_EmployeeID(int employeeID)
+    {
+        Employee employee;
+        try
+        {
+            employee = OS.getEmployee_EmployeeID(employeeID);
+            if(employee != null)
+            {
+                OS.deleteEmployee_EmployeeID(employeeID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean deleteTask_TaskID(int taskID)
+    {
+        Task task;
+        try
+        {
+            task = OS.getTask_TaskID(taskID);
+            if(task != null)
+            {
+                OS.deleteTask_TaskID(taskID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
     public boolean deleteMessage_MessageID(int messageID)
     {
         Message message;

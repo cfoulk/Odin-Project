@@ -124,6 +124,16 @@ public class OdinServer
     }
 
     //Deletes
+    public void deleteEmployee_EmployeeID(int employeeID) throws Exception //NOT FINISHED
+    {
+        this.stmt.executeUpdate("DELETE FROM employees WHERE employeeID = " + employeeID + ";");
+    }
+
+    public void deleteTask_TaskID(int taskID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM tasks WHERE taskID = " + taskID + ";");
+    }
+
     public void deleteMessage_MessageID(int messageID) throws Exception
     {
         this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");
