@@ -47,9 +47,9 @@ public class OdinServer
 
     public void editProject (int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
     {
-        this.stmt.executeUpdate ( "UPDATE projects SET " +
+        this.stmt.executeUpdate( "UPDATE projects SET " +
                 "Name = '" + name + "', " +
-                "DueDate = " + dueDate + "', " +
+                "DueDate = '" + dueDate + "', " +
                 "GroupID = " + groupID + ", " +
                 "ProjectLeadID = " + projectLeadID + ", " +
                 "Description = '" + description + "', " +
