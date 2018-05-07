@@ -2,17 +2,19 @@ package App;
 
 import App.gui.component.loginController;
 import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class Main extends Application {
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws Exception {
         //Load icons
         new Thread(() -> {
             try {
@@ -31,6 +33,11 @@ public class Main extends Application {
         JFXDecorator decorator = new JFXDecorator(primaryStage, root);
         primaryStage.setScene(new Scene(decorator));
         decorator.setContent(root);
+//        SVGGlyph logoTitle = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
+//        logoTitle.setFill(Paint.valueOf("#FFFFFF"));
+//        logoTitle.setSize(36);
+//        decorator.setGraphic(logoTitle);
+
 //        primaryStage.setScene(new Scene(root));
         ((loginController) loader.getController()).setDecorator(decorator);
 

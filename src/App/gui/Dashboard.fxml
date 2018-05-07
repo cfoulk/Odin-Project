@@ -57,8 +57,11 @@
                     <content>
                       <AnchorPane style="-fx-background-color: #ffffff;">
                            <children>
-                              <VBox fx:id="View" prefWidth="526.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+                              <VBox fx:id="View" prefWidth="526.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
                            </children>
+                           <padding>
+                              <Insets bottom="15.0" />
+                           </padding>
                         </AnchorPane>
                     </content>
                   </ScrollPane>
