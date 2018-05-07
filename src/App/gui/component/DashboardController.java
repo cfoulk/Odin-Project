@@ -107,15 +107,12 @@ public class DashboardController {
             p(rotate);
             if(rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
                 expand.setRotate(180);
-                p(expand.getRotate());
             }
             else if(rotate == (double) 180){
                 closeTasks((HBox) expand.getParent().getParent());
                 expand.setRotate(0);
             }
         });
-
-        p(expand.getRotate());
         projectLineButtons.getChildren().add(expand);
 
         projectLineButtons.getStyleClass().add("projectLineButtons");
@@ -189,7 +186,7 @@ public class DashboardController {
                 taskLine.setId(String.valueOf(i));
             }
         }
-        taskBox.setPadding(new Insets(0,5,0,20));
+        taskBox.setPadding(new Insets(0,5,0,40));
         taskBox.setSpacing(2);
         if(taskBox.getChildren().size() != 0) {
             View.getChildren().add(View.getChildren().indexOf(projectLine) + 1, taskBox);
@@ -203,7 +200,7 @@ public class DashboardController {
     public HBox createTaskLine(Task task){
         //Start task line with Project name
         HBox taskLine = new HBox(new Label(task.name));
-        taskLine.getStyleClass().add("projectLine");
+        taskLine.getStyleClass().add("taskLine");
 
         //add Listener
         EventHandler a = new EventHandler() {

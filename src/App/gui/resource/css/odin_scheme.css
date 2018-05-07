@@ -35,6 +35,17 @@
     -fx-background-color: #00695C;
 }
 
+.taskLine{
+    -fx-background-color: #366ebf;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 0;
+}
+
+.taskLine:hover{
+    -fx-border-color: #00b69f;
+    -fx-border-width: 4;
+}
+
 //ProjectLineButtons
 .projectLineButtons{
     -fx-alignment: CENTER_RIGHT;
