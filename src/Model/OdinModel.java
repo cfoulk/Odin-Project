@@ -43,10 +43,11 @@ public class OdinModel implements OdinInterface
         try
         {
             emp = OS.getEmployee_EmployeeID(employeeID);
+
             if(emp != null)
             {
                 emp = OS.getEmployee_Username(username);
-                if(emp == null )
+                if(emp != null )
                 {
                     OS.editEmployee(employeeID, name, position, groupID, username, password);
                     return true;
@@ -88,12 +89,15 @@ public class OdinModel implements OdinInterface
             {
                 projHold = getProject_ProjectID(projectID);
                 if(projHold == null) return false;
+                Collections.sort(emp);
                 for (Integer integer : emp)
                 {
                     empHold = OS.getEmployee_EmployeeID(integer);
                     if(empHold == null) return false;
                     if(empHold.groupID != projHold.groupID) return false;
                 }
+                employees = ",";
+                for(Integer integer : emp) employees += integer.toString() + ',';
                 OS.editTask(taskID,name,dueDate,projectID,employees,description,size, status);
                 return true;
             }
@@ -170,19 +174,22 @@ public class OdinModel implements OdinInterface
     public boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status)
     {
         List<Integer> emp = extractEmployeeIDs(employees);
-        Employee empHold = null;
+        Employee empHold;
         Project projHold;
         try
         {
             projHold = getProject_ProjectID(projectID);
             if(projHold == null) return false;
+            Collections.sort(emp);
             for (Integer integer : emp)
             {
                 empHold = OS.getEmployee_EmployeeID(integer);
                 if(empHold == null) return false;
                 if(empHold.groupID != projHold.groupID) return false;
             }
-            if(empHold != null) OS.addTask(name, dueDate, projectID, employees, description, size, status);
+            employees = ",";
+            for(Integer integer : emp) employees += integer.toString() + ',';
+            OS.addTask(name, dueDate, projectID, employees, description, size, status);
             return true;
         }
         catch (Exception e) { e.printStackTrace(); }
@@ -219,6 +226,38 @@ public class OdinModel implements OdinInterface
     }
 
     //deletes
+    public boolean deleteEmployee_EmployeeID(int employeeID)
+    {
+        Employee employee;
+        try
+        {
+            employee = OS.getEmployee_EmployeeID(employeeID);
+            if(employee != null)
+            {
+                OS.deleteEmployee_EmployeeID(employeeID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean deleteTask_TaskID(int taskID)
+    {
+        Task task;
+        try
+        {
+            task = OS.getTask_TaskID(taskID);
+            if(task != null)
+            {
+                OS.deleteTask_TaskID(taskID);
+                return true;
+            }
+        }
+        catch (Exception e){ e.printStackTrace(); }
+        return false;
+    }
+
     public boolean deleteMessage_MessageID(int messageID)
     {
         Message message;
@@ -521,10 +560,12 @@ public class OdinModel implements OdinInterface
         return tasks;
     }
 
-    public List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID)
+    public List<Task> filterTasks_EmployeeID(List<Task> list, int employeeID)
     {
-        //We need to talk about this one bfore going forward.
-        return null;
+        List<Task> tasks = new ArrayList<>();
+        for(Task task : list)
+        { if(extractEmployeeIDs(task.employees).contains(employeeID)) tasks.add(task);  }
+        return tasks;
     }
 
     public List<Task> filterTasks_ProjectID(List<Task> list, int projectID)
@@ -590,22 +631,12 @@ public class OdinModel implements OdinInterface
         return messages;
     }
 
-    public List<Message> filterMessages_SenderID(List<Message> list, int senderID)
+    public List<Message> filterMessages_SenderID(List<Message> list, int senderID, int recipientID)
     {
         List<Message> messages = new ArrayList<>();
         for(Message message : list)
-        { if(message.senderID == senderID) messages.add(message); }
+        { if(message.senderID == senderID && message.recipientID == recipientID) messages.add(message); }
         return messages;
-    }
-
-    public String sortEmployeeIDs(String employees)
-    {
-        List<Integer> list = extractEmployeeIDs(employees);
-        String hold = "";
-        Collections.sort(list);
-        hold += list.remove(0);
-        while(!list.isEmpty()) hold += "," + list.remove(0);
-        return hold;
     }
 
     public List<Integer> extractEmployeeIDs(String employees)

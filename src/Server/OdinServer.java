@@ -124,6 +124,18 @@ public class OdinServer
     }
 
     //Deletes
+    public void deleteEmployee_EmployeeID(int employeeID) throws Exception //might need some tweaking based on how tasks store employees
+    {
+        this.stmt.executeUpdate("DELETE FROM employees WHERE employeeID = " + employeeID + ";");
+        this.stmt.executeUpdate("UPDATE tasks SET Employees = REPLACE(Employees, '" + employeeID + "', '') WHERE Employees LIKE '%" + employeeID + ",%';");
+
+    }
+
+    public void deleteTask_TaskID(int taskID) throws Exception
+    {
+        this.stmt.executeUpdate("DELETE FROM tasks WHERE taskID = " + taskID + ";");
+    }
+
     public void deleteMessage_MessageID(int messageID) throws Exception
     {
         this.stmt.executeUpdate("DELETE FROM messages WHERE messageID = " + messageID + ";");

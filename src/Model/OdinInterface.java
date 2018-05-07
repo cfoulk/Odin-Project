@@ -26,6 +26,8 @@ public interface OdinInterface
     boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
+    boolean deleteEmployee_EmployeeID(int employeeID);
+    boolean deleteTask_TaskID(int taskID);
     boolean deleteMessage_MessageID(int messageID); //
     boolean deleteMessages_RecipientID(int recipientID);
     boolean deleteMessages_SenderID(int senderID);
@@ -67,7 +69,7 @@ public interface OdinInterface
     List<Project> filterProjects_Status(List<Project> list, String status);
     Task filterTasks_TaskID(List<Task> list, int taskID);
     List<Task> filterTasks_DueDate(List<Task> list, String dueDate);
-    List<Task> filterTasks_EmployeeID(List<Task> list, String employeeID);
+    List<Task> filterTasks_EmployeeID(List<Task> list, int employeeID);
     List<Task> filterTasks_ProjectID(List<Task> list, int projectID);
     List<Task> filterTasks_Status(List<Task> list, String status);
     List<Task> filterTasks_Size(List<Task> list, int size);
@@ -76,6 +78,6 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
     List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
-    List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
+    List<Message> filterMessages_SenderID(List<Message> list, int SenderID, int RecipientID);
 
 }
