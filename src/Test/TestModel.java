@@ -1,6 +1,7 @@
 package Test;
 import Model.OdinModel;
 import Server.Employee;
+import Server.Project;
 import javax.xml.transform.Result;
 
 public class TestModel {
@@ -12,6 +13,7 @@ public class TestModel {
         //Testing employee operations - populate and read functions
         Employee employee;
         OdinModel model = new OdinModel();
+
         model.addEmployee(EMP_NAME, "Manager", 1234, "JohnUser", "doe");
         employee = model.getEmployee_Username(("JohnUser"));
 
@@ -29,6 +31,7 @@ public class TestModel {
 
         //Testing employee - delete function
         employee = model.getEmployee_Username(EMP_NAME);
+
         if (employee != null)
         {
             model.deleteEmployee_EmployeeID(employee.employeeID);
@@ -36,6 +39,22 @@ public class TestModel {
         }
 
 
+        //Testing project operations - populate and read functions
+        Project project;
+        model.addProject("TestProject", "2018-01-08", 3, 125, "testCode", "Open");
+        project = model.getProject_ProjectID(1);
+
+        boolean isProjUpdated = false;
+        isProjUpdated = model.editProject(project.projectID, project.name, project.dueDate, project.groupID, project.projectLeadID, "Testing incomplete", "Open");
+
+        if(isProjUpdated)
+        {
+            System.out.println("model.addProject test passed");
+        }
+        else
+        {
+            System.out.println("model.addProject test failed");
+        }
 
     }
 }
