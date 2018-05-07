@@ -4,26 +4,33 @@ import java.sql.ResultSet;
 
 public class WorkLog
 {
-    public int employeeID;
-    public int taskID;
     public int logID;
-    public String entryType;
+    public int taskID;
+    public int employeeID;
+    public String elapsedTime;
+    public String startTime;
+    public String stopTime;
     public String description;
 
     public WorkLog(ResultSet myRS) throws Exception
     {
-        this.employeeID = myRS.getInt("EmployeeID");
-        this.taskID = myRS.getInt("TaskID");
         this.logID = myRS.getInt("LogID");
-        this.entryType = myRS.getString("EntryID");
+        this.taskID = myRS.getInt("TaskID");
+        this.employeeID = myRS.getInt("EmployeeID");
+        this.elapsedTime = myRS.getString("ElapsedTime");
+        this.startTime = myRS.getString("StartTime");
+        this.stopTime = myRS.getString("StopTime");
         this.description = myRS.getString("Description");
     }
 
-    public WorkLog(int employeeID, int taskID, int logID, String entryType, String description) {
-        this.employeeID = employeeID;
-        this.taskID = taskID;
+    public WorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description)
+    {
         this.logID = logID;
-        this.entryType = entryType;
+        this.taskID = taskID;
+        this.employeeID = employeeID;
+        this.elapsedTime = elapsedTime;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
         this.description = description;
     }
 }

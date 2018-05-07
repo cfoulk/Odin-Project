@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class OdinModel implements OdinInterface
@@ -126,6 +127,32 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
+    public boolean stopWork(int logID, String description) throws Exception
+    {
+        DateTimeFormatter formatter;
+        LocalDateTime startTime, stopTime;
+        String startString, stopString, elapsedTime;
+        long hours, minutes, seconds;
+        WorkLog workLog = OS.getWorkLog_LogID(logID);
+        if(workLog != null)
+        {
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            stopTime = LocalDateTime.now();
+            stopString  = stopTime.format(formatter);
+            startString = workLog.startTime;
+            startTime = LocalDateTime.parse(startString.replace(".0", ""), formatter);
+            hours = startTime.until(stopTime, ChronoUnit.HOURS);
+            startTime = startTime.plusHours(hours);
+            minutes = startTime.until(stopTime, ChronoUnit.MINUTES);
+            startTime = startTime.plusMinutes(minutes);
+            seconds = startTime.until(stopTime, ChronoUnit.SECONDS);
+            elapsedTime = hours + " hours, " + minutes + " minutes, " + seconds + " seconds.";
+            editWorkLog(logID, workLog.taskID, workLog.employeeID, elapsedTime, startString, stopString, description);
+            return true;
+        }
+        return false;
+    }
+
     public boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID)
     {
         Message mes;
@@ -222,11 +249,9 @@ public class OdinModel implements OdinInterface
     {
         Employee emp;
         Task task;
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime startDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String startTime = date.format(formatter);
-        LocalDateTime parsedDate = LocalDateTime.parse(startTime, formatter);
-        startTime = parsedDate.toString().replace('T', ' ');
+        String startTime = startDateTime.format(formatter);
         try
         {
             emp = OS.getEmployee_EmployeeID(employeeID);
