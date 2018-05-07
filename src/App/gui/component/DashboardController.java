@@ -5,16 +5,11 @@ import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
 import Server.Task;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
-import com.sun.deploy.xml.XMLable;
-import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import com.jfoenix.controls.*;
-import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,8 +23,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-
-import javax.tools.Tool;
 
 import java.util.List;
 
@@ -54,9 +47,9 @@ public class DashboardController {
 
     public int selectedProject;
 
-    private HBox projectLineButtons = new HBox();
 
     private HBox taskLineButtons = new HBox();
+    private HBox projectLineButtons = new HBox();
 
     private List<Project> Projects;
 
@@ -69,14 +62,13 @@ public class DashboardController {
 
         persistentUser.initiateSampleData();
 
-        Projects = persistentUser.projectList;
-        Tasks = persistentUser.taskList;
+//        Projects = persistentUser.projectList;
+//        Tasks = persistentUser.taskList;
 
-//        OdinModel b = new OdinModel();
-//        Projects = b.getProjects();
-//        Tasks = b.getTasks();
+        OdinModel b = new OdinModel();
+        Projects = b.getProjects();
+        Tasks = b.getTasks();
 
-        initProjectButtons();
         initTaskButtons();
 
         initView();
@@ -99,16 +91,21 @@ public class DashboardController {
     }
 
     //Should initialize ProjectButtons based on PRIVILEGES of User
-    public void initProjectButtons() {
+    public HBox initProjectControlButtons(HBox projectLine) {
+        HBox projectLineButtons = new HBox();
         projectLineButtons.getChildren().add(createIconButton("View","View Project"));
         projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
 
+
         JFXRippler expand = createIconButton("Arrowhead-Down","Expand");
+        //If already collapsed rotate button to collapse position
+        if(projectIsCollapsed(projectLine)){
+            expand.setRotate(180);
+        }
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             double rotate = expand.getRotate();
             p(rotate);
-            if(rotate == (double) 0) {
-                showTasks((HBox) expand.getParent().getParent());
+            if(rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
                 expand.setRotate(180);
                 p(expand.getRotate());
             }
@@ -117,12 +114,14 @@ public class DashboardController {
                 expand.setRotate(0);
             }
         });
-//        expand.setRotate();
+
         p(expand.getRotate());
         projectLineButtons.getChildren().add(expand);
 
         projectLineButtons.getStyleClass().add("projectLineButtons");
         HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
+        this.projectLineButtons = projectLineButtons;
+        return projectLineButtons;
     }
 
     //Should initialize view (with collapsed projects)
@@ -133,6 +132,15 @@ public class DashboardController {
             projectline.setId(Integer.toString(i));
             View.getChildren().add(projectline);
         }
+    }
+
+    private boolean projectIsCollapsed(HBox projectLine){
+        Object nxtItem;
+        int index;
+        if((index = View.getChildren().indexOf(projectLine))+1 < View.getChildren().size() && (nxtItem = View.getChildren().get(index+1)) instanceof  VBox){
+            return true;
+        }
+        return false;
     }
 
     //Creates a project line
@@ -146,7 +154,7 @@ public class DashboardController {
             @Override
             public void handle(Event event) {
                 if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
-                    projectLine.getChildren().add(projectLineButtons);
+                    projectLine.getChildren().add(initProjectControlButtons(projectLine));
                 }
                 if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
                     projectLine.getChildren().remove(projectLineButtons);
@@ -160,13 +168,14 @@ public class DashboardController {
 
     public void closeTasks(HBox projectLine){
         Object nxtItem;
-        if((nxtItem = View.getChildren().get(View.getChildren().indexOf(projectLine)+1)) instanceof  VBox){
+        int index;
+        if((index = View.getChildren().indexOf(projectLine)) < View.getChildren().size()+1 && (nxtItem = View.getChildren().get(index+1)) instanceof  VBox){
             View.getChildren().remove(nxtItem);
         }
     }
 
     //Will show the tasks in the project
-    public void showTasks(HBox projectLine){
+    public boolean showTasks(HBox projectLine){
         VBox taskBox = new VBox();
 
         Project project = Projects.get(Integer.parseInt(projectLine.getId()));
@@ -184,7 +193,9 @@ public class DashboardController {
         taskBox.setSpacing(2);
         if(taskBox.getChildren().size() != 0) {
             View.getChildren().add(View.getChildren().indexOf(projectLine) + 1, taskBox);
+            return true;
         }
+        return false;
 
     }
 

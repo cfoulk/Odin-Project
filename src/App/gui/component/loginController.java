@@ -47,8 +47,8 @@ public class loginController {
 
     @FXML
     void login(ActionEvent event) {
-        switchToScene();
-//        login();
+//        switchToScene();
+        login();
     }
 
     //Used to pass in decorator to controller (Used by main)
