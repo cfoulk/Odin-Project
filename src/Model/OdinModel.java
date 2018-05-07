@@ -1,14 +1,14 @@
 package Model;
 
 import Server.*;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class OdinModel implements OdinInterface
 {
@@ -97,7 +97,7 @@ public class OdinModel implements OdinInterface
                     if(empHold.groupID != projHold.groupID) return false;
                 }
                 employees = ",";
-                for(Integer integer : emp) employees += integer.toString() + ',';
+                for(Integer integer : emp) employees = employees.concat(integer.toString() + ',');
                 OS.editTask(taskID,name,dueDate,projectID,employees,description,size, status);
                 return true;
             }
@@ -106,19 +106,23 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description)
+    public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description)
     {
         WorkLog log;
+        Employee emp;
+        Task task;
         try
         {
             log = OS.getWorkLog_LogID(logID);
-            if (log != null)
+            emp = OS.getEmployee_EmployeeID(employeeID);
+            task = OS.getTask_TaskID(taskID);
+            if(log != null && emp != null && task != null && task.hasEmployee(employeeID))
             {
-                OS.editWorkLog(logID,employeeID,entryType, taskID,description);
+                OS.editWorkLog(logID, taskID, employeeID, elapsedTime, startTime, stopTime, description);
                 return true;
             }
         }
-        catch (Exception e) {e.printStackTrace() ;}
+        catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
@@ -188,7 +192,7 @@ public class OdinModel implements OdinInterface
                 if(empHold.groupID != projHold.groupID) return false;
             }
             employees = ",";
-            for(Integer integer : emp) employees += integer.toString() + ',';
+            for(Integer integer : emp) employees = employees.concat(integer.toString() + ',');
             OS.addTask(name, dueDate, projectID, employees, description, size, status);
             return true;
         }
@@ -196,14 +200,42 @@ public class OdinModel implements OdinInterface
         return false;
     }
 
-    public boolean addWorkLog(int employeeID, String entryType, int taskID, String description)
+    public boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description)
     {
         Employee emp;
+        Task task;
         try
         {
             emp = OS.getEmployee_EmployeeID(employeeID);
-            if(emp != null) OS.addWorkLog(employeeID, entryType, taskID, description);
-            return true;
+            task = OS.getTask_TaskID(taskID);
+            if(emp != null && task != null && task.hasEmployee(employeeID))
+            {
+                OS.addWorkLog(taskID, employeeID, elapsedTime, startTime, stopTime, description);
+                return true;
+            }
+        }
+        catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean startWork(int taskID, int employeeID)
+    {
+        Employee emp;
+        Task task;
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String startTime = date.format(formatter);
+        LocalDateTime parsedDate = LocalDateTime.parse(startTime, formatter);
+        startTime = parsedDate.toString().replace('T', ' ');
+        try
+        {
+            emp = OS.getEmployee_EmployeeID(employeeID);
+            task = OS.getTask_TaskID(taskID);
+            if(emp != null && task != null && task.hasEmployee(employeeID))
+            {
+                OS.startWorkLog(taskID, employeeID, startTime);
+                return true;
+            }
         }
         catch (Exception e) { e.printStackTrace(); }
         return false;
@@ -599,14 +631,6 @@ public class OdinModel implements OdinInterface
         return null;
     }
 
-    public List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType)
-    {
-        List<WorkLog> workLogs = new ArrayList<>();
-        for(WorkLog workLog : list)
-            { if(workLog.entryType.toLowerCase().compareTo(entryType.toLowerCase()) == 0) workLogs.add(workLog); }
-        return workLogs;
-    }
-
     public List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID)
     {
         List<WorkLog> workLogs = new ArrayList<>();
@@ -644,6 +668,13 @@ public class OdinModel implements OdinInterface
         List<Integer> list = new ArrayList<>();
         StringTokenizer stk = new StringTokenizer(employees, ",");
         while(stk.hasMoreTokens()) list.add(Integer.valueOf(stk.nextToken()));
+        return list;
+    }
+
+    public List<Integer> sortEmployeeIDs(String emp)
+    {
+        List<Integer> list = extractEmployeeIDs(emp);
+        Collections.sort(list);
         return list;
     }
 

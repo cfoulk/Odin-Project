@@ -70,13 +70,15 @@ public class OdinServer
                 "WHERE TaskID = " + taskID + ";");
     }
 
-    public void editWorkLog (int logID, String employeeID, String entryType, int taskID, String description) throws Exception
+    public void editWorkLog (int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE work log SET " +
-                "EmployeeID = " + employeeID + ", " +
-                "EntryType = '" + entryType + "', " +
+        this.stmt.executeUpdate("UPDATE worklogs SET " +
                 "TaskID = " + taskID + ", " +
-                "Description = '" + description + "', " +
+                "EmployeeID = " + employeeID + ", " +
+                "ElapsedTime = '" + elapsedTime + "', " +
+                "StartTime = '" + startTime + "', " +
+                "StopTime = '" + stopTime + "', " +
+                "Description = '" + description + "' " +
                 "WHERE LogID = " + logID + ";" );
     }
 
@@ -108,13 +110,19 @@ public class OdinServer
     public void addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status) throws Exception
     {
         this.stmt.executeUpdate("INSERT INTO tasks (Name, DueDate, ProjectID, Employees, Description, Size, Status) " +
-                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", " + employees + ", '" + description + "', " + size + ", '" + status + "');");
+                "VALUES ('" + name + "', '" + dueDate + "', " + projectID + ", '" + employees + "', '" + description + "', " + size + ", '" + status + "');");
     }
 
-    public void addWorkLog(int employeeID, String entryType, int taskID, String description) throws Exception
+    public void addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description) throws Exception
     {
-        this.stmt.executeUpdate("INSERT INTO WorkLog (EmployeeID, EntryType, TaskID, Description) " +
-                "VALUES (" + employeeID + ", '" + entryType + "', " + taskID + ", '" + description + "');");
+        this.stmt.executeUpdate("INSERT INTO worklogs (TaskID, EmployeeID, ElapsedTime, StartTime, StopTime, Description) " +
+                "VALUES (" + taskID + ", " + employeeID + ", '" + elapsedTime + "', '" + startTime + "', '" + stopTime + "', '" + description + "');");
+    }
+
+    public void startWorkLog(int taskID, int employeeID, String startTime) throws Exception
+    {
+        this.stmt.executeUpdate("INSERT INTO worklogs (TaskID, EmployeeID, StartTime)" +
+                "VALUES (" + taskID + ", " + employeeID + ", '" + startTime + "');");
     }
 
     public void addMessage(String message, int recipientID, int senderID) throws Exception

@@ -15,14 +15,14 @@ public interface OdinInterface
     boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password);
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status);
-    boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description);
+    public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
     boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
-    boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
+    boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
     boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
@@ -74,7 +74,6 @@ public interface OdinInterface
     List<Task> filterTasks_Status(List<Task> list, String status);
     List<Task> filterTasks_Size(List<Task> list, int size);
     WorkLog filterWorkLog_LogID(List<WorkLog> list, int logID);
-    List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
     List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
