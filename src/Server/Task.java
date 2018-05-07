@@ -35,6 +35,11 @@ public class Task {
         this.status = status;
     }
 
+    public boolean hasEmployee(int employeeID)
+    {
+        return(this.employees.contains("," + employeeID + ","));
+    }
+
     String taskLine()
     {
         return (this.employees + "\t" + this.name + "\t" + this.projectID + "\t" +
