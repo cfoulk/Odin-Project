@@ -16,17 +16,20 @@ public interface OdinInterface
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status);
     boolean editWorkLog(int logID, String employeeID, String entryType, int taskID, String description);
+    boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
     boolean addWorkLog(int employeeID, String entryType, int taskID, String description);
-    boolean addMessage(String message, int employeeID, int senderID);
+    boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
+    boolean deleteEmployee_EmployeeID(int employeeID);
+    boolean deleteTask_TaskID(int taskID);
     boolean deleteMessage_MessageID(int messageID); //
-    boolean deleteMessages_EmployeeID(int employeeID);
+    boolean deleteMessages_RecipientID(int recipientID);
     boolean deleteMessages_SenderID(int senderID);
 
     //Get Singles
@@ -51,7 +54,7 @@ public interface OdinInterface
     List<WorkLog> getWorkLogs_EmployeeID(int employeeID);
     List<WorkLog> getWorkLogs_TaskID(int taskID);
     List<Message> getMessages();
-    List<Message> getMessages_EmployeeID(int employeeID);
+    List<Message> getMessages_RecipientID(int employeeID);
     List<Message> getMessages_SenderID(int senderID);
 
     //Filter sets
@@ -74,7 +77,7 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EntryType(List<WorkLog> list, String entryType);
     List<WorkLog> filterWorkLog_TaskID(List<WorkLog> list, int taskID);
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
-    List<Message> filterMessages_EmployeeID(List<Message> list, int EmployeeID);
-    List<Message> filterMessages_SenderID(List<Message> list, int SenderID);
+    List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
+    List<Message> filterMessages_SenderID(List<Message> list, int SenderID, int RecipientID);
 
 }

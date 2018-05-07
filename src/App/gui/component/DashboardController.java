@@ -1,8 +1,17 @@
 package App.gui.component;
 
 import App.gui.persistentUser;
+import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
+import Server.Task;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.svg.SVGGlyphLoader;
+import com.sun.deploy.xml.XMLable;
+import javafx.beans.value.ChangeListener;
+import javafx.event.Event;
 import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -10,10 +19,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -35,9 +47,14 @@ public class DashboardController {
     private Text Username;
 
     @FXML
+    private VBox View;
+
+    @FXML
     private StackPane stackPane;
 
     public double heightHeader;
+
+    private HBox projectLineButtons = new HBox();
 
     public void initialize() throws Exception {
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
@@ -46,38 +63,107 @@ public class DashboardController {
 
         persistentUser.initiateSampleData();
 
-        List<Project> a = persistentUser.projectList;
+        OdinModel b = new OdinModel();
 
+//        List<Project> a = persistentUser.projectList;
+        List<Project> a = b.getProjects();
+
+
+        initProjectButtons();
+
+        initView(a);
 
         heightHeader = 0.162;
-        p(heightHeader);
-        p(splitPane.getDividers().get(0).getPosition());
+//        p(heightHeader);
+//        p(splitPane.getDividers().get(0).getPosition());
         splitPane.setDividerPosition(0,heightHeader);
-        p(splitPane.getDividers().get(0).getPosition());
+//        p(splitPane.getDividers().get(0).getPosition());
 
     }
 
-    private JFXRippler createIconButton(String iconName, String message) throws Exception {
 
-        SVGGlyph glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
+    //Should initialize ProjectButtons based on PRIVILEGES
+    public void initProjectButtons() {
+        projectLineButtons.getChildren().add(createIconButton("View","View Project"));
+        projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
+        projectLineButtons.getChildren().add(createIconButton("Arrowhead-Down","Expand"));
+        projectLineButtons.getStyleClass().add("projectLineButtons");
+        HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
+    }
+
+    //Should initialize view (with collapsed projects)
+    private void initView(List<Project> projects){
+        for(int i = 0; i < projects.size();i++ ){
+            HBox projectline = createProjectLine(projects.get(i));
+            //Set id of Hbox as related to the array list
+            projectline.setId(Integer.toString(i));
+            View.getChildren().add(projectline);
+        }
+    }
+
+    //Creates a project line
+    public HBox createProjectLine(Project project){
+        //Start project line with Project name
+        HBox projectLine = new HBox(new Label(project.name));
+        projectLine.getStyleClass().add("projectLine");
+//        projectLine.hoverProperty().addListener(ChangeListener<>{});
+        //add Listener
+        EventHandler a = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                    projectLine.getChildren().add(projectLineButtons);
+                }
+                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                    projectLine.getChildren().remove(projectLineButtons);
+                }
+            }
+        };
+        projectLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
+        projectLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        return projectLine;
+    }
+
+    //Create a task line
+    public HBox createTaskLine(Task task){
+        return null;
+    }
+
+    //Create a Worklog line
+    public HBox createWorkLogLine(Task task){
+        return null;
+    }
+
+
+
+    private JFXRippler createIconButton(String iconName, String tooltip) {
+
+        Node glyph = null;
+
+        //We will try and load glyph. If not available replace glyph with text
+        try {
+            glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
+            ((SVGGlyph)glyph).setSize(27);
+            ((SVGGlyph)glyph).setFill(Color.valueOf("#FFFFFF"));
+        } catch (Exception e) {
+            p("Glyph does not exist!");
+            glyph = new Text(iconName);
+            ((Text) glyph).setFill(Color.valueOf("#FFFFFF"));
+        }
+
         StackPane pane = new StackPane();
-
-        glyph.setSize(30);
-        glyph.setFill(Color.valueOf("#FFFFFF"));
         pane.getChildren().add(glyph);
-        pane.setPadding(new Insets(11));
+        pane.setPadding(new Insets(10));
 
         JFXRippler rippler = new JFXRippler(pane);
         rippler.getRipplerRadius();
         rippler.getStyleClass().add("icon-rippler");
 //        rippler.setRipplerFill(Color.valueOf("#254d87"));
 
-        if(message != null || message != "") {
-            Tooltip tooltip = new Tooltip(message);
-            Tooltip.install(rippler,tooltip);
+        if(tooltip != null || tooltip != "") {
+            Tooltip toolTip = new Tooltip(tooltip);
+            Tooltip.install(rippler,toolTip);
         }
-
-
 
         return rippler;
     }
@@ -99,8 +185,7 @@ public class DashboardController {
         loadEmployeeDialog(oldEmployee);
     }
 
-    void loadEmployeeDialog(Employee employee)
-    {
+    void loadEmployeeDialog(Employee employee) {
         JFXDialogLayout content = new JFXDialogLayout();
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXTextField    name = new JFXTextField(),
@@ -108,8 +193,8 @@ public class DashboardController {
                         groupID = new JFXTextField(),
                         username = new JFXTextField(),
                         password = new JFXTextField();
-        JFXButton confirm = new JFXButton("Confirm");
-        JFXButton cancel = new JFXButton("Cancel");
+        JFXRippler confirm = createIconButton("Check", "Save");
+        JFXRippler cancel = createIconButton("Cancel", "Cancel");
         name.setPromptText("Name");
         position.setPromptText("Position");
         groupID.setPromptText("Group Number");
@@ -123,13 +208,13 @@ public class DashboardController {
             groupID.setText(Integer.toString(employee.groupID));
             username.setText(employee.username);
             password.setText(employee.password);
-            confirm.setOnAction(event -> dialog.close());
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
         }
         else {
             content.setHeading(new Text("Add Employee"));
-            confirm.setOnAction(event -> dialog.close());
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
         }
-        cancel.setOnAction(event -> dialog.close());
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
         content.setBody(new VBox(name, position, groupID, username, password));
         content.setActions(confirm, cancel);
         dialog.show();

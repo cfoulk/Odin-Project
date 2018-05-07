@@ -9,20 +9,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class loginController {
+
+    private JFXDecorator decorator;
 
     @FXML
     private JFXTextField usernameField;
@@ -48,6 +48,15 @@ public class loginController {
     @FXML
     void login(ActionEvent event) {
         //switchToScene(event);
+        login();
+    }
+
+    //Used to pass in decorator to controller (Used by main)
+    public void setDecorator(JFXDecorator decorator) {
+        this.decorator = decorator;
+    }
+
+    void login() {
         OdinModel a = null;
         try {
 
@@ -67,7 +76,7 @@ public class loginController {
                     break;
                 default:
                     System.out.println("Success");
-                    switchToScene(event);
+                    switchToScene();
                     break;
             }
             connection.setStyle("-fx-background-color: #00E676");
@@ -95,13 +104,13 @@ public class loginController {
         }
     }
 
-    public void switchToScene(ActionEvent event){
-        Window root = loginButton.getScene().getWindow();
+    public void switchToScene() {
         try {
             Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-            window.setScene(new Scene(dashboard));
+            decorator.setContent(dashboard);
+            //Resizes window the scene
+            decorator.getScene().getWindow().sizeToScene();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,6 +141,12 @@ public class loginController {
 //        contentArray.getChildren().add(0, button);
         contentArray.getChildren().add(0, logo);
 
+        passwordField.addEventHandler(KeyEvent.KEY_PRESSED,
+                event -> {
+                    if (event.getCode().equals(KeyCode.ENTER)) {
+                        login();
+                    }
+                });
 //        usernameField.requestFocus(); //Doesn't work
         Platform.runLater(() -> usernameField.requestFocus());
 //        Platform.runLater(new Runnable() {
@@ -142,6 +157,4 @@ public class loginController {
 //        });
 
     }
-
-
 }

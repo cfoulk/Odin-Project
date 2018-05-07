@@ -33,7 +33,7 @@ public class persistentUser {
             for(Task task : holdTasks) taskList.add(task);
         }
         workLogList = OM.getWorkLogs_EmployeeID(currentUser.employeeID);
-        messageList = OM.getMessages_EmployeeID(currentUser.employeeID);
+        messageList = OM.getMessages_RecipientID(currentUser.recipientID);
     }*/
         currentUser = OM.getEmployee_Username(username);
         employeeList = OM.getEmployees();

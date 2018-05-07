@@ -1,11 +1,12 @@
 package App.gui.component;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
 
 public class TestUIController {
     @FXML

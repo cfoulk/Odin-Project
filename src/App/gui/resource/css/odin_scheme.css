@@ -1,3 +1,39 @@
+.jfx-decorator {
+    -fx-decorator-color: #254d87;
+}
+
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+}
+
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
+
+.label{
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+//Project Line
+.projectLine{
+    -fx-background-color: #2b5797;
+    -fx-padding: 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8;
+}
+
+.projectLine:hover{
+    -fx-background-color: #00838F;
+}
+
+//ProjectLineButtons
+.projectLineButtons{
+    -fx-alignment: CENTER_RIGHT;
+}
+
 //text field line
 .input-line{
     -fx-pref-height: 0;

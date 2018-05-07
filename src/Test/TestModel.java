@@ -7,19 +7,35 @@ public class TestModel {
 
     public static void main(String[] args) throws Exception {
 
-        //Testing employee operations
+        String EMP_NAME = "John";
+
+        //Testing employee operations - populate and read functions
         Employee employee;
         OdinModel model = new OdinModel();
-        model.addEmployee("John", "Manager", 1234, "John", "doe");
-        employee = model.getEmployee_Username(("John"));
+        model.addEmployee(EMP_NAME, "Manager", 1234, "JohnUser", "doe");
+        employee = model.getEmployee_Username(("JohnUser"));
 
-        if (model.editEmployee(employee.employeeID, employee.name, employee.position, employee.groupID, employee.username, "xyz"))
+        boolean isEmpUpdated = false;
+        isEmpUpdated = model.editEmployee(employee.employeeID, employee.name, employee.position, employee.groupID, employee.username, "xyz");
+
+        if (isEmpUpdated)
         {
             System.out.println("model.addEmployee test passed");
         }
-        else {
+        else
+        {
             System.out.println("model.addEmployee test failed");
         }
+
+        //Testing employee - delete function
+        employee = model.getEmployee_Username(EMP_NAME);
+        if (employee != null)
+        {
+            model.deleteEmployee_EmployeeID(employee.employeeID);
+            System.out.println("deleteEmployee_EmployeeID method passed");
+        }
+
+
 
     }
 }
