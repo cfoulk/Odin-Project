@@ -220,7 +220,7 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
-    public boolean startWork(int taskID, int employeeID) {
+    public int startWork(int taskID, int employeeID) {
         Employee emp;
         Task task;
         LocalDateTime startDateTime = LocalDateTime.now();
@@ -230,13 +230,12 @@ public class OdinModel implements OdinInterface {
             emp = OS.getEmployee_EmployeeID(employeeID);
             task = OS.getTask_TaskID(taskID);
             if (emp != null && task != null && task.hasEmployee(employeeID)) {
-                OS.startWorkLog(taskID, employeeID, startTime);
-                return true;
+                return OS.startWorkLog(taskID, employeeID, startTime);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return -1;
     }
 
     public boolean addMessage(String message, int recipientID, int senderID) {
