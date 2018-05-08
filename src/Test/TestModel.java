@@ -1,6 +1,7 @@
 package Test;
 import Model.OdinModel;
 import Server.Employee;
+import Server.OdinServer;
 import Server.Project;
 import Server.Task;
 import Server.WorkLog;
@@ -81,6 +82,24 @@ public class TestModel {
         WorkLog worklog;
         model.startWork(6, 12);
         worklog = model.getWorkLog_LogID();
+
+    }
+
+    //Please don't use this until you have populateTables finished.
+    void emptyTables() throws Exception
+    {
+        OdinServer OS = new OdinServer();
+        OS.stmt.executeUpdate(
+                    "TRUNCATE TABLE employees;" +
+                        "TRUNCATE TABLE projects;" +
+                        "TRUNCATE TABLE tasks;" +
+                        "TRUNCATE TABLE worklogs;" +
+                        "TRUNCATE TABLE messges;");
+    }
+
+    void fillTables() throws Exception
+    {
+        OdinModel OM = new OdinModel();
 
     }
 }

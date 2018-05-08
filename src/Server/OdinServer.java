@@ -119,10 +119,15 @@ public class OdinServer
                 "VALUES (" + taskID + ", " + employeeID + ", '" + elapsedTime + "', '" + startTime + "', '" + stopTime + "', '" + description + "');");
     }
 
-    public void startWorkLog(int taskID, int employeeID, String startTime) throws Exception
+    public int startWorkLog(int taskID, int employeeID, String startTime) throws Exception
     {
+        ResultSet RS;
         this.stmt.executeUpdate("INSERT INTO worklogs (TaskID, EmployeeID, StartTime)" +
-                "VALUES (" + taskID + ", " + employeeID + ", '" + startTime + "');");
+                "VALUES (" + taskID + ", " + employeeID + ", '" + startTime + "');",
+                Statement.RETURN_GENERATED_KEYS);
+        RS = this.stmt.getGeneratedKeys();
+        if(RS.next()) return RS.getInt(1);
+        return -1;
     }
 
     public void addMessage(String message, int recipientID, int senderID) throws Exception
