@@ -2,6 +2,7 @@ package Test;
 import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
+import Server.Task;
 import javax.xml.transform.Result;
 
 public class TestModel {
@@ -45,7 +46,7 @@ public class TestModel {
         project = model.getProject_ProjectID(1);
 
         boolean isProjUpdated = false;
-        isProjUpdated = model.editProject(project.projectID, project.name, project.dueDate, project.groupID, project.projectLeadID, "Testing incomplete", "Open");
+        isProjUpdated = model.editProject(4, "TestProject", "2018-01-08", 3, 125, "Testing incomplete", "Open");
 
         if(isProjUpdated)
         {
@@ -54,6 +55,20 @@ public class TestModel {
         else
         {
             System.out.println("model.addProject test failed");
+        }
+
+
+        //Testing task operations - populate and read functions
+        Task task;
+        model.addTask("Another test", "2018-05-12", 3, "2", "and another one!", 3, "Open");
+        task = model.getTask_TaskID(5);
+
+        boolean isTaskUpdated = false;
+        isTaskUpdated = model.editTask(5, "Another Test", "2018-05-12", "2", 3, "Changed description", 4, "Open");
+
+        if(isTaskUpdated)
+        {
+            System.out.println("model.addTask test passed");
         }
 
     }
