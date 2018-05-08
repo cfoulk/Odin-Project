@@ -1,6 +1,7 @@
 package Test;
 import Model.OdinModel;
 import Server.Employee;
+import Server.OdinServer;
 import Server.Project;
 import javax.xml.transform.Result;
 
@@ -55,6 +56,21 @@ public class TestModel {
         {
             System.out.println("model.addProject test failed");
         }
+
+    }
+
+    void emptyTables() throws Exception
+    {
+        OdinServer OS = new OdinServer();
+        OS.stmt.executeUpdate(
+                "TRUNCATE TABLE employees;" +
+                    "TRUNCATE TABLE projects;" +
+
+    }
+
+    void fillTables() throws Exception
+    {
+        OdinModel OM = new OdinModel();
 
     }
 }
