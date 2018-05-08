@@ -53,7 +53,7 @@
                         </VBox>
                      </children>
                   </AnchorPane>
-                  <ScrollPane fitToWidth="true" pannable="true" prefHeight="264.0" prefWidth="598.0">
+                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="264.0" prefWidth="598.0">
                     <content>
                       <AnchorPane style="-fx-background-color: #ffffff;">
                            <children>

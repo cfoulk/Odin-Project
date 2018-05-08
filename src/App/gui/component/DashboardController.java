@@ -5,6 +5,7 @@ import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
 import Server.Task;
+import Server.WorkLog;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -16,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
@@ -55,21 +57,21 @@ public class DashboardController {
 
     private List<Task> Tasks;
 
+    private List<WorkLog> Worklogs;
+
     public void initialize() throws Exception {
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
         UserBar.getChildren().add(createIconButton("Gear", "Settings"));
         UserBar.getChildren().add(createIconButton("Exit", "Logout"));
 
         persistentUser.initiateSampleData();
-
 //        Projects = persistentUser.projectList;
 //        Tasks = persistentUser.taskList;
 
         OdinModel b = new OdinModel();
         Projects = b.getProjects();
         Tasks = b.getTasks();
-
-        initTaskButtons();
+        Worklogs = b.getWorkLogs();
 
         initView();
 
@@ -81,14 +83,6 @@ public class DashboardController {
 
     }
 
-    //Should initialize taskButtons based on PRIVILEGES of User
-    public void initTaskButtons() {
-        taskLineButtons.getChildren().add(createIconButton("View","View Project"));
-        taskLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
-        taskLineButtons.getChildren().add(createIconButton("Arrowhead-Down","Expand"));
-        taskLineButtons.getStyleClass().add("projectLineButtons");
-        HBox.setHgrow(taskLineButtons,Priority.ALWAYS);
-    }
 
     //Should initialize ProjectButtons based on PRIVILEGES of User
     public HBox initProjectControlButtons(HBox projectLine) {
@@ -104,7 +98,6 @@ public class DashboardController {
         }
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             double rotate = expand.getRotate();
-            p(rotate);
             if(rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
                 expand.setRotate(180);
             }
@@ -132,9 +125,8 @@ public class DashboardController {
     }
 
     private boolean projectIsCollapsed(HBox projectLine){
-        Object nxtItem;
         int index;
-        if((index = View.getChildren().indexOf(projectLine))+1 < View.getChildren().size() && (nxtItem = View.getChildren().get(index+1)) instanceof  VBox){
+        if((index = View.getChildren().indexOf(projectLine))+1 < View.getChildren().size() && View.getChildren().get(index+1) instanceof  VBox){
             return true;
         }
         return false;
@@ -175,8 +167,8 @@ public class DashboardController {
     public boolean showTasks(HBox projectLine){
         VBox taskBox = new VBox();
 
+        //Filters for tasks by project id
         Project project = Projects.get(Integer.parseInt(projectLine.getId()));
-
         int projID = project.projectID;
 
         for(int i = 0; i < Tasks.size(); i++){
@@ -193,7 +185,6 @@ public class DashboardController {
             return true;
         }
         return false;
-
     }
 
     //Create a task line
@@ -207,7 +198,7 @@ public class DashboardController {
             @Override
             public void handle(Event event) {
                 if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
-                    taskLine.getChildren().add(taskLineButtons);
+                    taskLine.getChildren().add(initTaskControlButtons(taskLine));
                 }
                 if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
                     taskLine.getChildren().remove(taskLineButtons);
@@ -222,14 +213,88 @@ public class DashboardController {
         return taskLine;
     }
 
-    //TODO
-    public VBox workLog(){
-        return null;
+    //Should initialize taskButtons based on PRIVILEGES of User
+    public HBox initTaskControlButtons(HBox projectLine) {
+        HBox taskLineButtons = new HBox();
+        taskLineButtons.getChildren().add(createIconButton("View","View Project"));
+        taskLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
+
+
+        JFXRippler expand = createIconButton("Arrowhead-Down","View Worklog");
+        //If already collapsed rotate button to collapse position
+        if(projectIsCollapsed(projectLine)){
+            expand.setRotate(180);
+        }
+        expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+            double rotate = expand.getRotate();
+            if(rotate == (double) 0 && showWorklog((HBox) expand.getParent().getParent())) {
+                expand.setRotate(180);
+            }
+            else if(rotate == (double) 180){
+                closeTasks((HBox) expand.getParent().getParent());
+                expand.setRotate(0);
+            }
+        });
+        taskLineButtons.getChildren().add(expand);
+
+        taskLineButtons.getStyleClass().add("projectLineButtons");
+        HBox.setHgrow(taskLineButtons,Priority.ALWAYS);
+        this.taskLineButtons = taskLineButtons;
+        return taskLineButtons;
     }
 
+    //TODO
+    public boolean showWorklog(HBox taskLine){
+        VBox worklogBox = new VBox();
+        ScrollPane worklogPane = new ScrollPane(worklogBox);
+        DragResizer.makeResizable(worklogPane, DragResizer.SOUTH);
+
+        // Init taskID to filter worklogs
+        //TODO rework this where id the line id is actually taskID instead of index (because removing a task will fk the index not id)
+        Task task = Tasks.get(Integer.parseInt(taskLine.getId()));
+        int taskID = task.taskID;
+
+        for(int i = 0; i < Worklogs.size(); i++){
+            if(taskID == Worklogs.get(i).taskID){
+                HBox worklog = createWorkLogLine(Worklogs.get(i));
+                worklogBox.getChildren().add(worklog);
+                //TODO <see above TODO>
+                taskLine.setId(String.valueOf(i));
+            }
+        }
+        worklogBox.setPadding(new Insets(0,5,0,40));
+        worklogBox.setSpacing(2);
+        if(worklogBox.getChildren().size() != 0 && taskLine.getParent() instanceof VBox) {
+            VBox taskbox = (VBox) taskLine.getParent();
+            taskbox.getChildren().add(taskbox.getChildren().indexOf(taskLine) + 1, worklogPane);
+            return true;
+        }
+        return false;    }
+
     //Create a Worklog line
-    public HBox createWorkLogLine(Task task){
-        return null;
+    public HBox createWorkLogLine(WorkLog workLog) {
+        //Start worlog line with Project name
+        HBox workLogLine = new HBox(new Label(Integer.toString(workLog.employeeID)));
+        workLogLine.getStyleClass().add("taskLine");
+
+        //add Listener
+        EventHandler a = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                    workLogLine.getChildren().add(initTaskControlButtons(workLogLine));
+                }
+                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                    workLogLine.getChildren().remove(taskLineButtons);
+                }
+                if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)){
+
+                }
+            }
+        };
+        workLogLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
+        workLogLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        return workLogLine;
     }
 
 
