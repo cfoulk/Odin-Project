@@ -43,7 +43,17 @@
 
 .taskLine:hover{
     -fx-border-color: #00b69f;
-    -fx-border-width: 4;
+    -fx-border-width: 3;
+}
+
+.worklogLine{
+    -fx-background-color: #A9A9A9;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.worklogLine:hover{
+    -fx-border-color: #FFFFFF;
+    -fx-background-radius: 2;
 }
 
 //ProjectLineButtons
