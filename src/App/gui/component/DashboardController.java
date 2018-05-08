@@ -16,10 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -214,15 +211,13 @@ public class DashboardController {
     }
 
     //Should initialize taskButtons based on PRIVILEGES of User
-    public HBox initTaskControlButtons(HBox projectLine) {
+    public HBox initTaskControlButtons(HBox taskLine) {
         HBox taskLineButtons = new HBox();
         taskLineButtons.getChildren().add(createIconButton("View","View Project"));
-        taskLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
-
 
         JFXRippler expand = createIconButton("Arrowhead-Down","View Worklog");
         //If already collapsed rotate button to collapse position
-        if(projectIsCollapsed(projectLine)){
+        if(taskIsCollapsed(taskLine)){
             expand.setRotate(180);
         }
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
@@ -231,7 +226,7 @@ public class DashboardController {
                 expand.setRotate(180);
             }
             else if(rotate == (double) 180){
-                closeTasks((HBox) expand.getParent().getParent());
+                closeWorklog((HBox) expand.getParent().getParent());
                 expand.setRotate(0);
             }
         });
@@ -243,11 +238,43 @@ public class DashboardController {
         return taskLineButtons;
     }
 
+    public void closeWorklog(HBox taskLine){
+        Object nxtItem;
+        int index;
+        VBox taskview = (VBox) taskLine.getParent();
+        if((index = taskview.getChildren().indexOf(taskLine)) < taskview.getChildren().size()+1 && (nxtItem = taskview.getChildren().get(index+1)) instanceof  ScrollPane){
+            taskview.getChildren().remove(nxtItem);
+        }
+    }
+
+    private boolean taskIsCollapsed(HBox taskLine){
+        int index;
+        VBox taskview = (VBox) taskLine.getParent();
+        taskview.getChildren();
+        if((index = taskview.getChildren().indexOf(taskLine))+1 < taskview.getChildren().size() && taskview.getChildren().get(index+1) instanceof  ScrollPane){
+            return true;
+        }
+        return false;
+    }
+
+
     //TODO
     public boolean showWorklog(HBox taskLine){
         VBox worklogBox = new VBox();
-        ScrollPane worklogPane = new ScrollPane(worklogBox);
+
+        ScrollPane worklogPane = new ScrollPane();
+        worklogPane.setFitToWidth(true);
+
+        worklogBox.setFillWidth(true);
+
+        worklogPane.setContent(worklogBox);
+        worklogPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        worklogPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        worklogPane.setPrefHeight(140);
+        worklogPane.setFitToHeight(false);
         DragResizer.makeResizable(worklogPane, DragResizer.SOUTH);
+
+        worklogPane.setStyle("-fx-border-width: 0 0 2 0; -fx-border-color: grey;");
 
         // Init taskID to filter worklogs
         //TODO rework this where id the line id is actually taskID instead of index (because removing a task will fk the index not id)
@@ -262,8 +289,9 @@ public class DashboardController {
                 taskLine.setId(String.valueOf(i));
             }
         }
-        worklogBox.setPadding(new Insets(0,5,0,40));
+        worklogBox.setPadding(new Insets(0,5,0,10));
         worklogBox.setSpacing(2);
+
         if(worklogBox.getChildren().size() != 0 && taskLine.getParent() instanceof VBox) {
             VBox taskbox = (VBox) taskLine.getParent();
             taskbox.getChildren().add(taskbox.getChildren().indexOf(taskLine) + 1, worklogPane);
@@ -275,7 +303,7 @@ public class DashboardController {
     public HBox createWorkLogLine(WorkLog workLog) {
         //Start worlog line with Project name
         HBox workLogLine = new HBox(new Label(Integer.toString(workLog.employeeID)));
-        workLogLine.getStyleClass().add("taskLine");
+        workLogLine.getStyleClass().add("worklogLine");
 
         //add Listener
         EventHandler a = new EventHandler() {
@@ -297,6 +325,10 @@ public class DashboardController {
         return workLogLine;
     }
 
+    public HBox initWorkLogControlButtons(HBox workLog) {
+        //TODO
+        return null;
+    }
 
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
