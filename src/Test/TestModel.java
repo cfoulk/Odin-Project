@@ -3,6 +3,8 @@ import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
 import Server.Task;
+import Server.WorkLog;
+
 import javax.xml.transform.Result;
 
 public class TestModel {
@@ -74,6 +76,11 @@ public class TestModel {
         {
             System.out.println("model.addTask test failed");
         }
+
+        //Testing worklog operations - populate and read functions
+        WorkLog worklog;
+        model.startWork(6, 12);
+        worklog = model.getWorkLog_LogID();
 
     }
 }
