@@ -59,13 +59,16 @@ public class TestModel {
 
     }
 
+    //Please don't use this until you have populateTables finished.
     void emptyTables() throws Exception
     {
         OdinServer OS = new OdinServer();
         OS.stmt.executeUpdate(
-                "TRUNCATE TABLE employees;" +
-                    "TRUNCATE TABLE projects;" +
-
+                    "TRUNCATE TABLE employees;" +
+                        "TRUNCATE TABLE projects;" +
+                        "TRUNCATE TABLE tasks;" +
+                        "TRUNCATE TABLE worklogs;" +
+                        "TRUNCATE TABLE messges;");
     }
 
     void fillTables() throws Exception
