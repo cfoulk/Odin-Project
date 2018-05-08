@@ -70,6 +70,10 @@ public class TestModel {
         {
             System.out.println("model.addTask test passed");
         }
+        else
+        {
+            System.out.println("model.addTask test failed");
+        }
 
     }
 }
