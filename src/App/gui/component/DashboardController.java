@@ -27,6 +27,8 @@ import java.util.List;
 
 public class DashboardController {
 
+    static Employee User;
+
     @FXML
     private HBox UserBar;
 
@@ -56,14 +58,17 @@ public class DashboardController {
 
     private List<WorkLog> Worklogs;
 
+    public boolean passLogin(){
+        return true;
+    }
+
+
     public void initialize() throws Exception {
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
         UserBar.getChildren().add(createIconButton("Gear", "Settings"));
         UserBar.getChildren().add(createIconButton("Exit", "Logout"));
 
         persistentUser.initiateSampleData();
-//        Projects = persistentUser.projectList;
-//        Tasks = persistentUser.taskList;
 
         OdinModel b = new OdinModel();
         Projects = b.getProjects();
@@ -286,10 +291,10 @@ public class DashboardController {
                 HBox worklog = createWorkLogLine(Worklogs.get(i));
                 worklogBox.getChildren().add(worklog);
                 //TODO <see above TODO>
-                taskLine.setId(String.valueOf(i));
+                worklog.setId(String.valueOf(i));
             }
         }
-        worklogBox.setPadding(new Insets(0,5,0,10));
+        worklogBox.setPadding(new Insets(0,5,5,10));
         worklogBox.setSpacing(2);
 
         if(worklogBox.getChildren().size() != 0 && taskLine.getParent() instanceof VBox) {

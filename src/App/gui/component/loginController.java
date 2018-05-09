@@ -1,5 +1,6 @@
 package App.gui.component;
 
+import App.Main;
 import Model.OdinModel;
 import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
@@ -93,10 +94,25 @@ public class loginController {
         }
     }
 
+
+    public void liveCheck(){
+        new Thread(() -> {
+            while(true){
+                checkConnection(new ActionEvent());
+//                try {
+//                    Thread.sleep((long) 10000);
+//                } catch (InterruptedException e) {
+//                    System.out.println("End");
+//                }
+            }
+        }).start();
+    }
+
     void checkConnection(ActionEvent event) {
         try {
-            new OdinModel();
+            OdinModel OM = new OdinModel();
             connection.setStyle("-fx-background-color: #00E676");
+            OM.closeConnection();
         } catch (SQLException e) {
             connection.setStyle("-fx-background-color: #D32F2F");
         } catch (IOException e) {
@@ -148,6 +164,7 @@ public class loginController {
                     }
                 });
 //        usernameField.requestFocus(); //Doesn't work
+        liveCheck();
         Platform.runLater(() -> usernameField.requestFocus());
 //        Platform.runLater(new Runnable() {
 //            @Override
