@@ -44,6 +44,7 @@
                               <HBox prefHeight="57.0" prefWidth="600.0">
                                  <children>
                                     <JFXButton fx:id="testButton" onAction="#editEmployee" style="-fx-background-color: #FFFFFF;" />
+                                    <JFXButton fx:id="tempButton" onAction="#loadEmployeeWindow" style="-fx-background-color: #FFFFFF;" text="Employee LIst" />
                                  </children>
                                  <padding>
                                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
