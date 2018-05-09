@@ -4,6 +4,8 @@ import Server.Employee;
 import Server.OdinServer;
 import Server.Project;
 import Server.Task;
+import Server.WorkLog;
+
 import javax.xml.transform.Result;
 
 public class TestModel {
@@ -65,7 +67,7 @@ public class TestModel {
         task = model.getTask_TaskID(5);
 
         boolean isTaskUpdated = false;
-        isTaskUpdated = model.editTask(5, "Another Test", "2018-05-12", "2", 3, "Changed description", 4, "Open");
+        isTaskUpdated = model.editTask(5, "Another Test", "2018-05-12", "125", 3, "Changed description", 4, "Open");
 
         if(isTaskUpdated)
         {
@@ -75,6 +77,11 @@ public class TestModel {
         {
             System.out.println("model.addTask test failed");
         }
+
+        //Testing worklog operations - populate and read functions
+        WorkLog worklog;
+        model.startWork(6, 12);
+        worklog = model.getWorkLog_LogID();
 
     }
 
@@ -93,6 +100,7 @@ public class TestModel {
     void fillTables() throws Exception
     {
         OdinModel OM = new OdinModel();
+
 
     }
 }
