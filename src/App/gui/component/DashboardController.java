@@ -14,15 +14,20 @@ import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 public class DashboardController {
@@ -452,5 +457,20 @@ public class DashboardController {
         dialog.show();
         */
 
+    }
+
+    @FXML
+    void loadEmployeeWindow(ActionEvent event) throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
+        Parent root = loader.load();
+        Stage primaryStage = new Stage();
+        primaryStage.setTitle("Employee Window");
+        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
+        primaryStage.setScene(new Scene(decorator));
+        decorator.setContent(root);
+        ((EmployeeController) loader.getController()).setDecorator(decorator);
+        root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+        decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+        primaryStage.show();
     }
 }
