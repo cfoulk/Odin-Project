@@ -1,8 +1,5 @@
 package App.gui.component;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.beans.EventHandler;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,6 +11,7 @@ import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -21,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

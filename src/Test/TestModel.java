@@ -81,7 +81,7 @@ public class TestModel {
         //Testing worklog operations - populate and read functions
         WorkLog worklog;
         model.startWork(6, 12);
-        worklog = model.getWorkLog_LogID();
+//        worklog = model.getWorkLog_LogID();
 
     }
 
