@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class OdinServer
 {
     final String FILENAME = "ServerInfo.txt";
-    public Connection con;
+    public static Connection con;
     public Statement stmt;
 
     public OdinServer() throws IOException, SQLException
@@ -33,9 +33,32 @@ public class OdinServer
         return con;
     }
 
-    public boolean checkConnection() throws Exception
-    {
-        return con.isValid(2);
+    public boolean reconnect(){
+        try {
+            this.con = connect();
+            return true;
+        } catch (SQLException e) {
+        } catch (IOException e) {
+        }
+
+        System.out.println("Could not reconnect");
+        return false;
+    }
+
+    public boolean isClosed() throws SQLException {
+        if(!con.isValid(2) && !reconnect()){
+            return true;
+        }
+        return false;
+//        try {
+//            this.con = connect();
+//            return false;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return true;
     }
 
     //Edit methods

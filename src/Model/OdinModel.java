@@ -1,7 +1,6 @@
 package Model;
 
 import Server.*;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -714,8 +713,8 @@ public class OdinModel implements OdinInterface {
         }
     }
 
-    public boolean checkConnection() throws Exception
+    public boolean isClosed() throws Exception
     {
-        return OS.checkConnection();
+        return OS.isClosed();
     }
 }

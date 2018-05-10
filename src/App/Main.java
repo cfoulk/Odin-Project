@@ -5,12 +5,14 @@ import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class Main extends Application {
@@ -44,6 +46,8 @@ public class Main extends Application {
         //Addisng style classes
         root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
         decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+        //'X' will close java application
+        decorator.setOnCloseButtonAction(()-> System.exit(0));
 
         primaryStage.show();
     }
