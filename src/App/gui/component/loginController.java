@@ -1,6 +1,5 @@
 package App.gui.component;
 
-import App.Main;
 import Model.OdinModel;
 import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
@@ -41,6 +40,8 @@ public class loginController {
 
     private SVGGlyph connection;
 
+    OdinModel OM = null;
+
     @FXML
     private StackPane stackPane;
 
@@ -48,7 +49,6 @@ public class loginController {
 
     @FXML
     void login(ActionEvent event) {
-//        switchToScene();
         login();
     }
 
@@ -58,12 +58,12 @@ public class loginController {
     }
 
     void login() {
-        OdinModel a = null;
         try {
+            if (OM.equals(null)) {
+                OM = new OdinModel();
+            }
 
-            a = new OdinModel();
-
-            int userID = a.getUserID(usernameField.getText(), passwordField.getText());
+            int userID = OM.getUserID(usernameField.getText(), passwordField.getText());
             switch (userID) {
                 case -2:
                     System.out.println("Wrong Password");
@@ -77,11 +77,12 @@ public class loginController {
                     break;
                 default:
                     System.out.println("Success");
-                    switchToScene();
+                    switchToScene(userID);
                     break;
             }
             connection.setStyle("-fx-background-color: #00E676");
         }
+
         //No file
         catch (IOException e) {
             connection.setStyle("-fx-background-color: #D32F2F");
@@ -95,38 +96,48 @@ public class loginController {
     }
 
 
-    public void liveCheck(){
+    public void liveCheck() {
         new Thread(() -> {
-            while(true){
+            while (true) {
                 checkConnection(new ActionEvent());
-//                try {
-//                    Thread.sleep((long) 10000);
-//                } catch (InterruptedException e) {
-//                    System.out.println("End");
-//                }
+                try {
+                    Thread.sleep((long) 2000);
+                } catch (InterruptedException e) {
+                    System.out.println("End");
+                }
             }
         }).start();
     }
 
     void checkConnection(ActionEvent event) {
         try {
-            OdinModel OM = new OdinModel();
-            connection.setStyle("-fx-background-color: #00E676");
-            OM.closeConnection();
+            if (OM == null) {
+                OM = new OdinModel();
+            }
+            if(!OM.isClosed()) {
+                connection.setStyle("-fx-background-color: #00E676");
+                return;
+            }
         } catch (SQLException e) {
-            connection.setStyle("-fx-background-color: #D32F2F");
         } catch (IOException e) {
-            connection.setStyle("-fx-background-color: #D32F2F");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        connection.setStyle("-fx-background-color: #D32F2F");
     }
 
-    public void switchToScene() {
+    public void switchToScene(int UserID) {
         try {
-            Parent dashboard = FXMLLoader.load(getClass().getResource("/App/gui/Dashboard.fxml"));
-            dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-            decorator.setContent(dashboard);
-            //Resizes window the scene
-            decorator.getScene().getWindow().sizeToScene();
+            if(OM != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Dashboard.fxml"));
+                Parent dashboard = loader.load();
+                DashboardController dashboardController = loader.getController();
+                dashboardController.load(UserID, OM);
+                dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                decorator.setContent(dashboard);
+                //Resizes window the scene
+                decorator.getScene().getWindow().sizeToScene();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,7 +147,7 @@ public class loginController {
         //Throws Exception
         SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
         connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Connection-Good");
-        connection.setSize(35);
+        connection.setSize(25);
         connection.setFill(Color.valueOf("#9E9E9E"));
         connection.setStyle("-fx-cursor: hand");
 

@@ -9,6 +9,7 @@ import Server.WorkLog;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
+import javafx.application.Platform;
 import javafx.event.Event;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
@@ -34,6 +35,8 @@ public class DashboardController {
 
     static Employee User;
 
+    static OdinModel OM;
+
     @FXML
     private HBox UserBar;
 
@@ -53,7 +56,6 @@ public class DashboardController {
 
     public int selectedProject;
 
-
     private HBox taskLineButtons = new HBox();
     private HBox projectLineButtons = new HBox();
 
@@ -63,7 +65,9 @@ public class DashboardController {
 
     private List<WorkLog> Worklogs;
 
-    public boolean passLogin(){
+    public boolean load(int UserID, OdinModel OM){
+        User = OM.getEmployee_EmployeeID(UserID);
+        this.OM = OM;
         return true;
     }
 
@@ -73,14 +77,14 @@ public class DashboardController {
         UserBar.getChildren().add(createIconButton("Gear", "Settings"));
         UserBar.getChildren().add(createIconButton("Exit", "Logout"));
 
-        persistentUser.initiateSampleData();
+//        persistentUser.initiateSampleData();
 
-        OdinModel b = new OdinModel();
-        Projects = b.getProjects();
-        Tasks = b.getTasks();
-        Worklogs = b.getWorkLogs();
-
-        initView();
+        Platform.runLater(() -> {
+                    Projects = OM.getProjects();
+                    Tasks = OM.getTasks();
+                    Worklogs = OM.getWorkLogs();
+                    initView();
+        });
 
         heightHeader = 0.162;
 //        p(heightHeader);
