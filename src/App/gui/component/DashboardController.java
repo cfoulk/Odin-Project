@@ -1,6 +1,5 @@
 package App.gui.component;
 
-import App.gui.persistentUser;
 import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
@@ -38,13 +37,16 @@ public class DashboardController {
     static OdinModel OM;
 
     @FXML
+    private VBox HeaderVBox;
+
+    @FXML
     private HBox UserBar;
 
     @FXML
     private SplitPane splitPane;
 
     @FXML
-    private Text Username;
+    private Text UserName;
 
     @FXML
     private VBox View;
@@ -65,7 +67,7 @@ public class DashboardController {
 
     private List<WorkLog> Worklogs;
 
-    public boolean load(int UserID, OdinModel OM){
+    public boolean load(int UserID, OdinModel OM) {
         User = OM.getEmployee_EmployeeID(UserID);
         this.OM = OM;
         return true;
@@ -73,46 +75,58 @@ public class DashboardController {
 
 
     public void initialize() throws Exception {
-        UserBar.getChildren().add(createIconButton("Message", "Messenger"));
-        UserBar.getChildren().add(createIconButton("Gear", "Settings"));
-        UserBar.getChildren().add(createIconButton("Exit", "Logout"));
-
-//        persistentUser.initiateSampleData();
-
         Platform.runLater(() -> {
-                    Projects = OM.getProjects();
-                    Tasks = OM.getTasks();
-                    Worklogs = OM.getWorkLogs();
-                    initView();
+            Projects = OM.getProjects();
+            Tasks = OM.getTasks();
+            Worklogs = OM.getWorkLogs();
+            initHeader();
+            initView();
         });
 
         heightHeader = 0.162;
 //        p(heightHeader);
 //        p(splitPane.getDividers().get(0).getPosition());
-        splitPane.setDividerPosition(0,heightHeader);
+        splitPane.setDividerPosition(0, heightHeader);
 //        p(splitPane.getDividers().get(0).getPosition());
+    }
 
+    public void initHeader(){
+        UserName.setText("Hello, " + User.name);
+        UserBar.getChildren().add(createIconButton("Message", "Messenger"));
+        String priveleges = User.position;
+        if(priveleges.equals("Manager")){
+            JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
+            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new ActionEvent()));
+            UserBar.getChildren().add(manageEmployeeButton);
+            p(1);
+        }
+        else if(priveleges.equals("Project Lead")){
+            p(2);
+        }
+        else if(priveleges.equals("Employee")){
+            p(3);
+        }
+        UserBar.getChildren().add(createIconButton("Exit", "Logout"));
     }
 
 
     //Should initialize ProjectButtons based on PRIVILEGES of User
     public HBox initProjectControlButtons(HBox projectLine) {
         HBox projectLineButtons = new HBox();
-        projectLineButtons.getChildren().add(createIconButton("View","View Project"));
-        projectLineButtons.getChildren().add(createIconButton("Group-Info","Assigned Employees"));
+        projectLineButtons.getChildren().add(createIconButton("View", "View Project"));
+        projectLineButtons.getChildren().add(createIconButton("Group-Info", "Assigned Employees"));
 
 
-        JFXRippler expand = createIconButton("Arrowhead-Down","Expand");
+        JFXRippler expand = createIconButton("Arrowhead-Down", "Expand");
         //If already collapsed rotate button to collapse position
-        if(projectIsCollapsed(projectLine)){
+        if (projectIsCollapsed(projectLine)) {
             expand.setRotate(180);
         }
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             double rotate = expand.getRotate();
-            if(rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
+            if (rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
                 expand.setRotate(180);
-            }
-            else if(rotate == (double) 180){
+            } else if (rotate == (double) 180) {
                 closeTasks((HBox) expand.getParent().getParent());
                 expand.setRotate(0);
             }
@@ -120,14 +134,14 @@ public class DashboardController {
         projectLineButtons.getChildren().add(expand);
 
         projectLineButtons.getStyleClass().add("projectLineButtons");
-        HBox.setHgrow(projectLineButtons,Priority.ALWAYS);
+        HBox.setHgrow(projectLineButtons, Priority.ALWAYS);
         this.projectLineButtons = projectLineButtons;
         return projectLineButtons;
     }
 
     //Should initialize view (with collapsed projects)
-    private void initView(){
-        for(int i = 0; i < Projects.size();i++ ){
+    private void initView() {
+        for (int i = 0; i < Projects.size(); i++) {
             HBox projectline = createProjectLine(Projects.get(i));
             //Set id of Hbox as related to the array list
             projectline.setId(Integer.toString(i));
@@ -135,16 +149,16 @@ public class DashboardController {
         }
     }
 
-    private boolean projectIsCollapsed(HBox projectLine){
+    private boolean projectIsCollapsed(HBox projectLine) {
         int index;
-        if((index = View.getChildren().indexOf(projectLine))+1 < View.getChildren().size() && View.getChildren().get(index+1) instanceof  VBox){
+        if ((index = View.getChildren().indexOf(projectLine)) + 1 < View.getChildren().size() && View.getChildren().get(index + 1) instanceof VBox) {
             return true;
         }
         return false;
     }
 
     //Creates a project line
-    public HBox createProjectLine(Project project){
+    public HBox createProjectLine(Project project) {
         //Start project line with Project name
         HBox projectLine = new HBox(new Label(project.name));
         projectLine.getStyleClass().add("projectLine");
@@ -153,45 +167,45 @@ public class DashboardController {
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {
-                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
                     projectLine.getChildren().add(initProjectControlButtons(projectLine));
                 }
-                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
                     projectLine.getChildren().remove(projectLineButtons);
                 }
             }
         };
-        projectLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
-        projectLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        projectLine.addEventHandler(MouseEvent.MOUSE_ENTERED, a);
+        projectLine.addEventHandler(MouseEvent.MOUSE_EXITED, a);
         return projectLine;
     }
 
-    public void closeTasks(HBox projectLine){
+    public void closeTasks(HBox projectLine) {
         Object nxtItem;
         int index;
-        if((index = View.getChildren().indexOf(projectLine)) < View.getChildren().size()+1 && (nxtItem = View.getChildren().get(index+1)) instanceof  VBox){
+        if ((index = View.getChildren().indexOf(projectLine)) < View.getChildren().size() + 1 && (nxtItem = View.getChildren().get(index + 1)) instanceof VBox) {
             View.getChildren().remove(nxtItem);
         }
     }
 
     //Will show the tasks in the project
-    public boolean showTasks(HBox projectLine){
+    public boolean showTasks(HBox projectLine) {
         VBox taskBox = new VBox();
 
         //Filters for tasks by project id
         Project project = Projects.get(Integer.parseInt(projectLine.getId()));
         int projID = project.projectID;
 
-        for(int i = 0; i < Tasks.size(); i++){
-            if(projID == Tasks.get(i).projectID){
+        for (int i = 0; i < Tasks.size(); i++) {
+            if (projID == Tasks.get(i).projectID) {
                 HBox taskLine = createTaskLine(Tasks.get(i));
                 taskBox.getChildren().add(taskLine);
                 taskLine.setId(String.valueOf(i));
             }
         }
-        taskBox.setPadding(new Insets(0,5,0,40));
+        taskBox.setPadding(new Insets(0, 5, 0, 40));
         taskBox.setSpacing(2);
-        if(taskBox.getChildren().size() != 0) {
+        if (taskBox.getChildren().size() != 0) {
             View.getChildren().add(View.getChildren().indexOf(projectLine) + 1, taskBox);
             return true;
         }
@@ -199,7 +213,7 @@ public class DashboardController {
     }
 
     //Create a task line
-    public HBox createTaskLine(Task task){
+    public HBox createTaskLine(Task task) {
         //Start task line with Project name
         HBox taskLine = new HBox(new Label(task.name));
         taskLine.getStyleClass().add("taskLine");
@@ -208,38 +222,37 @@ public class DashboardController {
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {
-                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
                     taskLine.getChildren().add(initTaskControlButtons(taskLine));
                 }
-                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
                     taskLine.getChildren().remove(taskLineButtons);
                 }
-                if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
 
                 }
             }
         };
-        taskLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
-        taskLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        taskLine.addEventHandler(MouseEvent.MOUSE_ENTERED, a);
+        taskLine.addEventHandler(MouseEvent.MOUSE_EXITED, a);
         return taskLine;
     }
 
     //Should initialize taskButtons based on PRIVILEGES of User
     public HBox initTaskControlButtons(HBox taskLine) {
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().add(createIconButton("View","View Project"));
+        taskLineButtons.getChildren().add(createIconButton("View", "View Project"));
 
-        JFXRippler expand = createIconButton("Arrowhead-Down","View Worklog");
+        JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
         //If already collapsed rotate button to collapse position
-        if(taskIsCollapsed(taskLine)){
+        if (taskIsCollapsed(taskLine)) {
             expand.setRotate(180);
         }
         expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             double rotate = expand.getRotate();
-            if(rotate == (double) 0 && showWorklog((HBox) expand.getParent().getParent())) {
+            if (rotate == (double) 0 && showWorklog((HBox) expand.getParent().getParent())) {
                 expand.setRotate(180);
-            }
-            else if(rotate == (double) 180){
+            } else if (rotate == (double) 180) {
                 closeWorklog((HBox) expand.getParent().getParent());
                 expand.setRotate(0);
             }
@@ -247,25 +260,25 @@ public class DashboardController {
         taskLineButtons.getChildren().add(expand);
 
         taskLineButtons.getStyleClass().add("projectLineButtons");
-        HBox.setHgrow(taskLineButtons,Priority.ALWAYS);
+        HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
         return taskLineButtons;
     }
 
-    public void closeWorklog(HBox taskLine){
+    public void closeWorklog(HBox taskLine) {
         Object nxtItem;
         int index;
         VBox taskview = (VBox) taskLine.getParent();
-        if((index = taskview.getChildren().indexOf(taskLine)) < taskview.getChildren().size()+1 && (nxtItem = taskview.getChildren().get(index+1)) instanceof  ScrollPane){
+        if ((index = taskview.getChildren().indexOf(taskLine)) < taskview.getChildren().size() + 1 && (nxtItem = taskview.getChildren().get(index + 1)) instanceof ScrollPane) {
             taskview.getChildren().remove(nxtItem);
         }
     }
 
-    private boolean taskIsCollapsed(HBox taskLine){
+    private boolean taskIsCollapsed(HBox taskLine) {
         int index;
         VBox taskview = (VBox) taskLine.getParent();
         taskview.getChildren();
-        if((index = taskview.getChildren().indexOf(taskLine))+1 < taskview.getChildren().size() && taskview.getChildren().get(index+1) instanceof  ScrollPane){
+        if ((index = taskview.getChildren().indexOf(taskLine)) + 1 < taskview.getChildren().size() && taskview.getChildren().get(index + 1) instanceof ScrollPane) {
             return true;
         }
         return false;
@@ -273,7 +286,7 @@ public class DashboardController {
 
 
     //TODO
-    public boolean showWorklog(HBox taskLine){
+    public boolean showWorklog(HBox taskLine) {
         VBox worklogBox = new VBox();
 
         ScrollPane worklogPane = new ScrollPane();
@@ -295,23 +308,24 @@ public class DashboardController {
         Task task = Tasks.get(Integer.parseInt(taskLine.getId()));
         int taskID = task.taskID;
 
-        for(int i = 0; i < Worklogs.size(); i++){
-            if(taskID == Worklogs.get(i).taskID){
+        for (int i = 0; i < Worklogs.size(); i++) {
+            if (taskID == Worklogs.get(i).taskID) {
                 HBox worklog = createWorkLogLine(Worklogs.get(i));
                 worklogBox.getChildren().add(worklog);
                 //TODO <see above TODO>
                 worklog.setId(String.valueOf(i));
             }
         }
-        worklogBox.setPadding(new Insets(0,5,5,10));
+        worklogBox.setPadding(new Insets(0, 5, 5, 10));
         worklogBox.setSpacing(2);
 
-        if(worklogBox.getChildren().size() != 0 && taskLine.getParent() instanceof VBox) {
+        if (worklogBox.getChildren().size() != 0 && taskLine.getParent() instanceof VBox) {
             VBox taskbox = (VBox) taskLine.getParent();
             taskbox.getChildren().add(taskbox.getChildren().indexOf(taskLine) + 1, worklogPane);
             return true;
         }
-        return false;    }
+        return false;
+    }
 
     //Create a Worklog line
     public HBox createWorkLogLine(WorkLog workLog) {
@@ -323,19 +337,19 @@ public class DashboardController {
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {
-                if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
                     workLogLine.getChildren().add(initTaskControlButtons(workLogLine));
                 }
-                if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
                     workLogLine.getChildren().remove(taskLineButtons);
                 }
-                if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)){
+                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
 
                 }
             }
         };
-        workLogLine.addEventHandler(MouseEvent.MOUSE_ENTERED,a);
-        workLogLine.addEventHandler(MouseEvent.MOUSE_EXITED,a);
+        workLogLine.addEventHandler(MouseEvent.MOUSE_ENTERED, a);
+        workLogLine.addEventHandler(MouseEvent.MOUSE_EXITED, a);
         return workLogLine;
     }
 
@@ -351,9 +365,9 @@ public class DashboardController {
 
         //We will try and load glyph. If not available replace glyph with text
         try {
-            glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg."+iconName);
-            ((SVGGlyph)glyph).setSize(27);
-            ((SVGGlyph)glyph).setFill(Color.valueOf("#FFFFFF"));
+            glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg." + iconName);
+            ((SVGGlyph) glyph).setSize(27);
+            ((SVGGlyph) glyph).setFill(Color.valueOf("#FFFFFF"));
         } catch (Exception e) {
             p("Glyph does not exist!");
             glyph = new Text(iconName);
@@ -369,27 +383,27 @@ public class DashboardController {
         rippler.getStyleClass().add("icon-rippler");
 //        rippler.setRipplerFill(Color.valueOf("#254d87"));
 
-        if(tooltip != null || tooltip != "") {
+        if (tooltip != null || tooltip != "") {
             Tooltip toolTip = new Tooltip(tooltip);
-            Tooltip.install(rippler,toolTip);
+            Tooltip.install(rippler, toolTip);
         }
 
         return rippler;
     }
 
     //Easy Debug print statement
-    private void p(Object a){ System.out.println(a); }
+    private void p(Object a) {
+        System.out.println(a);
+    }
 
     @FXML
-    void createEmployee(ActionEvent event)
-    {
+    void createEmployee(ActionEvent event) {
         Employee newEmployee = null;
         loadEmployeeDialog(newEmployee);
     }
 
     @FXML
-    void editEmployee(ActionEvent event)
-    {
+    void editEmployee(ActionEvent event) {
         Employee oldEmployee = null;//new Employee(1,2, "Jim", "Manager", "SlimJim", "snap", "Active");
         loadEmployeeDialog(oldEmployee);
     }
@@ -399,11 +413,11 @@ public class DashboardController {
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXTextField    name = new JFXTextField(),
-                        position = new JFXTextField(),
-                        groupID = new JFXTextField(),
-                        username = new JFXTextField(),
-                        password = new JFXTextField();
+        JFXTextField name = new JFXTextField(),
+                position = new JFXTextField(),
+                groupID = new JFXTextField(),
+                username = new JFXTextField(),
+                password = new JFXTextField();
 
 
         JFXRippler confirm = createIconButton("Check", "Save");
@@ -413,15 +427,14 @@ public class DashboardController {
         name.setPromptText("Name");
         position.setPromptText("Position");
         groupID.setPromptText("Group Number");
-        username.setPromptText("Username");
+        username.setPromptText("UserName");
         password.setPromptText("Password");
 
         Text text = new Text();
         text.setFill(Paint.valueOf("#FFFFFF"));
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
-        if(employee != null)
-        {
+        if (employee != null) {
             text.setText("Edit Employee");
             content.setHeading(text);
             name.setText(employee.name);
@@ -429,14 +442,13 @@ public class DashboardController {
             groupID.setText(Integer.toString(employee.groupID));
             username.setText(employee.username);
             password.setText(employee.password);
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
-        }
-        else {
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        } else {
             text.setText("Add Employee");
             content.setHeading(text);
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         }
-        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> dialog.close());
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         VBox vBox = new VBox(name, position, groupID, username, password);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
@@ -447,7 +459,7 @@ public class DashboardController {
         VBox elements = new VBox();
         content.setHeading(new Text("OdinDialog"));
         JFXTextField name = new JFXTextField("Name");
-        JFXTextField username = new JFXTextField("Username");
+        JFXTextField username = new JFXTextField("UserName");
         JFXButton exit = new JFXButton("Exit");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         exit.setOnAction(new EventHandler<ActionEvent>() {
@@ -464,17 +476,22 @@ public class DashboardController {
     }
 
     @FXML
-    void loadEmployeeWindow(ActionEvent event) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
-        Parent root = loader.load();
-        Stage primaryStage = new Stage();
-        primaryStage.setTitle("Employee Window");
-        JFXDecorator decorator = new JFXDecorator(primaryStage, root);
-        primaryStage.setScene(new Scene(decorator));
-        decorator.setContent(root);
-        ((EmployeeController) loader.getController()).setDecorator(decorator);
-        root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-        decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-        primaryStage.show();
+    void loadEmployeeWindow(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
+            Parent root = loader.load();
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Employee Window");
+            JFXDecorator decorator = new JFXDecorator(primaryStage, root);
+            primaryStage.setScene(new Scene(decorator));
+            decorator.setContent(root);
+            ((EmployeeController) loader.getController()).setDecorator(decorator);
+            root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+            decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
