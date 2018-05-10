@@ -22,10 +22,14 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class EmployeeController {
+
+
+    public EmployeeController() {}
 
     @FXML
     private JFXDecorator decorator;
@@ -35,6 +39,9 @@ public class EmployeeController {
 
     @FXML
     private SplitPane splitPane;
+
+    @FXML
+    private VBox View;
 
     private List<Employee> Employees;
 
@@ -53,6 +60,9 @@ public class EmployeeController {
         for(int i = 0; i < Employees.size(); ++i)
         {
             HBox empLine = createEmpLine(Employees.get(i));
+            empLine.setId(Integer.toString(i));
+            empLine.setStyle("-fx-background-color: #2b5797");
+            View.getChildren().add(empLine);
         }
     }
 
@@ -78,8 +88,9 @@ public class EmployeeController {
     private HBox initEmpControlButtons(HBox empLine) {
         HBox empLineButtons = new HBox();
         empLineButtons.getChildren().add(createIconButton("View", "View Employee"));
-        empLineButtons.getChildren().add(createIconButton("Stuff", "Things"));
-        return new HBox();
+        empLineButtons.getStyleClass().add("empLineButtons");
+        this.empLineButtons = empLineButtons;
+        return empLineButtons;
     }
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
