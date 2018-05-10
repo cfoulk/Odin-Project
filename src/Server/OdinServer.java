@@ -18,7 +18,6 @@ public class OdinServer
     {
         this.con = connect();
         this.stmt = con.createStatement();
-
     }
 
     public Connection connect() throws SQLException, IOException
@@ -28,9 +27,15 @@ public class OdinServer
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(FILENAME));
         stk = new StringTokenizer(reader.readLine(), "\t");
+        DriverManager.setLoginTimeout(2);
         con = DriverManager.getConnection(stk.nextToken(), stk.nextToken(), stk.nextToken());
         reader.close();
         return con;
+    }
+
+    public boolean checkConnection() throws Exception
+    {
+        return con.isValid(2);
     }
 
     //Edit methods

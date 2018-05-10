@@ -713,4 +713,9 @@ public class OdinModel implements OdinInterface {
             e.printStackTrace();
         }
     }
+
+    public boolean checkConnection() throws Exception
+    {
+        return OS.checkConnection();
+    }
 }
