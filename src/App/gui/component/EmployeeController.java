@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
@@ -61,7 +62,6 @@ public class EmployeeController {
         {
             HBox empLine = createEmpLine(Employees.get(i));
             empLine.setId(Integer.toString(i));
-            empLine.setStyle("-fx-background-color: #2b5797");
             View.getChildren().add(empLine);
         }
     }
