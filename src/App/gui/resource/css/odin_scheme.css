@@ -22,6 +22,17 @@
     -fx-padding: 9;
 }
 
+//Employee Line
+.empLine{
+    -fx-background-color: #2b5797;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8;
+}
+
+.empLine:hover{
+    -fx-background-color: #00695C;
+}
+
 //Project Line
 .projectLine{
     -fx-background-color: #2b5797;
