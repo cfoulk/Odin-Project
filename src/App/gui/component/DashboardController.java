@@ -67,18 +67,20 @@ public class DashboardController {
 
     private List<WorkLog> Worklogs;
 
+    private List<Employee> Employees;
+
     public boolean load(int UserID, OdinModel OM) {
         User = OM.getEmployee_EmployeeID(UserID);
         this.OM = OM;
         return true;
     }
 
-
     public void initialize() throws Exception {
         Platform.runLater(() -> {
             Projects = OM.getProjects();
             Tasks = OM.getTasks();
             Worklogs = OM.getWorkLogs();
+            Employees = OM.getEmployees();
             initHeader();
             initView();
         });
@@ -96,7 +98,7 @@ public class DashboardController {
         String privileges = User.position;
         if(privileges.equals("Manager")){
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
-            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new ActionEvent()));
+            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new Stage(), User, Employees));
             UserBar.getChildren().add(manageEmployeeButton);
             p(1);
         }
@@ -406,101 +408,24 @@ public class DashboardController {
     }
 
     @FXML
-    void createEmployee(ActionEvent event) {
-        Employee newEmployee = null;
-        loadEmployeeDialog(newEmployee);
-    }
-
-    @FXML
-    void editEmployee(ActionEvent event) {
-        Employee oldEmployee = null;//new Employee(1,2, "Jim", "Manager", "SlimJim", "snap", "Active");
-        loadEmployeeDialog(oldEmployee);
-    }
-
-    void loadEmployeeDialog(Employee employee) {
-        JFXDialogLayout content = new JFXDialogLayout();
-        content.getStyleClass().add("dialog");
-        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
-        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXTextField name = new JFXTextField(),
-                position = new JFXTextField(),
-                groupID = new JFXTextField(),
-                username = new JFXTextField(),
-                password = new JFXTextField();
-
-
-        JFXRippler confirm = createIconButton("Check", "Save");
-        JFXRippler cancel = createIconButton("Cancel", "Cancel");
-
-        //TODO JOEL Validator for String vs. Integer
-        name.setPromptText("Name");
-        position.setPromptText("Position");
-        groupID.setPromptText("Group Number");
-        username.setPromptText("UserName");
-        password.setPromptText("Password");
-
-        Text text = new Text();
-        text.setFill(Paint.valueOf("#FFFFFF"));
-        text.setStyle("-fx-font: bold 16px \"System\" ;");
-
-        if (employee != null) {
-            text.setText("Edit Employee");
-            content.setHeading(text);
-            name.setText(employee.name);
-            position.setText(employee.position);
-            groupID.setText(Integer.toString(employee.groupID));
-            username.setText(employee.username);
-            password.setText(employee.password);
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        } else {
-            text.setText("Add Employee");
-            content.setHeading(text);
-            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        }
-        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        VBox vBox = new VBox(name, position, groupID, username, password);
-        vBox.setStyle("-fx-spacing: 15");
-        content.setBody(vBox);
-        content.setActions(confirm, cancel);
-        dialog.show();
-        /*
-        JFXDialogLayout content = new JFXDialogLayout();
-        VBox elements = new VBox();
-        content.setHeading(new Text("OdinDialog"));
-        JFXTextField name = new JFXTextField("Name");
-        JFXTextField username = new JFXTextField("UserName");
-        JFXButton exit = new JFXButton("Exit");
-        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        exit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                dialog.close();
-            }
-        });
-        content.setActions(exit);
-        content.setBody(new VBox(name,username));
-        dialog.show();
-        */
-
-    }
-
-    @FXML
-    void loadEmployeeWindow(ActionEvent event){
+    void loadEmployeeWindow(Stage primaryStage, Employee User, List<Employee> Employees){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
-            Parent root = loader.load();
-            Stage primaryStage = new Stage();
-            primaryStage.setTitle("Employee Window");
-            JFXDecorator decorator = new JFXDecorator(primaryStage, root);
-            primaryStage.setScene(new Scene(decorator));
-            decorator.setContent(root);
-            ((EmployeeController) loader.getController()).setDecorator(decorator);
-            root.getStylesheets().add("css/odin_scheme.css");
-            decorator.getStylesheets().add("css/odin_scheme.css");
-            primaryStage.show();
+            if(OM != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
+                Parent employee = loader.load();
+                EmployeeController employeeController = new EmployeeController();
+                primaryStage.setTitle("Employee Management");
+                JFXDecorator decorator = new JFXDecorator(primaryStage, employee);
+                primaryStage.setScene(new Scene(decorator));
+                decorator.setContent(employee);
+                employeeController.setDecorator(decorator);
+                employee.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                employeeController.load(User, Employees, OM);
+                primaryStage.show();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

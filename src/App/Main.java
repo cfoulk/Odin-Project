@@ -35,12 +35,13 @@ public class Main extends Application {
         JFXDecorator decorator = new JFXDecorator(primaryStage, root);
         primaryStage.setScene(new Scene(decorator));
         decorator.setContent(root);
-//        SVGGlyph logoTitle = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
-//        logoTitle.setFill(Paint.valueOf("#FFFFFF"));
-//        logoTitle.setSize(36);
-//        decorator.setGraphic(logoTitle);
-
-//        primaryStage.setScene(new Scene(root));
+        /*
+            SVGGlyph logoTitle = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
+            logoTitle.setFill(Paint.valueOf("#FFFFFF"));
+            logoTitle.setSize(36);
+            decorator.setGraphic(logoTitle);
+            primaryStage.setScene(new Scene(root));
+        */
         ((loginController) loader.getController()).setDecorator(decorator);
 
         //Addisng style classes
