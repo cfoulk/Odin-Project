@@ -2,13 +2,12 @@ package App.gui.component;
 
 import java.util.List;
 
+import com.jfoenix.controls.*;
 import javafx.application.Platform;
 import javafx.event.Event;
 import App.gui.persistentUser;
 import Model.OdinModel;
 import Server.Employee;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.event.EventHandler;
@@ -24,10 +23,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class EmployeeController {
+
+    static Employee User;
+
+    static List<Employee> Employees;
+
+    static OdinModel OM;
+
     @FXML
     private JFXDecorator decorator;
 
@@ -43,18 +50,21 @@ public class EmployeeController {
     @FXML
     private Text Username;
 
-    private VBox Header;
-
-    private List<Employee> Employees;
+    @FXML
+    private HBox Header;
 
     private HBox empLineButtons = new HBox();
 
+    public boolean load(Employee User, List<Employee> Employees, OdinModel OM) {
+        this.User = User;
+        this.Employees = Employees;
+        this.OM = OM;
+        return true;
+    }
+
     @FXML
     void initialize() throws Exception{
-        OdinModel OM = new OdinModel();
         Platform.runLater(() -> {
-            persistentUser.initiateSampleData();
-            Employees = OM.getEmployees();
             initHeader();
             initView();
         });
@@ -62,18 +72,10 @@ public class EmployeeController {
 
     private void initHeader()
     {
-        //Username.setText(persistentUser.currentUser.name);
-        JFXRippler exit = createIconButton("Exit", "Logout");
-        splitPane.setDividerPosition(0, 0.162);
-        exit.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-            closeWindow(exit);
-        });
-        //Header.getChildren().add(exit);
-    }
-
-    private void closeWindow(JFXRippler source) {
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        JFXRippler addEmpButton = new JFXRippler(createIconButton("User-Add", "Add Employee"));
+        addEmpButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadEmployeeDialog(null));
+        Username.setText(User.name);
+        Header.getChildren().add(addEmpButton);
     }
 
     private void initView() {
@@ -92,7 +94,7 @@ public class EmployeeController {
             @Override
             public void handle(Event event) {
                 if(event.getEventType().equals(MouseEvent.MOUSE_ENTERED)){
-                    empLine.getChildren().add(initEmpControlButtons(empLine));
+                    empLine.getChildren().add(initEmpControlButtons(employee));
                 }
                 if(event.getEventType().equals(MouseEvent.MOUSE_EXITED)){
                     empLine.getChildren().remove(empLineButtons);
@@ -104,9 +106,14 @@ public class EmployeeController {
         return empLine;
     }
 
-    private HBox initEmpControlButtons(HBox empLine) {
+    private HBox initEmpControlButtons(Employee employee) {
         HBox empLineButtons = new HBox();
-        empLineButtons.getChildren().add(createIconButton("View", "View Employee"));
+        JFXRippler viewEmpButton = createIconButton("User-Info", "View Employee");
+        JFXRippler editEmpButton = createIconButton("User-Edit", "Edit Employee");
+        editEmpButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadEmployeeDialog(employee));
+        viewEmpButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewEmployeeDialog(employee));
+        empLineButtons.getChildren().add(editEmpButton);
+        empLineButtons.getChildren().add(viewEmpButton);
         empLineButtons.getStyleClass().add("empLineButtons");
         this.empLineButtons = empLineButtons;
         return empLineButtons;
@@ -149,4 +156,96 @@ public class EmployeeController {
     }
 
     private void p(Object a){ System.out.println(a); }
+
+    void loadEmployeeDialog(Employee employee) {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXTextField name = new JFXTextField(),
+                position = new JFXTextField(),
+                groupID = new JFXTextField(),
+                username = new JFXTextField(),
+                password = new JFXTextField();
+
+        JFXRippler confirm = createIconButton("User-Check", "Confirm");
+        JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
+
+        //TODO JOEL Validator for String vs. Integer
+        name.setPromptText("Name");
+        position.setPromptText("Position");
+        groupID.setPromptText("Group Number");
+        username.setPromptText("UserName");
+        password.setPromptText("Password");
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
+        if(employee != null) {
+            text.setText("Edit Employee");
+            content.setHeading(text);
+            name.setText(employee.name);
+            position.setText(employee.position);
+            groupID.setText(Integer.toString(employee.groupID));
+            username.setText(employee.username);
+            password.setText(employee.password);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                OM.editEmployee(
+                        employee.employeeID,
+                        name.getText(),
+                        position.getText(),
+                        Integer.parseInt(groupID.getText()),
+                        username.getText(),
+                        password.getText()
+                );
+                refresh();
+                dialog.close();
+            });
+        }
+        else {
+            text.setText("Add Employee");
+            content.setHeading(text);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                OM.addEmployee(
+                        name.getText(),
+                        position.getText(),
+                        Integer.parseInt(groupID.getText()),
+                        username.getText(),
+                        password.getText()
+                );
+                refresh();
+                dialog.close();
+            });
+        }
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(name, position, groupID, username, password);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
+
+    void viewEmployeeDialog(Employee employee) {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        Text name = new Text(employee.name),
+                position = new Text(employee.position),
+                groupID = new Text(String.valueOf(employee.groupID)),
+                username = new Text(employee.username),
+                password = new Text(employee.password);
+        VBox vBox = new VBox(name, position, groupID, username, password);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        dialog.show();
+    }
+
+    void refresh()
+    {
+        View = new VBox();
+        Employees = OM.getEmployees();
+        initView();
+    }
 }
