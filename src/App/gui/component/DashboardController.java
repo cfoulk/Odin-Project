@@ -73,7 +73,6 @@ public class DashboardController {
         return true;
     }
 
-
     public void initialize() throws Exception {
         Platform.runLater(() -> {
             Projects = OM.getProjects();

@@ -1,8 +1,8 @@
 package App.gui.component;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.event.Event;
 import App.gui.persistentUser;
 import Model.OdinModel;
@@ -12,11 +12,10 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
@@ -26,12 +25,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class EmployeeController {
-
-
-    public EmployeeController() {}
-
     @FXML
     private JFXDecorator decorator;
 
@@ -44,17 +40,40 @@ public class EmployeeController {
     @FXML
     private VBox View;
 
+    @FXML
+    private Text Username;
+
+    private VBox Header;
+
     private List<Employee> Employees;
 
     private HBox empLineButtons = new HBox();
 
     @FXML
     void initialize() throws Exception{
-        persistentUser.initiateSampleData();
         OdinModel OM = new OdinModel();
-        Employees = OM.getEmployees();
+        Platform.runLater(() -> {
+            persistentUser.initiateSampleData();
+            Employees = OM.getEmployees();
+            initHeader();
+            initView();
+        });
+    }
 
-        initView();
+    private void initHeader()
+    {
+        //Username.setText(persistentUser.currentUser.name);
+        JFXRippler exit = createIconButton("Exit", "Logout");
+        splitPane.setDividerPosition(0, 0.162);
+        exit.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+            closeWindow(exit);
+        });
+        //Header.getChildren().add(exit);
+    }
+
+    private void closeWindow(JFXRippler source) {
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     private void initView() {
@@ -68,7 +87,7 @@ public class EmployeeController {
 
     public HBox createEmpLine(Employee employee) {
         HBox empLine = new HBox(new Label(employee.name));
-        empLine.getStylesheets().add("empLine");
+        empLine.getStyleClass().add("empLine");
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {

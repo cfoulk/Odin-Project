@@ -20,9 +20,9 @@
                      <children>
                         <VBox prefHeight="182.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <HBox prefHeight="57.0" prefWidth="600.0" spacing="5.0">
+                              <HBox fx:id="Header" prefHeight="57.0" prefWidth="600.0" spacing="5.0">
                                  <children>
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                    <Text fx:id="Username" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
