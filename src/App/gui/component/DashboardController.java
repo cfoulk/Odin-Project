@@ -486,8 +486,8 @@ public class DashboardController {
             primaryStage.setScene(new Scene(decorator));
             decorator.setContent(root);
             ((EmployeeController) loader.getController()).setDecorator(decorator);
-            root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
-            decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+            root.getStylesheets().add("css/odin_scheme.css");
+            decorator.getStylesheets().add("css/odin_scheme.css");
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
