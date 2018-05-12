@@ -93,20 +93,29 @@ public class DashboardController {
     public void initHeader(){
         UserName.setText("Hello, " + User.name);
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
-        String priveleges = User.position;
-        if(priveleges.equals("Manager")){
+        String privileges = User.position;
+        if(privileges.equals("Manager")){
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
             manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new ActionEvent()));
             UserBar.getChildren().add(manageEmployeeButton);
             p(1);
         }
-        else if(priveleges.equals("Project Lead")){
+        else if(privileges.equals("Project Lead")){
             p(2);
         }
-        else if(priveleges.equals("Employee")){
+        else if(privileges.equals("Employee")){
             p(3);
         }
-        UserBar.getChildren().add(createIconButton("Exit", "Logout"));
+
+        JFXRippler logOut = createIconButton("Exit", "Logout");
+
+
+        HBox rightAligned = new HBox(logOut);
+        HBox.setHgrow(rightAligned, Priority.ALWAYS);
+        rightAligned.getStyleClass().add("lineButtons");
+        UserBar.getChildren().add(rightAligned);
+
+
     }
 
 
@@ -133,7 +142,7 @@ public class DashboardController {
         });
         projectLineButtons.getChildren().add(expand);
 
-        projectLineButtons.getStyleClass().add("projectLineButtons");
+        projectLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(projectLineButtons, Priority.ALWAYS);
         this.projectLineButtons = projectLineButtons;
         return projectLineButtons;
@@ -259,7 +268,7 @@ public class DashboardController {
         });
         taskLineButtons.getChildren().add(expand);
 
-        taskLineButtons.getStyleClass().add("projectLineButtons");
+        taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
         return taskLineButtons;
