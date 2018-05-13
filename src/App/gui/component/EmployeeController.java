@@ -163,17 +163,18 @@ public class EmployeeController {
                 position = new JFXTextField(),
                 groupID = new JFXTextField(),
                 username = new JFXTextField(),
-                password = new JFXTextField();
+                password = new JFXTextField(),
+                status = new JFXTextField();
 
         JFXRippler confirm = createIconButton("User-Check", "Confirm");
         JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
 
-        //TODO JOEL Validator for String vs. Integer
         name.setPromptText("Name");
         position.setPromptText("Manager, Project Lead, or Employee");
         groupID.setPromptText("Group Number");
         username.setPromptText("UserName");
         password.setPromptText("Password");
+        status.setPromptText("Active or Inactive");
 
         Text text = new Text();
         text.setFill(Paint.valueOf("#FFFFFF"));
@@ -188,23 +189,27 @@ public class EmployeeController {
             username.setText(employee.username);
             password.setText(employee.password);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                boolean successful = OM.editEmployee(
-                        employee.employeeID,
-                        name.getText(),
-                        position.getText(),
-                        Integer.parseInt(groupID.getText()),
-                        username.getText(),
-                        password.getText()
-                );
-                if(successful) {
-                    refresh();
-                    dialog.close();
-                }
-                else
-                {
-                    username.setPromptText("Duplicate Username");
-                    username.setStyle("-fx-background-color: #FFCDD2");
-                    username.clear();
+                boolean successful;
+                if(isValid(name, position, groupID, username, password, status)) {
+                    successful = OM.editEmployee(
+                            employee.employeeID,
+                            name.getText(),
+                            position.getText(),
+                            Integer.parseInt(groupID.getText()),
+                            username.getText(),
+                            password.getText(),
+                            status.getText()
+                    );
+                    if(successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else
+                    {
+                        username.setPromptText("Duplicate Username");
+                        username.setStyle("-fx-background-color: #FFCDD2");
+                        username.clear();
+                    }
                 }
             });
         }
@@ -213,13 +218,14 @@ public class EmployeeController {
             content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(isValid(name, position, groupID, username, password)) {
+                if(isValid(name, position, groupID, username, password, status)) {
                     successful = OM.addEmployee(
                             name.getText(),
                             position.getText(),
                             Integer.parseInt(groupID.getText()),
                             username.getText(),
-                            password.getText()
+                            password.getText(),
+                            status.getText()
                     );
                     if(successful) {
                         refresh();
@@ -260,9 +266,10 @@ public class EmployeeController {
     }
 
     boolean isValid(JFXTextField name, JFXTextField position, JFXTextField groupID,
-                    JFXTextField username, JFXTextField password)
-    {
+                    JFXTextField username, JFXTextField password, JFXTextField status) {
         boolean valid = true;
+
+        //name
         if(name.getText().isEmpty())
         {
             name.setPromptText("Name cannot be empty");
@@ -278,15 +285,12 @@ public class EmployeeController {
             valid = false;
         }
         else name.setStyle("-fx-background-color: #FFFFFF");
-        if(position.getText().isEmpty())
-        {
-            position.setPromptText("Must be Manager, Project Lead, or Employee");
-            position.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else if(!(position.getText().equals("Manager") ||
-                  position.getText().equals("Project Lead") ||
-                  position.getText().equals("Employee")))
+
+        //position
+        if(position.getText().isEmpty() ||
+              !(position.getText().equals("Manager") ||
+                position.getText().equals("Project Lead") ||
+                position.getText().equals("Employee")))
         {
             position.clear();
             position.setPromptText("Must be Manager, Project Lead, or Employee");
@@ -294,6 +298,8 @@ public class EmployeeController {
             valid = false;
         }
         else position.setStyle("-fx-background-color: #FFFFFF");
+
+        //groupID
         if(!StringUtils.isStrictlyNumeric(groupID.getText()))
         {
             groupID.clear();
@@ -302,6 +308,8 @@ public class EmployeeController {
             valid = false;
         }
         else groupID.setStyle("-fx-background-color: #FFFFFF");
+
+        //username
         if(username.getText().isEmpty())
         {
             username.setPromptText("Username cannot be empty");
@@ -316,6 +324,8 @@ public class EmployeeController {
             valid = false;
         }
         else username.setStyle("-fx-background-color: #FFFFFF");
+
+        //password
         if(password.getText().isEmpty())
         {
             password.setPromptText("Password cannot be empty");
@@ -330,6 +340,19 @@ public class EmployeeController {
             valid = false;
         }
         else password.setStyle("-fx-background-color: #FFFFFF");
+
+        //status
+        if(status.getText().isEmpty() ||
+            !(status.getText().equals("Active") ||
+              status.getText().equals("Inactive")))
+        {
+            status.clear();
+            status.setPromptText("Status must be Active or Inactive");
+            status.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else status.setStyle("-fx-background-color: #FFFFFF");
+
         return valid;
     }
 

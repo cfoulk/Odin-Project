@@ -9,6 +9,7 @@ import Server.WorkLog;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
+import com.mysql.jdbc.StringUtils;
 import javafx.application.Platform;
 import javafx.event.Event;
 import com.jfoenix.controls.*;
@@ -29,6 +30,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DashboardController {
@@ -326,7 +331,6 @@ public class DashboardController {
         return false;
     }
 
-
     //TODO
     public boolean showWorklog(HBox taskLine) {
         VBox worklogBox = new VBox();
@@ -398,7 +402,6 @@ public class DashboardController {
         return null;
     }
 
-
     private JFXRippler createIconButton(String iconName, String tooltip) {
 
         Node glyph = null;
@@ -431,6 +434,217 @@ public class DashboardController {
         return rippler;
     }
 
+    void loadProjectDialog(Project project)
+    {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXTextField groupID = new JFXTextField(),
+                projectLeadID = new JFXTextField(),
+                name = new JFXTextField(),
+                description = new JFXTextField(),
+                status = new JFXTextField(),
+                dueDate = new JFXTextField();
+
+        JFXRippler confirm = createIconButton("User-Check", "Confirm");
+        JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
+
+        //TODO JOEL Validator for String vs. Integer
+        groupID.setPromptText("Group Number");
+        projectLeadID.setPromptText("Project Leader");
+        name.setPromptText("Name");
+        description.setPromptText("Description of the project");
+        status.setPromptText("Open or Closed");
+        dueDate.setPromptText("Due Date must be YYYY-MM-DD HH:MM:SS");
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
+        if(project != null) {
+            text.setText("Edit Project");
+            content.setHeading(text);
+            groupID.setText(Integer.toString(project.groupID));
+            projectLeadID.setText(Integer.toString(project.projectLeadID));
+            name.setText(project.name);
+            description.setText(project.description);
+            status.setText(project.status);
+            dueDate.setText(project.dueDate);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(projectIsValid(groupID, projectLeadID, name, description, status, dueDate)) {
+                    successful = OM.editProject(
+                            project.projectID,
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(groupID.getText()),
+                            Integer.parseInt(projectLeadID.getText()),
+                            description.getText(),
+                            status.getText()
+                    );
+                    if (successful) {
+                        refresh();
+                        dialog.close();
+                    } else {
+                        projectLeadID.setPromptText("Invalid Project Leader");
+                        projectLeadID.setStyle("-fx-background-color: #FFCDD2");
+                        projectLeadID.clear();
+                    }
+                }
+            });
+        }
+        else {
+            text.setText("Add project");
+            content.setHeading(text);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(projectIsValid(groupID, projectLeadID, name, description, status, dueDate)) {
+                    successful = OM.addProject(
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(groupID.getText()),
+                            Integer.parseInt(projectLeadID.getText()),
+                            description.getText(),
+                            status.getText()
+                    );
+                    if(successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else
+                    {
+                        projectLeadID.setPromptText("Invalid Project Leader");
+                        projectLeadID.setStyle("-fx-background-color: #FFCDD2");
+                        projectLeadID.clear();
+                    }
+                }
+            });
+        }
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
+
+    private boolean projectIsValid(JFXTextField groupID, JFXTextField projectLeadID, JFXTextField name,
+                                   JFXTextField description, JFXTextField status, JFXTextField dueDate)
+    {
+        boolean valid = true;
+        //groupID
+        if(groupID.getText().isEmpty())
+        {
+            groupID.setPromptText("Group ID cannot be empty");
+            groupID.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(!StringUtils.isStrictlyNumeric(groupID.getText()))
+        {
+            groupID.clear();
+            groupID.setPromptText("Group ID must be an integer");
+            groupID.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else groupID.setStyle("-fx-background-color: #FFFFFF");
+
+        //projectLeadID
+        if(projectLeadID.getText().isEmpty())
+        {
+            projectLeadID.setPromptText("Project Lead ID cannot be empty");
+            projectLeadID.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(!StringUtils.isStrictlyNumeric(groupID.getText()))
+        {
+            projectLeadID.clear();
+            projectLeadID.setPromptText("Project Lead ID must be an integer");
+            projectLeadID.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else projectLeadID.setStyle("-fx-background-color: #FFFFFF");
+
+        //name
+        if(name.getText().isEmpty())
+        {
+            name.setPromptText("Name cannot be empty");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(name.getText().matches("(.*)[0-9](.*)") ||
+                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
+        {
+            name.clear();
+            name.setPromptText("Name can only alphabetic characters");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else name.setStyle("-fx-background-color: #FFFFFF");
+
+        //description
+        if(description.getText().matches("(.*)[\'\";](.*)"))
+        {
+            description.clear();
+            description.setPromptText("Description cannot contain special characters");
+            description.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else description.setStyle("-fx-background-color: #FFFFFF");
+
+        //status
+        if(status.getText().isEmpty() ||
+            !(status.getText().equals("Open") ||
+              status.getText().equals("Closed")))
+        {
+            status.clear();
+            status.setPromptText("Status must be Open or Closed");
+            status.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else status.setStyle("-fx-background-color: #FFFFFF");
+
+        //dueDate
+        try
+        {
+            LocalDateTime.parse(dueDate.getText());
+            dueDate.setStyle("-fx-background-color: #FFFFFF");
+        }
+        catch (DateTimeException e)
+        {
+            dueDate.clear();
+            status.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    void viewProjectDialog(Project project)
+    {
+
+    }
+
+    void loadTaskDialog(Task task)
+    {
+
+    }
+
+    void viewTaskDialog(Task task)
+    {
+
+    }
+
+    void loadWorkLogDialog(WorkLog worklog)
+    {
+
+    }
+
+    void viewWorkLogDialog(WorkLog worklog)
+    {
+
+    }
+
     //Easy Debug print statement
     private void p(Object a) {
         System.out.println(a);
@@ -456,5 +670,12 @@ public class DashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void refresh()
+    {
+        View = new VBox();
+        try{ initialize(); }
+        catch(Exception e){ System.out.println("Error"); }
     }
 }

@@ -34,14 +34,14 @@ public class OdinModel implements OdinInterface {
     }
 
     //Edit methods
-    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password) {
+    public boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password, String status) {
         Employee emp;
         try {
             emp = OS.getEmployee_EmployeeID(employeeID);
             if (emp != null) {
                 emp = OS.getEmployee_Username(username);
                 if (emp == null) {
-                    OS.editEmployee(employeeID, name, position, groupID, username, password);
+                    OS.editEmployee(employeeID, name, position, groupID, username, password, status);
                     return true;
                 }
             }
@@ -151,12 +151,12 @@ public class OdinModel implements OdinInterface {
     }
 
     //Add methods
-    public boolean addEmployee(String name, String position, int groupID, String username, String password) {
+    public boolean addEmployee(String name, String position, int groupID, String username, String password, String status) {
         Employee emp;
         try {
             emp = OS.getEmployee_Username(username);
             if (emp == null) {
-                OS.addEmployee(name, position, groupID, username, password);
+                OS.addEmployee(name, position, groupID, username, password, status);
                 return true;
             }
         } catch (Exception e) {

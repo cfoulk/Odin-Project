@@ -12,14 +12,14 @@ import java.util.List;
 public interface OdinInterface
 {
     //Edits
-    boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password);
+    boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password, String status);
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status);
     public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
     boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
 
     //Adds
-    boolean addEmployee(String name, String position, int groupID, String username, String password);
+    boolean addEmployee(String name, String position, int groupID, String username, String password, String status);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
     boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
