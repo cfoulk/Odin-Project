@@ -62,14 +62,15 @@ public class OdinServer
     }
 
     //Edit methods
-    public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password) throws Exception
+    public void editEmployee (int employeeID, String name, String position, int groupID, String username, String password, String status) throws Exception
     {
         this.stmt.executeUpdate(  "UPDATE employees SET " +
                 "Name = '" + name + "', " +
                 "Position = '" + position + "', " +
                 "GroupID = " + groupID  + ", " +
                 "Username = '"  + username + "', " +
-                "Password = '" + password + "' " +
+                "Password = '" + password + "', " +
+                "Status = '" + status + "' " +
                 "WHERE EmployeeID = " + employeeID + ";");
     }
 
@@ -123,10 +124,10 @@ public class OdinServer
     }
 
     //Add methods
-    public void addEmployee(String name, String position, int groupID, String username, String password) throws Exception
+    public void addEmployee(String name, String position, int groupID, String username, String password, String status) throws Exception
     {
-        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password) " +
-                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "');");
+        this.stmt.executeUpdate("INSERT INTO employees (Name, Position, GroupID, Username, Password, Status) " +
+                "VALUES ('" + name + "', '" + position + "', " + groupID + ", '" + username + "', '" + password + "', '" + status + "');");
     }
 
     public void addProject(String name, Date dueDate, int groupID, int projectLeadID, String description, String status) throws Exception
@@ -285,6 +286,15 @@ public class OdinServer
     {
         List<Employee> employees = new ArrayList<>();
         ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = " + groupID + ";");
+        while(myRS.next()) employees.add(new Employee(myRS));
+        myRS.close();
+        return employees;
+    }
+
+    public List<Employee> getEmployees_Status(String status) throws Exception
+    {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet myRS = this.stmt.executeQuery("SELECT * FROM employees WHERE GroupID = '" + status + "';");
         while(myRS.next()) employees.add(new Employee(myRS));
         myRS.close();
         return employees;

@@ -18,11 +18,11 @@ public class TestModel {
         Employee employee;
         OdinModel model = new OdinModel();
 
-        model.addEmployee(EMP_NAME, "Manager", 1234, "JohnUser", "doe");
+        model.addEmployee(EMP_NAME, "Manager", 1234, "JohnUser", "doe", "Active");
         employee = model.getEmployee_Username(("JohnUser"));
 
         boolean isEmpUpdated = false;
-        isEmpUpdated = model.editEmployee(employee.employeeID, employee.name, employee.position, employee.groupID, employee.username, "xyz");
+        isEmpUpdated = model.editEmployee(employee.employeeID, employee.name, employee.position, employee.groupID, employee.username, "xyz", "Active");
 
         if (isEmpUpdated)
         {
