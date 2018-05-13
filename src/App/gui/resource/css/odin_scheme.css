@@ -54,7 +54,7 @@
 }
 
 .taskLine:hover{
-    -fx-background-color: linear-gradient( #366ebf 77%, #4DB6AC 100%);
+    -fx-background-color: linear-gradient( #366ebf 85%, #4DB6AC 100%);
     -fx-border-color: #4DB6AC;
     -fx-border-width: 3;
 }

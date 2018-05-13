@@ -39,7 +39,7 @@ public class loginController {
     @FXML
     private VBox contentArray;
 
-    private JFXButton connectionStatus = null;
+    public JFXButton connectionStatus = null;
 
     private SVGGlyph connection;
 

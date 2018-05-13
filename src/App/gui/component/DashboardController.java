@@ -34,6 +34,10 @@ import java.util.List;
 public class DashboardController {
 
     static Employee User;
+    static String Privelage = "";
+    static String MANAGER = "Manager";
+    static String PROJECT_LEAD = "Project Lead";
+    static String EMPLOYEE = "Employee";
 
     static OdinModel OM;
 
@@ -74,7 +78,8 @@ public class DashboardController {
 
     public boolean load(int UserID, OdinModel OM, JFXButton connectionStatus) {
         User = OM.getEmployee_EmployeeID(UserID);
-        this.OM = OM;
+        Privelage = User.position;
+                this.OM = OM;
         this.connectionStatus = connectionStatus;
         return true;
     }
@@ -96,20 +101,17 @@ public class DashboardController {
 //        p(splitPane.getDividers().get(0).getPosition());
     }
 
-    public void initHeader(){
+    public void initHeader() {
         UserName.setText("Hello, " + User.name);
         UserBar.getChildren().add(createIconButton("Message", "Messenger"));
-        String privileges = User.position;
-        if(privileges.equals("Manager")){
+        if (Privelage.equals(MANAGER)) {
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
             manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new Stage(), User, Employees));
             UserBar.getChildren().add(manageEmployeeButton);
             p(1);
-        }
-        else if(privileges.equals("Project Lead")){
+        } else if (Privelage.equals(PROJECT_LEAD)) {
             p(2);
-        }
-        else if(privileges.equals("Employee")){
+        } else if (Privelage.equals(EMPLOYEE)) {
             p(3);
         }
 
@@ -119,8 +121,8 @@ public class DashboardController {
         logOut.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> switchToLogin(new ActionEvent()));
 
         HBox rightAligned = new HBox(refresh, logOut);
-        if(connectionStatus != null){
-            rightAligned.getChildren().add(1,connectionStatus);
+        if (connectionStatus != null) {
+            rightAligned.getChildren().add(1, connectionStatus);
         }
         HBox.setHgrow(rightAligned, Priority.ALWAYS);
         rightAligned.getStyleClass().add("lineButtons");
@@ -137,21 +139,30 @@ public class DashboardController {
 //        projectLineButtons.getChildren().add(createIconButton("Group-Info", "Assigned Employees"));
 
 
-        JFXRippler expand = createIconButton("Arrowhead-Down", "Expand");
-        //If already collapsed rotate button to collapse position
-        if (projectIsCollapsed(projectLine)) {
-            expand.setRotate(180);
+        //EDIT Button
+        if(Privelage.equals(MANAGER)){
+            JFXRippler Edit = createIconButton("Edit", "Edit Project");
+            projectLineButtons.getChildren().add(Edit);
         }
-        expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-            double rotate = expand.getRotate();
-            if (rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
+
+        //EXPAND/COLLAPSE Button
+        if(projectHasTasks(projectLine)) {
+            JFXRippler expand = createIconButton("Arrowhead-Down", "Expand");
+            //If already collapsed rotate button to collapse position
+            if (projectIsCollapsed(projectLine)) {
                 expand.setRotate(180);
-            } else if (rotate == (double) 180) {
-                closeTasks((HBox) expand.getParent().getParent());
-                expand.setRotate(0);
             }
-        });
-        projectLineButtons.getChildren().add(expand);
+            expand.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                double rotate = expand.getRotate();
+                if (rotate == (double) 0 && showTasks((HBox) expand.getParent().getParent())) {
+                    expand.setRotate(180);
+                } else if (rotate == (double) 180) {
+                    closeTasks((HBox) expand.getParent().getParent());
+                    expand.setRotate(0);
+                }
+            });
+            projectLineButtons.getChildren().add(expand);
+        }
 
         projectLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(projectLineButtons, Priority.ALWAYS);
@@ -170,9 +181,20 @@ public class DashboardController {
             View.getChildren().add(projectline);
         }
         //Adds Create button TODO privelage base
-        HBox newProject = new HBox(createIconButton("Add", "Add Project"),new Label("Add Project"));
+        HBox newProject = new HBox(createIconButton("Add", "Add Project"), new Label("Add Project"));
         newProject.getStyleClass().add("projectLine");
+        newProject.setStyle("-fx-background-color: #1a555b");
         View.getChildren().addAll(newProject);
+    }
+
+    private boolean projectHasTasks(HBox projectLine) {
+        int projID = Integer.parseInt(projectLine.getId());
+        for (int i = 0; i < Tasks.size();i++) {
+            if(projID == Tasks.get(i).projectID){
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean projectIsCollapsed(HBox projectLine) {
@@ -188,8 +210,7 @@ public class DashboardController {
         //Start project line with Project name
         HBox projectLine = new HBox(new Label(project.name));
         projectLine.getStyleClass().add("projectLine");
-//        projectLine.hoverProperty().addListener(ChangeListener<>{});
-        //add Listener
+        //Event handler for hover
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {
@@ -237,7 +258,7 @@ public class DashboardController {
         }
 
         //Adds Create button TODO privelage base
-        HBox newTask = new HBox(createIconButton("Add", "Add Task"),new Label("Add Task"));
+        HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
         newTask.getStyleClass().add("taskLine");
         taskBox.getChildren().add(newTask);
 
@@ -293,7 +314,7 @@ public class DashboardController {
         });
 
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().addAll(view,expand,startTime);
+        taskLineButtons.getChildren().addAll(view, expand, startTime);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
@@ -437,9 +458,9 @@ public class DashboardController {
     }
 
     @FXML
-    void loadEmployeeWindow(Stage primaryStage, Employee User, List<Employee> Employees){
+    void loadEmployeeWindow(Stage primaryStage, Employee User, List<Employee> Employees) {
         try {
-            if(OM != null) {
+            if (OM != null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
                 Parent employee = loader.load();
                 EmployeeController employeeController = new EmployeeController();
