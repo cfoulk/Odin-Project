@@ -1,5 +1,6 @@
 package App.gui.component;
 
+import App.gui.persistentUser;
 import Model.OdinModel;
 import Server.Employee;
 import Server.Project;
@@ -69,9 +70,12 @@ public class DashboardController {
 
     private List<Employee> Employees;
 
-    public boolean load(int UserID, OdinModel OM) {
+    private JFXButton connectionStatus = null;
+
+    public boolean load(int UserID, OdinModel OM, JFXButton connectionStatus) {
         User = OM.getEmployee_EmployeeID(UserID);
         this.OM = OM;
+        this.connectionStatus = connectionStatus;
         return true;
     }
 
@@ -110,9 +114,14 @@ public class DashboardController {
         }
 
         JFXRippler logOut = createIconButton("Exit", "Logout");
+        JFXRippler refresh = createIconButton("Refresh", "Refresh");
 
+        logOut.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> switchToLogin(new ActionEvent()));
 
-        HBox rightAligned = new HBox(logOut);
+        HBox rightAligned = new HBox(refresh, logOut);
+        if(connectionStatus != null){
+            rightAligned.getChildren().add(1,connectionStatus);
+        }
         HBox.setHgrow(rightAligned, Priority.ALWAYS);
         rightAligned.getStyleClass().add("lineButtons");
         UserBar.getChildren().add(rightAligned);
@@ -298,6 +307,13 @@ public class DashboardController {
         if ((index = taskview.getChildren().indexOf(taskLine)) < taskview.getChildren().size() + 1 && (nxtItem = taskview.getChildren().get(index + 1)) instanceof ScrollPane) {
             taskview.getChildren().remove(nxtItem);
         }
+    }
+
+    public void switchToLogin(ActionEvent event) {
+        JFXDecorator decorator = persistentUser.DECORATOR;
+        decorator.setContent(persistentUser.PARENT_LOGIN);
+        decorator.getScene().getWindow().sizeToScene();
+
     }
 
     private boolean taskIsCollapsed(HBox taskLine) {
