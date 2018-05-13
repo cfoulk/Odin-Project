@@ -2,12 +2,18 @@ package App.gui;
 
 import Server.*;
 import Model.OdinModel;
+import com.jfoenix.controls.JFXDecorator;
+import javafx.scene.Parent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class persistentUser {
+
+    public static JFXDecorator DECORATOR;
+    public static Parent PARENT_LOGIN;
+    public static Parent PARENT_DASHBOARD;
 
     public static Employee currentUser;
     public static List<Employee> employeeList;
