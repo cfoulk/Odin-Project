@@ -1,11 +1,10 @@
 package App.gui.component;
 
 import java.util.List;
-
 import com.jfoenix.controls.*;
+import com.mysql.jdbc.StringUtils;
 import javafx.application.Platform;
 import javafx.event.Event;
-import App.gui.persistentUser;
 import Model.OdinModel;
 import Server.Employee;
 import com.jfoenix.svg.SVGGlyph;
@@ -14,7 +13,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
@@ -25,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class EmployeeController {
 
@@ -173,7 +170,7 @@ public class EmployeeController {
 
         //TODO JOEL Validator for String vs. Integer
         name.setPromptText("Name");
-        position.setPromptText("Position");
+        position.setPromptText("Manager, Project Lead, or Employee");
         groupID.setPromptText("Group Number");
         username.setPromptText("UserName");
         password.setPromptText("Password");
@@ -191,7 +188,7 @@ public class EmployeeController {
             username.setText(employee.username);
             password.setText(employee.password);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                OM.editEmployee(
+                boolean successful = OM.editEmployee(
                         employee.employeeID,
                         name.getText(),
                         position.getText(),
@@ -199,25 +196,45 @@ public class EmployeeController {
                         username.getText(),
                         password.getText()
                 );
-                refresh();
-                dialog.close();
+                if(successful) {
+                    refresh();
+                    dialog.close();
+                }
+                else
+                {
+                    username.setPromptText("Duplicate Username");
+                    username.setStyle("-fx-background-color: #FFCDD2");
+                    username.clear();
+                }
             });
         }
         else {
             text.setText("Add Employee");
             content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                OM.addEmployee(
-                        name.getText(),
-                        position.getText(),
-                        Integer.parseInt(groupID.getText()),
-                        username.getText(),
-                        password.getText()
-                );
-                refresh();
-                dialog.close();
+                boolean successful;
+                if(isValid(name, position, groupID, username, password)) {
+                    successful = OM.addEmployee(
+                            name.getText(),
+                            position.getText(),
+                            Integer.parseInt(groupID.getText()),
+                            username.getText(),
+                            password.getText()
+                    );
+                    if(successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else
+                    {
+                        username.setPromptText("Duplicate Username");
+                        username.setStyle("-fx-background-color: #FFCDD2");
+                        username.clear();
+                    }
+                }
             });
         }
+        //name.addEventHandler();
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         VBox vBox = new VBox(name, position, groupID, username, password);
         vBox.setStyle("-fx-spacing: 15");
@@ -240,6 +257,80 @@ public class EmployeeController {
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         dialog.show();
+    }
+
+    boolean isValid(JFXTextField name, JFXTextField position, JFXTextField groupID,
+                    JFXTextField username, JFXTextField password)
+    {
+        boolean valid = true;
+        if(name.getText().isEmpty())
+        {
+            name.setPromptText("Name cannot be empty");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(name.getText().matches("(.*)[0-9](.*)") ||
+                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
+        {
+            name.clear();
+            name.setPromptText("Name can only alphabetic characters");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else name.setStyle("-fx-background-color: #FFFFFF");
+        if(position.getText().isEmpty())
+        {
+            position.setPromptText("Must be Manager, Project Lead, or Employee");
+            position.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(!(position.getText().equals("Manager") ||
+                  position.getText().equals("Project Lead") ||
+                  position.getText().equals("Employee")))
+        {
+            position.clear();
+            position.setPromptText("Must be Manager, Project Lead, or Employee");
+            position.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else position.setStyle("-fx-background-color: #FFFFFF");
+        if(!StringUtils.isStrictlyNumeric(groupID.getText()))
+        {
+            groupID.clear();
+            groupID.setPromptText("Group ID must be an integer");
+            groupID.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else groupID.setStyle("-fx-background-color: #FFFFFF");
+        if(username.getText().isEmpty())
+        {
+            username.setPromptText("Username cannot be empty");
+            username.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(username.getText().matches("(.*)[\'\";](.*)"))
+        {
+            username.clear();
+            username.setPromptText("Username cannot contain special characters");
+            username.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else username.setStyle("-fx-background-color: #FFFFFF");
+        if(password.getText().isEmpty())
+        {
+            password.setPromptText("Password cannot be empty");
+            password.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(password.getText().matches("(.*)[\'\";](.*)"))
+        {
+            password.clear();
+            password.setPromptText("Password cannot contain special characters");
+            password.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else password.setStyle("-fx-background-color: #FFFFFF");
+        return valid;
     }
 
     void refresh()

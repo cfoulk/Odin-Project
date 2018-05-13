@@ -38,10 +38,9 @@ public class OdinModel implements OdinInterface {
         Employee emp;
         try {
             emp = OS.getEmployee_EmployeeID(employeeID);
-
             if (emp != null) {
                 emp = OS.getEmployee_Username(username);
-                if (emp != null) {
+                if (emp == null) {
                     OS.editEmployee(employeeID, name, position, groupID, username, password);
                     return true;
                 }
@@ -703,8 +702,7 @@ public class OdinModel implements OdinInterface {
         return list;
     }
 
-    public void closeConnection()
-    {
+    public void closeConnection() {
         try {
             OS.con.close();
             OS.stmt.close();
