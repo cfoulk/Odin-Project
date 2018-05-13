@@ -124,8 +124,8 @@ public class DashboardController {
     //Should initialize ProjectButtons based on PRIVILEGES of User
     public HBox initProjectControlButtons(HBox projectLine) {
         HBox projectLineButtons = new HBox();
-        projectLineButtons.getChildren().add(createIconButton("View", "View Project"));
-        projectLineButtons.getChildren().add(createIconButton("Group-Info", "Assigned Employees"));
+//        projectLineButtons.getChildren().add(createIconButton("View", "View Project"));
+//        projectLineButtons.getChildren().add(createIconButton("Group-Info", "Assigned Employees"));
 
 
         JFXRippler expand = createIconButton("Arrowhead-Down", "Expand");
@@ -153,11 +153,17 @@ public class DashboardController {
     //Should initialize view (with collapsed projects)
     private void initView() {
         for (int i = 0; i < Projects.size(); i++) {
-            HBox projectline = createProjectLine(Projects.get(i));
+            //TODO show only tasks that are w/ Empl ID or privelege
+            Project project = Projects.get(i);
+            HBox projectline = createProjectLine(project);
             //Set id of Hbox as related to the array list
-            projectline.setId(Integer.toString(i));
+            projectline.setId(Integer.toString(project.projectID));
             View.getChildren().add(projectline);
         }
+        //Adds Create button TODO privelage base
+        HBox newProject = new HBox(createIconButton("Add", "Add Project"),new Label("Add Project"));
+        newProject.getStyleClass().add("projectLine");
+        View.getChildren().addAll(newProject);
     }
 
     private boolean projectIsCollapsed(HBox projectLine) {
@@ -201,26 +207,32 @@ public class DashboardController {
 
     //Will show the tasks in the project
     public boolean showTasks(HBox projectLine) {
+        boolean status = false;
         VBox taskBox = new VBox();
-
         //Filters for tasks by project id
-        Project project = Projects.get(Integer.parseInt(projectLine.getId()));
-        int projID = project.projectID;
+        int projID = Integer.parseInt(projectLine.getId());
 
         for (int i = 0; i < Tasks.size(); i++) {
             if (projID == Tasks.get(i).projectID) {
-                HBox taskLine = createTaskLine(Tasks.get(i));
+                Task task = Tasks.get(i);
+                HBox taskLine = createTaskLine(task);
                 taskBox.getChildren().add(taskLine);
-                taskLine.setId(String.valueOf(i));
+                taskLine.setId(String.valueOf(task.taskID));
             }
         }
         taskBox.setPadding(new Insets(0, 5, 0, 40));
         taskBox.setSpacing(2);
         if (taskBox.getChildren().size() != 0) {
             View.getChildren().add(View.getChildren().indexOf(projectLine) + 1, taskBox);
-            return true;
+            status = true;
         }
-        return false;
+
+        //Adds Create button TODO privelage base
+        HBox newTask = new HBox(createIconButton("Add", "Add Task"),new Label("Add Task"));
+        newTask.getStyleClass().add("taskLine");
+        taskBox.getChildren().add(newTask);
+
+        return status;
     }
 
     //Create a task line
@@ -251,8 +263,10 @@ public class DashboardController {
 
     //Should initialize taskButtons based on PRIVILEGES of User
     public HBox initTaskControlButtons(HBox taskLine) {
-        HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().add(createIconButton("View", "View Project"));
+
+        JFXRippler view = createIconButton("View", "View Project");
+        JFXRippler startTime = createIconButton("StartTime", "Start Work");
+
 
         JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
         //If already collapsed rotate button to collapse position
@@ -268,8 +282,9 @@ public class DashboardController {
                 expand.setRotate(0);
             }
         });
-        taskLineButtons.getChildren().add(expand);
 
+        HBox taskLineButtons = new HBox();
+        taskLineButtons.getChildren().addAll(view,expand,startTime);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
@@ -315,9 +330,7 @@ public class DashboardController {
         worklogPane.setStyle("-fx-border-width: 0 0 2 0; -fx-border-color: grey;");
 
         // Init taskID to filter worklogs
-        //TODO rework this where id the line id is actually taskID instead of index (because removing a task will fk the index not id)
-        Task task = Tasks.get(Integer.parseInt(taskLine.getId()));
-        int taskID = task.taskID;
+        int taskID = Integer.parseInt(taskLine.getId());
 
         for (int i = 0; i < Worklogs.size(); i++) {
             if (taskID == Worklogs.get(i).taskID) {
@@ -377,7 +390,7 @@ public class DashboardController {
         //We will try and load glyph. If not available replace glyph with text
         try {
             glyph = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg." + iconName);
-            ((SVGGlyph) glyph).setSize(27);
+            ((SVGGlyph) glyph).setSize(26);
             ((SVGGlyph) glyph).setFill(Color.valueOf("#FFFFFF"));
         } catch (Exception e) {
             p("Glyph does not exist!");
