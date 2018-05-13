@@ -450,7 +450,6 @@ public class DashboardController {
         JFXRippler confirm = createIconButton("User-Check", "Confirm");
         JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
 
-        //TODO JOEL Validator for String vs. Integer
         groupID.setPromptText("Group Number");
         projectLeadID.setPromptText("Project Leader");
         name.setPromptText("Name");
@@ -529,10 +528,40 @@ public class DashboardController {
         dialog.show();
     }
 
-    private boolean projectIsValid(JFXTextField groupID, JFXTextField projectLeadID, JFXTextField name,
-                                   JFXTextField description, JFXTextField status, JFXTextField dueDate)
+    private boolean projectIsValid( JFXTextField name, JFXTextField dueDate, JFXTextField groupID,
+                                    JFXTextField projectLeadID, JFXTextField description, JFXTextField status)
     {
         boolean valid = true;
+        //name
+        if(name.getText().isEmpty())
+        {
+            name.setPromptText("Name cannot be empty");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else if(name.getText().matches("(.*)[0-9](.*)") ||
+                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
+        {
+            name.clear();
+            name.setPromptText("Name can only alphabetic characters");
+            name.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+        else name.setStyle("-fx-background-color: #FFFFFF");
+
+        //dueDate
+        try
+        {
+            LocalDateTime.parse(dueDate.getText());
+            dueDate.setStyle("-fx-background-color: #FFFFFF");
+        }
+        catch (DateTimeException e)
+        {
+            dueDate.clear();
+            status.setStyle("-fx-background-color: #FFCDD2");
+            valid = false;
+        }
+
         //groupID
         if(groupID.getText().isEmpty())
         {
@@ -565,22 +594,6 @@ public class DashboardController {
         }
         else projectLeadID.setStyle("-fx-background-color: #FFFFFF");
 
-        //name
-        if(name.getText().isEmpty())
-        {
-            name.setPromptText("Name cannot be empty");
-            name.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else if(name.getText().matches("(.*)[0-9](.*)") ||
-                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
-        {
-            name.clear();
-            name.setPromptText("Name can only alphabetic characters");
-            name.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else name.setStyle("-fx-background-color: #FFFFFF");
 
         //description
         if(description.getText().matches("(.*)[\'\";](.*)"))
@@ -604,25 +617,25 @@ public class DashboardController {
         }
         else status.setStyle("-fx-background-color: #FFFFFF");
 
-        //dueDate
-        try
-        {
-            LocalDateTime.parse(dueDate.getText());
-            dueDate.setStyle("-fx-background-color: #FFFFFF");
-        }
-        catch (DateTimeException e)
-        {
-            dueDate.clear();
-            status.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-
         return valid;
     }
 
     void viewProjectDialog(Project project)
     {
-
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        Text groupID = new Text(String.valueOf(project.groupID)),
+             projectLeadID = new Text(String.valueOf(project.projectLeadID)),
+             name = new Text(project.name),
+             description = new Text(project.description),
+             status = new Text(project.status),
+             dueDate = new Text(project.dueDate);
+        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        dialog.show();
     }
 
     void loadTaskDialog(Task task)
@@ -631,8 +644,22 @@ public class DashboardController {
     }
 
     void viewTaskDialog(Task task)
-    {
-
+    {/*
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        Text groupID = new Text(String.valueOf(project.groupID)),
+                projectLeadID = new Text(String.valueOf(project.projectLeadID)),
+                name = new Text(project.name),
+                description = new Text(project.description),
+                status = new Text(project.status),
+                dueDate = new Text(project.dueDate);
+        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        dialog.show();
+        */
     }
 
     void loadWorkLogDialog(WorkLog worklog)
