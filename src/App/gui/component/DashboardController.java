@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import com.mysql.jdbc.StringUtils;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.application.Platform;
 import javafx.event.Event;
 import com.jfoenix.controls.*;
@@ -34,6 +35,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardController {
@@ -70,6 +72,7 @@ public class DashboardController {
 
     private HBox taskLineButtons = new HBox();
     private HBox projectLineButtons = new HBox();
+    private HBox workLogButtons = new HBox();
 
     private List<Project> Projects;
 
@@ -91,6 +94,7 @@ public class DashboardController {
 
     public void initialize() throws Exception {
         Platform.runLater(() -> {
+            //fetchAppropriateObjects();
             Projects = OM.getProjects();
             Tasks = OM.getTasks();
             Worklogs = OM.getWorkLogs();
@@ -104,6 +108,32 @@ public class DashboardController {
 //        p(splitPane.getDividers().get(0).getPosition());
         splitPane.setDividerPosition(0, heightHeader);
 //        p(splitPane.getDividers().get(0).getPosition());
+    }
+
+    private void fetchAppropriateObjects()
+    {
+        switch(User.position)
+        {
+            case("Manager"):
+                Employees = OM.getEmployees();
+                Projects = OM.getProjects();
+                Tasks = OM.getTasks();
+                Worklogs = OM.getWorkLogs();
+                break;
+            case("Project Lead"):
+                Projects = OM.getProjects_ProjectLeadID(User.employeeID);
+                Tasks = new ArrayList<>();
+                for(Project project : Projects) Tasks.addAll(OM.getTasks_ProjectID(project.projectID));
+                Worklogs = new ArrayList<>();
+                for(Task task : Tasks) Worklogs.addAll(OM.getWorkLogs_TaskID(task.taskID));
+                break;
+            case("Employee"):
+                Projects = OM.getProjects_GroupID(User.groupID);
+                Tasks = new ArrayList<>();
+                for(Project project : Projects) Tasks.addAll(OM.getTasks_ProjectID(project.projectID));
+                Worklogs = OM.getWorkLogs_EmployeeID(User.employeeID);
+                break;
+        }
     }
 
     public void initHeader() {
@@ -123,6 +153,7 @@ public class DashboardController {
         JFXRippler logOut = createIconButton("Exit", "Logout");
         JFXRippler refresh = createIconButton("Refresh", "Refresh");
 
+        refresh.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> refresh());
         logOut.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> switchToLogin(new ActionEvent()));
 
         HBox rightAligned = new HBox(refresh, logOut);
@@ -138,7 +169,7 @@ public class DashboardController {
 
 
     //Should initialize ProjectButtons based on PRIVILEGES of User
-    public HBox initProjectControlButtons(HBox projectLine) {
+    public HBox initProjectControlButtons(HBox projectLine, Project project) {
         HBox projectLineButtons = new HBox();
 //        projectLineButtons.getChildren().add(createIconButton("View", "View Project"));
 //        projectLineButtons.getChildren().add(createIconButton("Group-Info", "Assigned Employees"));
@@ -147,8 +178,13 @@ public class DashboardController {
         //EDIT Button
         if(Privelage.equals(MANAGER)){
             JFXRippler Edit = createIconButton("Edit", "Edit Project");
+            Edit.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadProjectDialog(project));
             projectLineButtons.getChildren().add(Edit);
         }
+
+        JFXRippler View = createIconButton("View", "View Project");
+        View.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewProjectDialog(project));
+        projectLineButtons.getChildren().add(View);
 
         //EXPAND/COLLAPSE Button
         if(projectHasTasks(projectLine)) {
@@ -177,16 +213,28 @@ public class DashboardController {
 
     //Should initialize view (with collapsed projects)
     private void initView() {
+        Project project;
+        HBox projectline;
         for (int i = 0; i < Projects.size(); i++) {
             //TODO show only tasks that are w/ Empl ID or privelege
-            Project project = Projects.get(i);
-            HBox projectline = createProjectLine(project);
-            //Set id of Hbox as related to the array list
-            projectline.setId(Integer.toString(project.projectID));
-            View.getChildren().add(projectline);
+            project = Projects.get(i);
+            if(User.position.equals("Manager")) {
+                projectline = createProjectLine(project);
+                //Set id of Hbox as related to the array list
+                projectline.setId(Integer.toString(project.projectID));
+                View.getChildren().add(projectline);
+            }
+            else if(project.groupID == User.groupID)
+            {
+                projectline = createProjectLine(project);
+                projectline.setId(Integer.toString(project.projectID));
+                View.getChildren().add(projectline);
+            }
         }
         //Adds Create button TODO privelage base
-        HBox newProject = new HBox(createIconButton("Add", "Add Project"), new Label("Add Project"));
+        JFXRippler addProject = createIconButton("Add", "Add Project");
+        addProject.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadProjectDialog(null));
+        HBox newProject = new HBox(addProject, new Label("Add Project"));
         newProject.getStyleClass().add("projectLine");
         newProject.setStyle("-fx-background-color: #1a555b");
         View.getChildren().addAll(newProject);
@@ -213,14 +261,14 @@ public class DashboardController {
     //Creates a project line
     public HBox createProjectLine(Project project) {
         //Start project line with Project name
-        HBox projectLine = new HBox(new Label(project.name));
+        HBox projectLine = new HBox(new Label("(PID: " + project.projectID + ") " + project.name));
         projectLine.getStyleClass().add("projectLine");
         //Event handler for hover
         EventHandler a = new EventHandler() {
             @Override
             public void handle(Event event) {
                 if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
-                    projectLine.getChildren().add(initProjectControlButtons(projectLine));
+                    projectLine.getChildren().add(initProjectControlButtons(projectLine, project));
                 }
                 if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
                     projectLine.getChildren().remove(projectLineButtons);
@@ -281,7 +329,7 @@ public class DashboardController {
             @Override
             public void handle(Event event) {
                 if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
-                    taskLine.getChildren().add(initTaskControlButtons(taskLine));
+                    taskLine.getChildren().add(initTaskControlButtons(taskLine, task));
                 }
                 if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
                     taskLine.getChildren().remove(taskLineButtons);
@@ -297,13 +345,13 @@ public class DashboardController {
     }
 
     //Should initialize taskButtons based on PRIVILEGES of User
-    public HBox initTaskControlButtons(HBox taskLine) {
+    public HBox initTaskControlButtons(HBox taskLine, Task task) {
 
         JFXRippler view = createIconButton("View", "View Project");
         JFXRippler startTime = createIconButton("StartTime", "Start Work");
-
-
         JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
+
+        view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> { viewTaskDialog(task); });
         //If already collapsed rotate button to collapse position
         if (taskIsCollapsed(taskLine)) {
             expand.setRotate(180);
@@ -395,7 +443,15 @@ public class DashboardController {
     //Create a Worklog line
     public HBox createWorkLogLine(WorkLog workLog) {
         //Start worlog line with Project name
-        HBox workLogLine = new HBox(new Label(Integer.toString(workLog.employeeID)));
+        String label;
+        HBox workLogLine;
+
+        if(workLog.stopTime == null)
+            label = "EMP: " + Integer.toString(workLog.employeeID) + " START: " + workLog.startTime + ". IP.";
+        else
+            label = "EMP: " + Integer.toString(workLog.employeeID) + " START: " + workLog.startTime + ". STOP: " + workLog.stopTime + ".";
+
+        workLogLine = new HBox(new Label(label));
         workLogLine.getStyleClass().add("worklogLine");
 
         //add Listener
@@ -403,10 +459,10 @@ public class DashboardController {
             @Override
             public void handle(Event event) {
                 if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
-                    workLogLine.getChildren().add(initTaskControlButtons(workLogLine));
+                    workLogLine.getChildren().add(initWorkLogControlButtons(workLog));
                 }
                 if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
-                    workLogLine.getChildren().remove(taskLineButtons);
+                    workLogLine.getChildren().remove(workLogButtons);
                 }
                 if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
 
@@ -418,9 +474,16 @@ public class DashboardController {
         return workLogLine;
     }
 
-    public HBox initWorkLogControlButtons(HBox workLog) {
-        //TODO
-        return null;
+    public HBox initWorkLogControlButtons(WorkLog workLog) {
+        HBox workLogLineButtons = new HBox();
+        JFXRippler viewWorkLogButton = createIconButton("View", "View WorkLog");
+        JFXRippler editWorkLogButton = createIconButton("Edit", "Edit WorkLog");
+        viewWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewWorkLogDialog(workLog));
+        workLogLineButtons.getChildren().add(viewWorkLogButton);
+        workLogLineButtons.getChildren().add(editWorkLogButton);
+        //workLogLineButtons.getStylesheets().add("lineButtons");
+        this.workLogButtons = workLogLineButtons;
+        return workLogLineButtons;
     }
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
@@ -455,28 +518,102 @@ public class DashboardController {
         return rippler;
     }
 
+    private boolean projectIsValid( JFXTextField name, JFXTextField dueDate, JFXTextField groupID,
+                                    JFXTextField projectLeadID, JFXTextField description, JFXTextField status)
+    {
+        boolean valid = true;
+        System.out.println(dueDate.getText());
+
+        //name
+        if(name.getText().isEmpty())
+        {
+            dialogError_JFXTF(name, "Name cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidName(name.getText()))
+        {
+            dialogError_JFXTF(name, "Name can only be alphabetic characters");
+            valid = false;
+        }
+        else name.setStyle("-fx-background-color: #FFFFFF");
+
+        //dueDate
+        if(!OM.isValidDate(dueDate.getText()))
+        {
+            dialogError_JFXTF(dueDate, "Due Date must be in YYYY-MM-DD format");
+            valid = false;
+        }
+        else dueDate.setStyle("-fx-background-color: #FFFFFF");
+
+        //groupID
+        if(groupID.getText().isEmpty())
+        {
+            dialogError_JFXTF(groupID,"Group ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(groupID.getText()))
+        {
+            dialogError_JFXTF(groupID, "Group ID must be an integer");
+            valid = false;
+        }
+        else groupID.setStyle("-fx-background-color: #FFFFFF");
+
+        //projectLeadID
+        if(projectLeadID.getText().isEmpty())
+        {
+            dialogError_JFXTF(projectLeadID, "Project Lead ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(projectLeadID.getText()))
+        {
+            projectLeadID.clear();
+            dialogError_JFXTF(projectLeadID,"Project Lead ID must be an integer");
+            valid = false;
+        }
+        else projectLeadID.setStyle("-fx-background-color: #FFFFFF");
+
+
+        //description
+        if(!OM.isValidString(description.getText()))
+        {
+            dialogError_JFXTF(description, "Description cannot contain special characters");
+            valid = false;
+        }
+        else description.setStyle("-fx-background-color: #FFFFFF");
+
+        //status
+        if(status.getText().isEmpty() || !OM.isValidWorkStatus(status.getText()))
+        {
+            dialogError_JFXTF(status, "Status must be Open or Closed");
+            valid = false;
+        }
+        else status.setStyle("-fx-background-color: #FFFFFF");
+
+        return valid;
+    }
+
     void loadProjectDialog(Project project)
     {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXTextField groupID = new JFXTextField(),
-                projectLeadID = new JFXTextField(),
-                name = new JFXTextField(),
-                description = new JFXTextField(),
-                status = new JFXTextField(),
-                dueDate = new JFXTextField();
+        JFXTextField    name = new JFXTextField(),
+                        dueDate = new JFXTextField(),
+                        groupID = new JFXTextField(),
+                        projectLeadID = new JFXTextField(),
+                        description = new JFXTextField(),
+                        status = new JFXTextField();
 
-        JFXRippler confirm = createIconButton("User-Check", "Confirm");
-        JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
 
-        groupID.setPromptText("Group Number");
-        projectLeadID.setPromptText("Project Leader");
         name.setPromptText("Name");
+        dueDate.setPromptText("Due Date must be YYYY-MM-DD");
+        groupID.setPromptText("Group Number");
+        projectLeadID.setPromptText("Project Leader ID");
         description.setPromptText("Description of the project");
         status.setPromptText("Open or Closed");
-        dueDate.setPromptText("Due Date must be YYYY-MM-DD HH:MM:SS");
 
         Text text = new Text();
         text.setFill(Paint.valueOf("#FFFFFF"));
@@ -485,15 +622,15 @@ public class DashboardController {
         if(project != null) {
             text.setText("Edit Project");
             content.setHeading(text);
+            name.setText(project.name);
+            dueDate.setText(project.dueDate);
             groupID.setText(Integer.toString(project.groupID));
             projectLeadID.setText(Integer.toString(project.projectLeadID));
-            name.setText(project.name);
             description.setText(project.description);
             status.setText(project.status);
-            dueDate.setText(project.dueDate);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(projectIsValid(groupID, projectLeadID, name, description, status, dueDate)) {
+                if(projectIsValid(name, dueDate, groupID, projectLeadID, description, status)) {
                     successful = OM.editProject(
                             project.projectID,
                             name.getText(),
@@ -506,11 +643,8 @@ public class DashboardController {
                     if (successful) {
                         refresh();
                         dialog.close();
-                    } else {
-                        projectLeadID.setPromptText("Invalid Project Leader");
-                        projectLeadID.setStyle("-fx-background-color: #FFCDD2");
-                        projectLeadID.clear();
                     }
+                    else { dialogError_JFXTF(projectLeadID, "Invalid Project Lead"); }
                 }
             });
         }
@@ -519,7 +653,7 @@ public class DashboardController {
             content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(projectIsValid(groupID, projectLeadID, name, description, status, dueDate)) {
+                if(projectIsValid(name, dueDate, groupID, projectLeadID, description, status)) {
                     successful = OM.addProject(
                             name.getText(),
                             dueDate.getText(),
@@ -532,114 +666,18 @@ public class DashboardController {
                         refresh();
                         dialog.close();
                     }
-                    else
-                    {
-                        projectLeadID.setPromptText("Invalid Project Leader");
-                        projectLeadID.setStyle("-fx-background-color: #FFCDD2");
-                        projectLeadID.clear();
-                    }
+                    else { dialogError_JFXTF(projectLeadID, "Invalid Project Lead"); }
                 }
             });
         }
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        VBox vBox = new VBox(name, dueDate, groupID, projectLeadID, description, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         content.setActions(confirm, cancel);
         dialog.show();
     }
 
-    private boolean projectIsValid( JFXTextField name, JFXTextField dueDate, JFXTextField groupID,
-                                    JFXTextField projectLeadID, JFXTextField description, JFXTextField status)
-    {
-        boolean valid = true;
-        //name
-        if(name.getText().isEmpty())
-        {
-            name.setPromptText("Name cannot be empty");
-            name.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else if(name.getText().matches("(.*)[0-9](.*)") ||
-                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
-        {
-            name.clear();
-            name.setPromptText("Name can only alphabetic characters");
-            name.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else name.setStyle("-fx-background-color: #FFFFFF");
-
-        //dueDate
-        try
-        {
-            LocalDateTime.parse(dueDate.getText());
-            dueDate.setStyle("-fx-background-color: #FFFFFF");
-        }
-        catch (DateTimeException e)
-        {
-            dueDate.clear();
-            status.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-
-        //groupID
-        if(groupID.getText().isEmpty())
-        {
-            groupID.setPromptText("Group ID cannot be empty");
-            groupID.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else if(!StringUtils.isStrictlyNumeric(groupID.getText()))
-        {
-            groupID.clear();
-            groupID.setPromptText("Group ID must be an integer");
-            groupID.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else groupID.setStyle("-fx-background-color: #FFFFFF");
-
-        //projectLeadID
-        if(projectLeadID.getText().isEmpty())
-        {
-            projectLeadID.setPromptText("Project Lead ID cannot be empty");
-            projectLeadID.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else if(!StringUtils.isStrictlyNumeric(groupID.getText()))
-        {
-            projectLeadID.clear();
-            projectLeadID.setPromptText("Project Lead ID must be an integer");
-            projectLeadID.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else projectLeadID.setStyle("-fx-background-color: #FFFFFF");
-
-
-        //description
-        if(description.getText().matches("(.*)[\'\";](.*)"))
-        {
-            description.clear();
-            description.setPromptText("Description cannot contain special characters");
-            description.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else description.setStyle("-fx-background-color: #FFFFFF");
-
-        //status
-        if(status.getText().isEmpty() ||
-            !(status.getText().equals("Open") ||
-              status.getText().equals("Closed")))
-        {
-            status.clear();
-            status.setPromptText("Status must be Open or Closed");
-            status.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else status.setStyle("-fx-background-color: #FFFFFF");
-
-        return valid;
-    }
 
     void viewProjectDialog(Project project)
     {
@@ -647,40 +685,223 @@ public class DashboardController {
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        Text groupID = new Text(String.valueOf(project.groupID)),
-             projectLeadID = new Text(String.valueOf(project.projectLeadID)),
-             name = new Text(project.name),
-             description = new Text(project.description),
-             status = new Text(project.status),
-             dueDate = new Text(project.dueDate);
-        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        String timeString = OM.durationAsString(OM.calcDuration(OM.getWorkLogs(project, Tasks, Worklogs)));
+        JFXRippler addTask = new JFXRippler(new Label("Add Task"));
+        Text name = new Text("Name: " + project.name),
+             dueDate = new Text("Due Date: " + project.dueDate),
+             groupID = new Text("Group ID: " + String.valueOf(project.groupID)),
+             projectLeadID = new Text("Project Lead: " + String.valueOf(project.projectLeadID)),
+             description = new Text("Description: " + project.description),
+             status = new Text("Status: " + project.status),
+             timeSpent = new Text("Time spent on " + project.name + ": " + timeString);
+        addTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            dialog.close();
+            loadTaskDialog(null, project.projectID);
+        });
+        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate, timeSpent, addTask);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         dialog.show();
     }
 
-    void loadTaskDialog(Task task)
+    private boolean taskIsValid( JFXTextField name, JFXTextField dueDate, JFXTextField projectID,
+                                 JFXTextField employees, JFXTextField description, JFXTextField size,
+                                 JFXTextField status)
     {
+        boolean valid = true;
 
+        //name
+        if(name.getText().isEmpty())
+        {
+            dialogError_JFXTF(name, "Name cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidName(name.getText()))
+        {
+            dialogError_JFXTF(name, "Name can only be alphabetic characters");
+            valid = false;
+        }
+        else name.setStyle("-fx-background-color: #FFFFFF");
+
+        //dueDate
+        if(!OM.isValidDate(dueDate.getText()))
+        {
+            dialogError_JFXTF(dueDate, "Due Date must be in YYYY-MM-DD format");
+            valid = false;
+        }
+        else dueDate.setStyle("-fx-background-color: #FFFFFF");
+
+        //projectID
+        if(projectID.getText().isEmpty())
+        {
+            dialogError_JFXTF(projectID,"Group ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(projectID.getText()))
+        {
+            dialogError_JFXTF(projectID, "Group ID must be an integer");
+            valid = false;
+        }
+        else projectID.setStyle("-fx-background-color: #FFFFFF");
+
+        //employees
+        if(employees.getText().isEmpty())
+        {
+            dialogError_JFXTF(employees, "Employees cannot be empty");
+        }
+        else if(!OM.isValidEmpList(employees.getText()))
+        {
+            dialogError_JFXTF(employees, "Employees must be comma separated list of digits");
+            valid = false;
+        }
+        else employees.setStyle("-fx-background-color: #FFFFFF");
+
+        //description
+        if(!OM.isValidString(description.getText()))
+        {
+            dialogError_JFXTF(description, "Description cannot contain special characters");
+            valid = false;
+        }
+        else description.setStyle("-fx-background-color: #FFFFFF");
+
+        //size
+        if(size.getText().isEmpty())
+        {
+            dialogError_JFXTF(size, "Size cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(size.getText()))
+        {
+            size.clear();
+            dialogError_JFXTF(size,"Size must be an integer");
+            valid = false;
+        }
+        else size.setStyle("-fx-background-color: #FFFFFF");
+
+        //status
+        if(status.getText().isEmpty() || !OM.isValidWorkStatus(status.getText()))
+        {
+            dialogError_JFXTF(status, "Status must be Open or Closed");
+            valid = false;
+        }
+        else status.setStyle("-fx-background-color: #FFFFFF");
+
+        return valid;
     }
 
-    void viewTaskDialog(Task task)
-    {/*
+    void loadTaskDialog(Task task, int projSeed)
+    {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        Text groupID = new Text(String.valueOf(project.groupID)),
-                projectLeadID = new Text(String.valueOf(project.projectLeadID)),
-                name = new Text(project.name),
-                description = new Text(project.description),
-                status = new Text(project.status),
-                dueDate = new Text(project.dueDate);
-        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate);
+        JFXTextField    name = new JFXTextField(),
+                        dueDate = new JFXTextField(),
+                        projectID = new JFXTextField(),
+                        employees = new JFXTextField(),
+                        description = new JFXTextField(),
+                        size = new JFXTextField(),
+                        status = new JFXTextField();
+
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+
+        name.setPromptText("Name");
+        dueDate.setPromptText("Due Date must be YYYY-MM-DD");
+        projectID.setPromptText("Project ID");
+        employees.setPromptText("Employees on the task");
+        description.setPromptText("Description of the task");
+        size.setPromptText("Size of task (1-10)");
+        status.setPromptText("Open or Closed");
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
+        if(task != null) {
+            text.setText("Edit Project");
+            content.setHeading(text);
+            name.setText(task.name);
+            dueDate.setText(task.dueDate);
+            projectID.setText(Integer.toString(task.projectID));
+            employees.setText(OM.empListToString(task.employees));
+            description.setText(task.description);
+            size.setText(Integer.toString(task.size));
+            status.setText(task.status);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
+                    successful = OM.editTask(
+                            task.taskID,
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(projectID.getText()),
+                            employees.getText(),
+                            description.getText(),
+                            Integer.parseInt(size.getText()),
+                            status.getText()
+                    );
+                    if (successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
+                }
+            });
+        }
+        else {
+            text.setText("Add project");
+            content.setHeading(text);
+            if(projSeed != -1)
+            {
+                projectID.setText(String.valueOf(projSeed));
+                projectID.setDisable(true);
+            }
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
+                    successful = OM.addTask(
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(projectID.getText()),
+                            employees.getText(),
+                            description.getText(),
+                            Integer.parseInt(size.getText()),
+                            status.getText()
+                    );
+                    if(successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(employees, "Invalid project or employees not in project"); }
+                }
+            });
+        }
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
+
+    void viewTaskDialog(Task task)
+    {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        Text    name = new Text("Name: " + task.name),
+                dueDate = new Text("Due Date: " + task.dueDate),
+                projectID = new Text("Project ID: " + String.valueOf(task.projectID)),
+                employees = new Text("Employees: " + OM.empListToString(task.employees)),
+                description = new Text("Description: " + task.description),
+                size = new Text("Size: " + String.valueOf(task.size)),
+                status = new Text("Status: " + task.status);
+        VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         dialog.show();
-        */
     }
 
     void loadWorkLogDialog(WorkLog worklog)
@@ -691,6 +912,13 @@ public class DashboardController {
     void viewWorkLogDialog(WorkLog worklog)
     {
 
+    }
+
+    void dialogError_JFXTF(JFXTextField input, String message)
+    {
+        input.clear();
+        input.setPromptText(message);
+        input.setStyle("-fx-background-color: #FFCDD2");
     }
 
     //Easy Debug print statement
@@ -722,8 +950,16 @@ public class DashboardController {
 
     void refresh()
     {
+        View.getChildren().removeAll();
         View = new VBox();
-        try{ initialize(); }
+        try{
+            OM = new OdinModel();
+            Projects = OM.getProjects();
+            Tasks = OM.getTasks();
+            Worklogs = OM.getWorkLogs();
+            Employees = OM.getEmployees();
+            initView();
+        }
         catch(Exception e){ System.out.println("Error"); }
     }
 }

@@ -4,34 +4,45 @@ import java.sql.ResultSet;
 import java.sql.Date;
 
 public class Task {
-    public String employees; //
-    public int projectID;//
-    public int size;//
     public int taskID;
     public String name; //
-    public String description;
     public String dueDate; //
+    public int projectID;//
+    public String employees; //
+    public String description;
+    public int size;//
     public String status; //
 
     public Task(ResultSet myRS) throws Exception {
-        this.employees = myRS.getString   ("Employees");
-        this.projectID = myRS.getInt("ProjectID");
+        this.taskID = myRS.getInt("TaskID");
         this.name = myRS.getString("Name");
+        this.dueDate = myRS.getString("DueDate");
+        this.projectID = myRS.getInt("ProjectID");
+        this.employees = myRS.getString   ("Employees");
         this.description = myRS.getString("Description");
         this.size = myRS.getInt("Size");
-        this.taskID = myRS.getInt("TaskID");
-        this.dueDate = myRS.getString("DueDate");
         this.status = myRS.getString("Status");
     }
 
-    public Task(String employees, int projectID, int size, int taskID, String name, String description, String dueDate, String status) {
-        this.employees = employees;
-        this.projectID = projectID;
-        this.size = size;
+    public Task(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status) {
         this.taskID = taskID;
         this.name = name;
-        this.description = description;
         this.dueDate = dueDate;
+        this.projectID = projectID;
+        this.employees = employees;
+        this.description = description;
+        this.size = size;
+        this.status = status;
+    }
+
+    public Task(String name, String dueDate, int projectID, String employees, String description, int size, String status)
+    {
+        this.name = name;
+        this.dueDate = dueDate;
+        this.projectID = projectID;
+        this.employees = employees;
+        this.description = description;
+        this.size = size;
         this.status = status;
     }
 

@@ -25,7 +25,7 @@ public class persistentUser {
     public static void initiateSampleData(){
         Project user1 = new Project(1,22,131,"Finish Dashboard", "Testing class", "In-Progress", "5/11/2018");
         Project user2 = new Project(33,22,131,"Show Headers", "Testing class", "In-Progress", "5/4/2018");
-        Task task1 = new Task("Employee",1,5,3,"Task Name", "Task description", "", "status");
+        Task task1 = new Task(1, "Task Name","2000-1-1",3,"69", "Task description", 1, "Open");
 //        WorkLog wl1 = new WorkLog(1,2,3,"Open","worklog");
         taskList.add(task1);
         projectList.add(user1);

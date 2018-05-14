@@ -1,10 +1,17 @@
 package Model;
 
 import Server.*;
+import com.mysql.jdbc.StringUtils;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
+import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.time.DateTimeException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -40,7 +47,7 @@ public class OdinModel implements OdinInterface {
             emp = OS.getEmployee_EmployeeID(employeeID);
             if (emp != null) {
                 emp = OS.getEmployee_Username(username);
-                if (emp == null) {
+                if (emp == null || emp.employeeID == employeeID) {
                     OS.editEmployee(employeeID, name, position, groupID, username, password, status);
                     return true;
                 }
@@ -67,7 +74,7 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
-    public boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status) {
+    public boolean editTask(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status) {
         Task task;
         List<Integer> emp = extractEmployeeIDs(employees);
         Employee empHold;
@@ -112,18 +119,21 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
-    public boolean stopWork(int logID, String description) throws Exception {
+    public boolean stopWork(int logID, String description) {
         DateTimeFormatter formatter;
         LocalDateTime startTime, stopTime;
         String startString, stopString, elapsedTime;
         long hours, minutes, seconds;
-        WorkLog workLog = OS.getWorkLog_LogID(logID);
+        WorkLog workLog = null;
+        try { workLog = OS.getWorkLog_LogID(logID); }
+        catch(Exception e) { e.printStackTrace(); }
         if (workLog != null) {
             formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             stopTime = LocalDateTime.now();
             stopString = stopTime.format(formatter);
             startString = workLog.startTime;
-            startTime = LocalDateTime.parse(startString.replace(".0", ""), formatter);
+            startString = startString.substring(0, startString.lastIndexOf(".0"));
+            startTime = LocalDateTime.parse(startString, formatter);
             hours = startTime.until(stopTime, ChronoUnit.HOURS);
             startTime = startTime.plusHours(hours);
             minutes = startTime.until(stopTime, ChronoUnit.MINUTES);
@@ -224,6 +234,7 @@ public class OdinModel implements OdinInterface {
         LocalDateTime startDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startTime = startDateTime.format(formatter);
+        startTime = startTime.substring(0, startTime.lastIndexOf(".0"));
         try {
             emp = OS.getEmployee_EmployeeID(employeeID);
             task = OS.getTask_TaskID(taskID);
@@ -700,6 +711,126 @@ public class OdinModel implements OdinInterface {
         List<Integer> list = extractEmployeeIDs(emp);
         Collections.sort(list);
         return list;
+    }
+
+    public String empListToString(String empList) {
+        String sortedString = "";
+        List<Integer> sortedList = sortEmployeeIDs(empList);
+        for (Integer integer : sortedList) {
+            sortedString = sortedString.concat(integer.toString().concat(", "));
+        }
+        if(!sortedString.isEmpty())sortedString = sortedString.substring(0, sortedString.lastIndexOf(", "));
+        return sortedString;
+    }
+
+    public String durationAsString(Duration dur) {
+        long totalSec = dur.getSeconds();
+
+        int years = (int) totalSec / (3600 * 24 * 365);
+        int days = (int) totalSec / (3600 * 24) % 365;
+        int hours = (int) totalSec / 3600 % 24;
+        int minutes = (int) totalSec % 3600 / 60;
+        int seconds = (int) totalSec % 60;
+
+        String out = "";
+
+        if (years != 0) {
+            out += "Years: " + years + " ";
+        }
+        if (days != 0) {
+            out += "Days: " + days + " ";
+        }
+        if (hours != 0) {
+            out += "Hrs: " + hours + " ";
+        }
+        if (minutes != 0) {
+            out += "Min: " + minutes + " ";
+        }
+        out += "Sec: " + seconds + " ";
+
+
+        return out;
+    }
+
+    public Duration calcDuration(List<WorkLog> workLogs) {
+        LocalDateTime startTime, endTime;
+        Duration duration = Duration.ZERO;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
+        for(WorkLog workLog : workLogs)
+        {
+            startTime = LocalDateTime.parse(workLog.startTime.replace(".0", ""), formatter);
+            endTime = LocalDateTime.parse(workLog.startTime.replace(".0", ""), formatter);
+            duration = duration.plus(Duration.between(startTime, endTime));
+        }
+        return duration;
+    }
+
+    public List<WorkLog> getWorkLogs(Task task, List<WorkLog> workLogs) {
+        return filterWorkLog_TaskID(workLogs, task.taskID);
+    }
+
+    public List<WorkLog> getWorkLogs(Project project, List<Task> tasks, List<WorkLog> workLogs) {
+        List<WorkLog> finalList = new ArrayList<>();
+        for(Task task : tasks)
+        {
+            if(task.projectID == project.projectID) finalList.addAll(getWorkLogs(task, workLogs));
+        }
+        return finalList;
+    }
+
+    public boolean isValidName(String name) {
+        return !(name.matches("(.*)[0-9](.*)") || name.matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"));
+    }
+
+    public boolean isValidDate(String date) {
+        if (date.isEmpty() || LocalDate.parse(date).toString().equals(date)) return true;
+        else return false;
+    }
+
+    public boolean isValidNum(String number)
+    {
+        return StringUtils.isStrictlyNumeric(number);
+    }
+
+    public boolean isValidString(String string)
+    {
+        return !(string.matches("(.*)[\'\";()](.*)"));
+    }
+
+    public boolean isValidWorkStatus(String status)
+    {
+        return (status.equals("Open") || status.equals("Closed"));
+    }
+
+    public boolean isValidEmpStatus(String status)
+    {
+        return (status.equals("Active") || status.equals("Inactive"));
+    }
+
+    public boolean isValidPos(String status) {
+        return (status.equals("Manager") || status.equals("Project Lead") || status.equals("Employee"));
+    }
+
+    public boolean isValidEmpList(String empList)
+    {
+        if(empList.matches("(.*)[a-zA-z](.*)") || empList.matches("(.*)[!\"#$%&'()*+./:;<=>?@^_`{|}~-](.*)"))
+            return false;
+        int size = empList.length();
+        for(int i = 0; i < size; ++i)
+        {
+            if(!(Character.compare(empList.charAt(i), ',') == 0 || Character.isDigit(empList.charAt(i))))
+                return false;
+        }
+        return true;
+    }
+
+    public String now()
+    {
+        DateTimeFormatter formatter;
+        LocalDateTime now;
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        now = LocalDateTime.now();
+        return now.format(formatter);
     }
 
     public void closeConnection() {

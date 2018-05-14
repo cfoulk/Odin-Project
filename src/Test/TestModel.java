@@ -67,7 +67,7 @@ public class TestModel {
         task = model.getTask_TaskID(5);
 
         boolean isTaskUpdated = false;
-        isTaskUpdated = model.editTask(5, "Another Test", "2018-05-12", "125", 3, "Changed description", 4, "Open");
+        isTaskUpdated = model.editTask(5, "Another Test", "2018-05-12", 3, "125", "Changed description", 4, "Open");
 
         if(isTaskUpdated)
         {
