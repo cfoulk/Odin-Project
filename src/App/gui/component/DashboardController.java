@@ -952,10 +952,8 @@ public class DashboardController {
 
     void refresh()
     {
-        View.getChildren().removeAll();
-        View = new VBox();
+        View.getChildren().remove(0,View.getChildren().size());
         try{
-            OM = new OdinModel();
             Projects = OM.getProjects();
             Tasks = OM.getTasks();
             Worklogs = OM.getWorkLogs();
