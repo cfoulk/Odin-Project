@@ -81,7 +81,9 @@ public class loginController {
                     System.out.println("Success");
                     //Clear text after login
                     usernameField.setText("");
+                    usernameField.setStyle("-fx-background-color: #FFFFFF");
                     passwordField.setText("");
+                    passwordField.setStyle("-fx-background-color: #FFFFFF");
                     switchToDashboard(userID);
                     break;
             }
