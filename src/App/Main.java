@@ -45,7 +45,10 @@ public class Main extends Application {
         root.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
         decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
         //'X' will close java application
-        decorator.setOnCloseButtonAction(()-> System.exit(0));
+        decorator.setOnCloseButtonAction(() -> {
+            System.exit(0);
+        });
+
         decorator.getScene().getWindow().sizeToScene();
 
         primaryStage.show();
