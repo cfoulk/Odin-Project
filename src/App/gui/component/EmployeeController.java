@@ -342,7 +342,7 @@ public class EmployeeController {
 
     void refresh()
     {
-        View = new VBox();
+        View.getChildren().remove(0,View.getChildren().size());
         Employees = OM.getEmployees();
         initView();
     }

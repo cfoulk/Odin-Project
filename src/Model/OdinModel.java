@@ -234,7 +234,7 @@ public class OdinModel implements OdinInterface {
         LocalDateTime startDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startTime = startDateTime.format(formatter);
-        startTime = startTime.substring(0, startTime.lastIndexOf(".0"));
+        if(startTime.contains(".0")) startTime = startTime.substring(0, startTime.lastIndexOf(".0"));
         try {
             emp = OS.getEmployee_EmployeeID(employeeID);
             task = OS.getTask_TaskID(taskID);

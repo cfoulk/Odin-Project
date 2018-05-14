@@ -84,14 +84,16 @@ public class DashboardController {
 
     private List<Employee> Employees;
 
+    private String responseString;
+
     public boolean load(int UserID, OdinModel OM) {
         User = OM.getEmployee_EmployeeID(UserID);
         Privelage = User.position;
-                this.OM = OM;
+                DashboardController.OM = OM;
         return true;
     }
 
-    public void initialize() throws Exception {
+    public void initialize() {
         Platform.runLater(() -> {
             //fetchAppropriateObjects();
             Projects = OM.getProjects();
@@ -253,10 +255,7 @@ public class DashboardController {
 
     private boolean projectIsCollapsed(HBox projectLine) {
         int index;
-        if ((index = View.getChildren().indexOf(projectLine)) + 1 < View.getChildren().size() && View.getChildren().get(index + 1) instanceof VBox) {
-            return true;
-        }
-        return false;
+        return (index = View.getChildren().indexOf(projectLine)) + 1 < View.getChildren().size() && View.getChildren().get(index + 1) instanceof VBox;
     }
 
     //Creates a project line
@@ -347,12 +346,30 @@ public class DashboardController {
 
     //Should initialize taskButtons based on PRIVILEGES of User
     public HBox initTaskControlButtons(HBox taskLine, Task task) {
+        boolean taskStarted;
+        int lastLogID = getLastLog(task.taskID, User.employeeID);
 
-        JFXRippler view = createIconButton("View", "View Project");
-        JFXRippler startTime = createIconButton("StartTime", "Start Work");
+        taskStarted = (lastLogID != -1);
+
+        JFXRippler view = createIconButton("View", "View Task");
+        JFXRippler workButton;
+        if(!taskStarted)
+            workButton = createIconButton("StartTime", "Start Work");
+        else
+            workButton = createIconButton("StopTime", "Stop Work");
         JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
 
-        view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> { viewTaskDialog(task); });
+        view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewTaskDialog(task));
+
+        workButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if(!taskStarted)
+            {
+                OM.startWork(task.taskID, User.employeeID);
+                refresh();
+            }
+            else getStopDesc(lastLogID);
+        });
+
         //If already collapsed rotate button to collapse position
         if (taskIsCollapsed(taskLine)) {
             expand.setRotate(180);
@@ -368,7 +385,7 @@ public class DashboardController {
         });
 
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().addAll(view, expand, startTime);
+        taskLineButtons.getChildren().addAll(view, expand, workButton);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
@@ -396,10 +413,7 @@ public class DashboardController {
         int index;
         VBox taskview = (VBox) taskLine.getParent();
         taskview.getChildren();
-        if ((index = taskview.getChildren().indexOf(taskLine)) + 1 < taskview.getChildren().size() && taskview.getChildren().get(index + 1) instanceof ScrollPane) {
-            return true;
-        }
-        return false;
+        return (index = taskview.getChildren().indexOf(taskLine)) + 1 < taskview.getChildren().size() && taskview.getChildren().get(index + 1) instanceof ScrollPane;
     }
 
     //TODO
@@ -483,7 +497,6 @@ public class DashboardController {
         viewWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewWorkLogDialog(workLog));
         workLogLineButtons.getChildren().add(viewWorkLogButton);
         workLogLineButtons.getChildren().add(editWorkLogButton);
-        //workLogLineButtons.getStylesheets().add("lineButtons");
         this.workLogButtons = workLogLineButtons;
         return workLogLineButtons;
     }
@@ -906,6 +919,34 @@ public class DashboardController {
         dialog.show();
     }
 
+    private void getStopDesc(int taskID)
+    {
+        responseString = "";
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXTextField description = new JFXTextField();
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Cancel");
+
+        description.setPromptText("Description of work");
+
+        confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            OM.stopWork(taskID, description.getText());
+            refresh();
+            dialog.close();
+        });
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            dialog.close();
+        });
+        VBox vBox = new VBox(description, confirm, cancel);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
+
     void loadWorkLogDialog(WorkLog worklog)
     {
 
@@ -914,6 +955,15 @@ public class DashboardController {
     void viewWorkLogDialog(WorkLog worklog)
     {
 
+    }
+
+    int getLastLog(int taskID, int empID)
+    {
+        List<WorkLog> relevantLogs;
+        relevantLogs = OM.filterWorkLog_EmployeeID(OM.filterWorkLog_TaskID(Worklogs, taskID), empID);
+        if(relevantLogs.isEmpty()) return -1;
+        for(WorkLog workLog : relevantLogs) if(workLog.stopTime == null) return workLog.logID;
+        return -1;
     }
 
     void dialogError_JFXTF(JFXTextField input, String message)
