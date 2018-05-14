@@ -1,5 +1,6 @@
 package App.gui.component;
 
+import App.gui.component.util.ConnectionStatus;
 import App.gui.persistentUser;
 import Model.OdinModel;
 import com.jfoenix.controls.*;
@@ -39,16 +40,14 @@ public class loginController {
     @FXML
     private VBox contentArray;
 
-    public JFXButton connectionStatus = null;
-
-    private SVGGlyph connection;
-
     OdinModel OM = null;
 
     @FXML
     private StackPane stackPane;
 
     private JFXDialog popup;
+
+    ConnectionStatus StatusIcon;
 
     @FXML
     void login(ActionEvent event) {
@@ -62,7 +61,7 @@ public class loginController {
 
     void login() {
         try {
-            if (OM.equals(null)) {
+            if (OM == null) {
                 OM = new OdinModel();
             }
 
@@ -80,6 +79,7 @@ public class loginController {
                     break;
                 default:
                     System.out.println("Success");
+                    //Clear text after login
                     usernameField.setText("");
                     passwordField.setText("");
                     switchToDashboard(userID);
@@ -98,36 +98,6 @@ public class loginController {
     }
 
 
-    public void liveCheck() {
-        new Thread(() -> {
-            while (true) {
-                checkConnection(new ActionEvent());
-                try {
-                    Thread.sleep((long) 2000);
-                } catch (InterruptedException e) {
-                    System.out.println("End");
-                }
-            }
-        }).start();
-    }
-
-    void checkConnection(ActionEvent event) {
-        try {
-            if (OM == null) {
-                OM = new OdinModel();
-            }
-            if(!OM.isClosed()) {
-                connection.setStyle("-fx-background-color: #00E676");
-                return;
-            }
-        } catch (SQLException e) {
-        } catch (IOException e) {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connection.setStyle("-fx-background-color: #D32F2F");
-    }
-
     public void switchToDashboard(int UserID) {
         try {
             if(OM != null) {
@@ -135,7 +105,7 @@ public class loginController {
                 Parent dashboard = loader.load();
                 persistentUser.PARENT_DASHBOARD = dashboard;
                 DashboardController dashboardController = loader.getController();
-                dashboardController.load(UserID, OM, connectionStatus);
+                dashboardController.load(UserID, OM);
                 dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
                 decorator.setContent(dashboard);
                 //Resize window to the new scene
@@ -150,18 +120,12 @@ public class loginController {
         //Throws Exception
         SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
         logo.setFill(Color.WHITE);
-        if(connectionStatus == null) {
-            connection = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Connection-Good");
-            connection.setSize(25);
-            connection.setFill(Color.valueOf("#9E9E9E"));
-            connection.setStyle("-fx-cursor: hand");
-            connectionStatus = new JFXButton();
-            connectionStatus.setStyle("-jfx-mask-type: CIRCLE");
-            connectionStatus.setGraphic(connection);
-            connectionStatus.setOnAction(this::checkConnection);
-            ((HBox) loginButton.getParent()).getChildren().add(connectionStatus);
-        }
+        OM = new OdinModel();
+        new ConnectionStatus(OM);
 
+        StatusIcon = new ConnectionStatus(OM);
+        ((HBox) loginButton.getParent()).getChildren().add(StatusIcon.getIcon());
+        System.out.println(Thread.activeCount());
         logo.setSize(200);
         ObservableList list = contentArray.getChildren();
         contentArray.getChildren().add(0, logo);
@@ -171,7 +135,6 @@ public class loginController {
                         login();
                     }
                 });
-        liveCheck();
         Platform.runLater(() -> {usernameField.requestFocus();
             Root = usernameField.getScene().getRoot();});
 

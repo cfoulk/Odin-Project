@@ -1,5 +1,6 @@
 package App.gui.component;
 
+import App.gui.component.util.ConnectionStatus;
 import App.gui.persistentUser;
 import Model.OdinModel;
 import Server.Employee;
@@ -45,6 +46,7 @@ public class DashboardController {
     static String EMPLOYEE = "Employee";
 
     static OdinModel OM;
+    ConnectionStatus StatusIcon;
 
     @FXML
     private VBox HeaderVBox;
@@ -79,13 +81,10 @@ public class DashboardController {
 
     private List<Employee> Employees;
 
-    private JFXButton connectionStatus = null;
-
-    public boolean load(int UserID, OdinModel OM, JFXButton connectionStatus) {
+    public boolean load(int UserID, OdinModel OM) {
         User = OM.getEmployee_EmployeeID(UserID);
         Privelage = User.position;
                 this.OM = OM;
-        this.connectionStatus = connectionStatus;
         return true;
     }
 
@@ -126,9 +125,11 @@ public class DashboardController {
         logOut.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> switchToLogin(new ActionEvent()));
 
         HBox rightAligned = new HBox(refresh, logOut);
-        if (connectionStatus != null) {
-            rightAligned.getChildren().add(1, connectionStatus);
-        }
+
+
+
+        StatusIcon = new ConnectionStatus(OM);
+        rightAligned.getChildren().add(1,StatusIcon.getIcon());
         HBox.setHgrow(rightAligned, Priority.ALWAYS);
         rightAligned.getStyleClass().add("lineButtons");
         UserBar.getChildren().add(rightAligned);
@@ -336,6 +337,7 @@ public class DashboardController {
     }
 
     public void switchToLogin(ActionEvent event) {
+        StatusIcon.close();
         JFXDecorator decorator = persistentUser.DECORATOR;
         decorator.setContent(persistentUser.PARENT_LOGIN);
         decorator.getScene().getWindow().sizeToScene();
