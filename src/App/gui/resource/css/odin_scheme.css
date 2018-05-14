@@ -22,6 +22,17 @@
     -fx-padding: 9;
 }
 
+//Employee Line
+.empLine{
+    -fx-background-color: #2b5797;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8;
+}
+
+.empLine:hover{
+    -fx-background-color: #00695C;
+}
+
 //Project Line
 .projectLine{
     -fx-background-color: #2b5797;
@@ -32,7 +43,8 @@
 }
 
 .projectLine:hover{
-    -fx-background-color: #00695C;
+    -fx-background-color: linear-gradient( #2b5797 20%, #366ebf 100%);
+//    -fx-background-color: #00695C;
 }
 
 .taskLine{
@@ -42,7 +54,8 @@
 }
 
 .taskLine:hover{
-    -fx-border-color: #00b69f;
+    -fx-background-color: linear-gradient( #366ebf 85%, #4DB6AC 100%);
+    -fx-border-color: #4DB6AC;
     -fx-border-width: 3;
 }
 
@@ -57,7 +70,7 @@
 }
 
 //ProjectLineButtons
-.projectLineButtons{
+.lineButtons{
     -fx-alignment: CENTER_RIGHT;
 }
 

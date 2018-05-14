@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
@@ -19,31 +18,15 @@
               <items>
                   <AnchorPane minHeight="40.0" minWidth="0.0" prefHeight="86.0" prefWidth="598.0" style="-fx-background-color: #2b5797;" SplitPane.resizableWithParent="false">
                      <children>
-                        <VBox prefHeight="232.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox fx:id="HeaderVBox" prefHeight="232.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <HBox fx:id="UserBar" alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="600.0" spacing="5.0">
                                  <children>
-                                    <Text fx:id="Username" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                    <Text fx:id="UserName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
                                     </Text>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox prefHeight="57.0" prefWidth="600.0">
-                                 <children>
-                                    <JFXButton style="-fx-background-color: #FFFFFF;" text="User Settings" />
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox prefHeight="57.0" prefWidth="600.0">
-                                 <children>
-                                    <JFXButton fx:id="testButton" onAction="#editEmployee" style="-fx-background-color: #FFFFFF;" />
                                  </children>
                                  <padding>
                                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
@@ -60,7 +43,7 @@
                               <VBox fx:id="View" prefWidth="526.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
                            </children>
                            <padding>
-                              <Insets bottom="15.0" />
+                              <Insets bottom="15.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                         </AnchorPane>
                     </content>

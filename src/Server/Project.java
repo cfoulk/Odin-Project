@@ -15,12 +15,12 @@ public class Project
     public Project(ResultSet myRS) throws Exception
     {
         this.projectID = myRS.getInt("ProjectID");
+        this.name = myRS.getString("Name");
+        this.dueDate = myRS.getString("DueDate");
         this.groupID = myRS.getInt("GroupID");
         this.projectLeadID = myRS.getInt("ProjectLeadID");
-        this.name = myRS.getString("Name");
         this.description = myRS.getString("Description");
         this.status = myRS.getString("Status");
-        this.dueDate = myRS.getString("DueDate");
     }
 
     public Project(int projectID, int groupID, int projectLeadID, String name, String description, String status, String dueDate) {
