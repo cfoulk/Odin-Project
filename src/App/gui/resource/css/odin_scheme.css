@@ -15,6 +15,12 @@
     -fx-background-color: #23497f;
 }
 
+Text{
+    -fx-font-size: 13;
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+
 .label{
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 15;
@@ -74,10 +80,13 @@
     -fx-alignment: CENTER_RIGHT;
 }
 
-.jfx-text-field{
+.jfx-text-field, .jfx-password-field{
     -fx-background-color: #FFFFFF;
     -fx-font: 13px "System";
-    -fx-focus-traversable: true;
+    //-fx-focus-traversable: true;
+    -fx-prompt-text-fill: #142947;
+    -jfx-focus-color: WHITE;
+    -jfx-unfocus-color: WHITE;
 }
 
 //text field line
