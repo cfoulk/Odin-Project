@@ -161,12 +161,12 @@ public class OdinModel implements OdinInterface {
         return elapsedTime;
     }
 
-    public boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID) {
+    public boolean setMessage_Read(int MessageID) {
         Message mes;
         try {
             mes = OS.getMessage_MessageID(MessageID);
             if (mes != null) {
-                OS.setMessage_Read(MessageID, message, recipientID, senderID);
+                OS.setMessage_Read(MessageID);
                 return true;
             }
         } catch (Exception e) {
