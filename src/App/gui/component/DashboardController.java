@@ -313,6 +313,7 @@ public class DashboardController {
         //Adds Create button TODO privelage base
         HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
         newTask.getStyleClass().add("taskLine");
+        newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
         taskBox.getChildren().add(newTask);
 
         return status;
@@ -351,15 +352,17 @@ public class DashboardController {
 
         taskStarted = (lastLogID != -1);
 
-        JFXRippler view = createIconButton("View", "View Task");
         JFXRippler workButton;
+        JFXRippler view = createIconButton("View", "View Task");
+        JFXRippler edit = createIconButton("Edit", "Edit Task");
+        JFXRippler expand = createIconButton("Arrowhead-Down", "View Work Logs");
         if(!taskStarted)
             workButton = createIconButton("StartTime", "Start Work");
         else
             workButton = createIconButton("StopTime", "Stop Work");
-        JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
 
         view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewTaskDialog(task));
+        edit.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(task, -1));
 
         workButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if(!taskStarted)
@@ -385,7 +388,7 @@ public class DashboardController {
         });
 
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().addAll(view, expand, workButton);
+        taskLineButtons.getChildren().addAll(view, edit, workButton, expand);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
@@ -498,6 +501,7 @@ public class DashboardController {
         JFXRippler viewWorkLogButton = createIconButton("View", "View WorkLog");
         JFXRippler editWorkLogButton = createIconButton("Edit", "Edit WorkLog");
         viewWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewWorkLogDialog(workLog));
+        editWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadWorkLogDialog(workLog));
         workLogLineButtons.getChildren().add(viewWorkLogButton);
         workLogLineButtons.getChildren().add(editWorkLogButton);
         this.workLogButtons = workLogLineButtons;
@@ -852,7 +856,7 @@ public class DashboardController {
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
         if(task != null) {
-            text.setText("Edit Project");
+            text.setText("Edit Task");
             content.setHeading(text);
             name.setText(task.name);
             dueDate.setText(task.dueDate);
@@ -883,7 +887,7 @@ public class DashboardController {
             });
         }
         else {
-            text.setText("Add project");
+            text.setText("Add Task");
             content.setHeading(text);
             if(projSeed != -1)
             {
@@ -965,7 +969,7 @@ public class DashboardController {
         dialog.show();
     }
 
-    boolean isValidWorkLog(JFXTextField startTime, JFXTextField stopTime, JFXTextField description,
+    boolean workLogIsValid(JFXTextField startTime, JFXTextField stopTime, JFXTextField description,
                            JFXTextField taskID, JFXTextField employeeID)
     {
         boolean valid = true;
@@ -1024,7 +1028,99 @@ public class DashboardController {
 
     void loadWorkLogDialog(WorkLog worklog)
     {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXTextField    startTime = new JFXTextField(),
+                        stopTime = new JFXTextField(),
+                        elapsedTime = new JFXTextField(),
+                        description = new JFXTextField(),
+                        taskID = new JFXTextField(),
+                        employeeID = new JFXTextField();
 
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+
+        startTime.setPromptText("Stop time must be YYYY-MM-DD HH:mm:ss");
+        stopTime.setPromptText("Stop time must be YYYY-MM-DD HH:mm:ss");
+        elapsedTime.setPromptText("Elapsed Time");
+        description.setPromptText("Description of the work done");
+        taskID.setPromptText("Task ID");
+        employeeID.setPromptText("Employee ID");
+
+        elapsedTime.setDisable(true);
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
+        if(worklog != null) {
+            text.setText("Edit work log");
+            content.setHeading(text);
+            if(worklog.startTime != null) {
+                if (worklog.startTime.contains(".0"))
+                    startTime.setText(worklog.startTime.substring(0, worklog.startTime.lastIndexOf(".0")));
+                else startTime.setText(worklog.startTime);
+            }
+            if(worklog.stopTime != null) {
+                if (worklog.stopTime.contains(".0"))
+                    stopTime.setText(worklog.stopTime.substring(0, worklog.stopTime.lastIndexOf(".0")));
+                else stopTime.setText(worklog.stopTime);
+            }
+            elapsedTime.setText(worklog.elapsedTime);
+            description.setText(worklog.description);
+            taskID.setText(Integer.toString(worklog.logID));
+            employeeID.setText(Integer.toString(worklog.employeeID));
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(workLogIsValid(startTime, stopTime, description, taskID, employeeID)) {
+                    successful = OM.editWorkLog(
+                            worklog.logID,
+                            startTime.getText(),
+                            stopTime.getText(),
+                            OM.calcElapsedTime(startTime.getText(), stopTime.getText()),
+                            description.getText(),
+                            Integer.parseInt(taskID.getText()),
+                            Integer.parseInt(employeeID.getText())
+                    );
+                    if (successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
+                }
+            });
+        }
+        else {
+            text.setText("Add work log");
+            content.setHeading(text);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                elapsedTime.setText(OM.calcElapsedTime(startTime.getText(), stopTime.getText()));
+                if(workLogIsValid(startTime, stopTime, description, taskID, employeeID)) {
+                    successful = OM.addWorkLog(
+                            startTime.getText(),
+                            stopTime.getText(),
+                            elapsedTime.getText(),
+                            description.getText(),
+                            Integer.parseInt(taskID.getText()),
+                            Integer.parseInt(employeeID.getText())
+                    );
+                    if (successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
+                }
+            });
+        }
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(startTime, stopTime, elapsedTime, description, taskID, employeeID);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
     }
 
     void viewWorkLogDialog(WorkLog worklog)

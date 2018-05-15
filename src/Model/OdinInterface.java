@@ -15,7 +15,7 @@ public interface OdinInterface
     boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password, String status);
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean editTask(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status);
-    public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
+    public boolean editWorkLog(int logID, String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
     public boolean stopWork(int logID, String description);
     boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
 
@@ -23,7 +23,7 @@ public interface OdinInterface
     boolean addEmployee(String name, String position, int groupID, String username, String password, String status);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
-    boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
+    boolean addWorkLog(String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
     public int startWork(int taskID, int employeeID);
     boolean addMessage(String message, int recipientID, int senderID);
 
