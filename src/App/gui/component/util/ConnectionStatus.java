@@ -40,7 +40,7 @@ public class ConnectionStatus {
         connectionStatus.getChildren().add(connection);
     }
 
-    public class checkThread extends Thread {
+    private class checkThread extends Thread {
         public void run() {
             while (run || !Thread.currentThread().isInterrupted()) {
                 checkConnection();

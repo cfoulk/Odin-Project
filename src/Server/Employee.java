@@ -2,6 +2,7 @@ package Server;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Employee
 {
@@ -34,4 +35,24 @@ public class Employee
     }
 
     public boolean passwordCheck(String input) { return (this.password.compareTo(input) == 0); }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return employeeID == employee.employeeID &&
+                groupID == employee.groupID &&
+                Objects.equals(name, employee.name) &&
+                Objects.equals(position, employee.position) &&
+                Objects.equals(username, employee.username) &&
+                Objects.equals(password, employee.password) &&
+                Objects.equals(status, employee.status);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(employeeID, groupID, name, position, username, password, status);
+    }
 }

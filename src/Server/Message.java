@@ -2,6 +2,7 @@ package Server;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Message {
     public int messageID;
@@ -24,5 +25,22 @@ public class Message {
         this.status = status;
         this.recipientID = recipientID;
         this.senderID = senderID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message1 = (Message) o;
+        return messageID == message1.messageID &&
+                recipientID == message1.recipientID &&
+                senderID == message1.senderID &&
+                Objects.equals(message, message1.message) &&
+                Objects.equals(status, message1.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageID, message, status, recipientID, senderID);
     }
 }
