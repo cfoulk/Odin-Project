@@ -113,7 +113,7 @@ public class DashboardController {
 
     private void fetchAppropriateObjects()
     {
-        switch(User.position)
+        switch(Privelage)
         {
             case("Manager"):
                 Employees = OM.getEmployees();
@@ -408,7 +408,9 @@ public class DashboardController {
         StatusIcon.close();
         JFXDecorator decorator = persistentUser.DECORATOR;
         decorator.setContent(persistentUser.PARENT_LOGIN);
-        decorator.getScene().getWindow().sizeToScene();
+        if(!((Stage) decorator.getScene().getWindow()).isFullScreen()) {
+            decorator.getScene().getWindow().sizeToScene();
+        }
 
     }
 
