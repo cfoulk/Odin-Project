@@ -17,7 +17,7 @@ public interface OdinInterface
     boolean editTask(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status);
     public boolean editWorkLog(int logID, String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
     public boolean stopWork(int logID, String description);
-    boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
+    boolean setMessage_Read(int MessageID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password, String status);
