@@ -437,8 +437,11 @@ public class DashboardController {
         // Init taskID to filter worklogs
         int taskID = Integer.parseInt(taskLine.getId());
 
+        WorkLog currentLog;
         for (int i = 0; i < Worklogs.size(); i++) {
-            if (taskID == Worklogs.get(i).taskID) {
+            currentLog = Worklogs.get(i);
+            if (currentLog.taskID == taskID &&
+               (!User.position.equals("Employee") || currentLog.employeeID == User.employeeID)) {
                 HBox worklog = createWorkLogLine(Worklogs.get(i));
                 worklogBox.getChildren().add(worklog);
                 //TODO <see above TODO>
@@ -749,12 +752,12 @@ public class DashboardController {
         //projectID
         if(projectID.getText().isEmpty())
         {
-            dialogError_JFXTF(projectID,"Group ID cannot be empty");
+            dialogError_JFXTF(projectID,"Project ID cannot be empty");
             valid = false;
         }
         else if(!OM.isValidNum(projectID.getText()))
         {
-            dialogError_JFXTF(projectID, "Group ID must be an integer");
+            dialogError_JFXTF(projectID, "Project ID must be an integer");
             valid = false;
         }
         else projectID.setStyle("-fx-background-color: #FFFFFF");
@@ -947,6 +950,63 @@ public class DashboardController {
         dialog.show();
     }
 
+    boolean isValidWorkLog(JFXTextField startTime, JFXTextField stopTime, JFXTextField description,
+                           JFXTextField taskID, JFXTextField employeeID)
+    {
+        boolean valid = true;
+
+        //stop time
+        if(startTime.getText().isEmpty() || !OM.isValidDateTime(startTime.getText()))
+        {
+            dialogError_JFXTF(startTime, "Start Time must be YYYY-MM-DD HH:mm:ss");
+            valid = false;
+        }
+        else startTime.setStyle("-fx-background-color: #FFFFFF");
+
+        //stop time
+        if(stopTime.getText().isEmpty() || !OM.isValidDateTime(stopTime.getText()))
+        {
+            dialogError_JFXTF(stopTime, "Stop Time must be YYYY-MM-DD HH:mm:ss");
+            valid = false;
+        }
+        else startTime.setStyle("-fx-background-color: #FFFFFF");
+
+        //description
+        if(!OM.isValidString(description.getText()))
+        {
+            dialogError_JFXTF(description, "Description cannot contain special characters");
+            valid = false;
+        }
+        else description.setStyle("-fx-background-color: #FFFFFF");
+
+        //taskID
+        if(taskID.getText().isEmpty())
+        {
+            dialogError_JFXTF(taskID,"Task ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(taskID.getText()))
+        {
+            dialogError_JFXTF(taskID, "Task ID must be an integer");
+            valid = false;
+        }
+        else taskID.setStyle("-fx-background-color: #FFFFFF");
+
+        //employeeID
+        if(employeeID.getText().isEmpty())
+        {
+            dialogError_JFXTF(taskID,"Employee ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(employeeID.getText()))
+        {
+            dialogError_JFXTF(employeeID, "Employee ID must be an integer");
+            valid = false;
+        }
+        else employeeID.setStyle("-fx-background-color: #FFFFFF");
+        return valid;
+    }
+
     void loadWorkLogDialog(WorkLog worklog)
     {
 
@@ -954,7 +1014,23 @@ public class DashboardController {
 
     void viewWorkLogDialog(WorkLog worklog)
     {
-
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        String  stop = (worklog.stopTime == null) ? "In Progress" : worklog.stopTime,
+                desc = (worklog.description == null) ? "In Progress" : worklog.description,
+                totalTime = (worklog.elapsedTime == null) ? "In Progress" : worklog.elapsedTime;
+        Text    startTime = new Text("Started: " + worklog.startTime),
+                stopTime = new Text("Stopped: " + stop),
+                elapsedTime = new Text("Total time: " + totalTime),
+                description = new Text("Description: " + desc),
+                taskID = new Text("Task: " + String.valueOf(worklog.taskID)),
+                employeeID = new Text("Employee: " + String.valueOf(worklog.employeeID));
+        VBox vBox = new VBox(startTime, stopTime, elapsedTime, description, taskID, employeeID);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        dialog.show();
     }
 
     int getLastLog(int taskID, int empID)

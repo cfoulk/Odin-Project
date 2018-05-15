@@ -811,8 +811,7 @@ public class OdinModel implements OdinInterface {
         return (status.equals("Manager") || status.equals("Project Lead") || status.equals("Employee"));
     }
 
-    public boolean isValidEmpList(String empList)
-    {
+    public boolean isValidEmpList(String empList) {
         if(empList.matches("(.*)[a-zA-z](.*)") || empList.matches("(.*)[!\"#$%&'()*+./:;<=>?@^_`{|}~-](.*)"))
             return false;
         int size = empList.length();
@@ -822,6 +821,12 @@ public class OdinModel implements OdinInterface {
                 return false;
         }
         return true;
+    }
+
+    public boolean isValidDateTime(String time)
+    {
+        if (time.isEmpty() || LocalDateTime.parse(time).toString().equals(time)) return true;
+        else return false;
     }
 
     public String now()
