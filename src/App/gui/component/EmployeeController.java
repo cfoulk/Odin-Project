@@ -134,7 +134,6 @@ public class EmployeeController {
         StackPane pane = new StackPane();
         pane.getChildren().add(glyph);
         pane.setPadding(new Insets(10));
-
         JFXRippler rippler = new JFXRippler(pane);
         rippler.getRipplerRadius();
         rippler.getStyleClass().add("icon-rippler");

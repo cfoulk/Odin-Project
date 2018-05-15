@@ -630,6 +630,13 @@ public class DashboardController {
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
 
+        name.setLabelFloat(true);
+        dueDate.setLabelFloat(true);
+        groupID.setLabelFloat(true);
+        projectLeadID.setLabelFloat(true);
+        description.setLabelFloat(true);
+        status.setLabelFloat(true);
+
         name.setPromptText("Name");
         dueDate.setPromptText("Due Date must be YYYY-MM-DD");
         groupID.setPromptText("Group Number");
@@ -827,6 +834,14 @@ public class DashboardController {
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
+
+        name.setLabelFloat(true);
+        dueDate.setLabelFloat(true);
+        projectID.setLabelFloat(true);
+        employees.setLabelFloat(true);
+        description.setLabelFloat(true);
+        size.setLabelFloat(true);
+        status.setLabelFloat(true);
 
         name.setPromptText("Name");
         dueDate.setPromptText("Due Date must be YYYY-MM-DD");
