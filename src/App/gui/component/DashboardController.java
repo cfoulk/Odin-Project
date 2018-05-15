@@ -313,6 +313,7 @@ public class DashboardController {
         //Adds Create button TODO privelage base
         HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
         newTask.getStyleClass().add("taskLine");
+        newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
         taskBox.getChildren().add(newTask);
 
         return status;
@@ -351,15 +352,17 @@ public class DashboardController {
 
         taskStarted = (lastLogID != -1);
 
-        JFXRippler view = createIconButton("View", "View Task");
         JFXRippler workButton;
+        JFXRippler view = createIconButton("View", "View Task");
+        JFXRippler edit = createIconButton("Edit", "Edit Task");
+        JFXRippler expand = createIconButton("Arrowhead-Down", "View Work Logs");
         if(!taskStarted)
             workButton = createIconButton("StartTime", "Start Work");
         else
             workButton = createIconButton("StopTime", "Stop Work");
-        JFXRippler expand = createIconButton("Arrowhead-Down", "View Worklog");
 
         view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewTaskDialog(task));
+        edit.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(task, -1));
 
         workButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if(!taskStarted)
@@ -385,7 +388,7 @@ public class DashboardController {
         });
 
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().addAll(view, expand, workButton);
+        taskLineButtons.getChildren().addAll(view, edit, workButton, expand);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
@@ -837,7 +840,7 @@ public class DashboardController {
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
         if(task != null) {
-            text.setText("Edit Project");
+            text.setText("Edit Task");
             content.setHeading(text);
             name.setText(task.name);
             dueDate.setText(task.dueDate);
@@ -868,7 +871,7 @@ public class DashboardController {
             });
         }
         else {
-            text.setText("Add project");
+            text.setText("Add Task");
             content.setHeading(text);
             if(projSeed != -1)
             {
@@ -1008,8 +1011,93 @@ public class DashboardController {
     }
 
     void loadWorkLogDialog(WorkLog worklog)
-    {
+    {/*
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXTextField    startTime = new JFXTextField(),
+                        stopTime = new JFXTextField(),
+                        description = new JFXTextField(),
+                        description = new JFXTextField(),
+                        size = new JFXTextField(),
+                        status = new JFXTextField();
 
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+
+        startTime.setPromptText("Name");
+        stopTime.setPromptText("Due Date must be YYYY-MM-DD");
+        projectID.setPromptText("Project ID");
+        employees.setPromptText("Employees on the task");
+        description.setPromptText("Description of the task");
+        size.setPromptText("Size of task (1-10)");
+        status.setPromptText("Open or Closed");
+
+        Text text = new Text();
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setStyle("-fx-font: bold 16px \"System\" ;");
+
+        if(worklog != null) {
+            text.setText("Edit Project");
+            content.setHeading(text);
+            startTime.setText(worklog.startTime);
+            stopTime.setText(worklog.stopTime);
+            projectID.setText(Integer.toString(worklog.projectID));
+            employees.setText(OM.empListToString(worklog.employees));
+            description.setText(worklog.description);
+            size.setText(Integer.toString(worklog.size));
+            status.setText(worklog.status);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
+                    successful = OM.editTask(
+                            task.taskID,
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(projectID.getText()),
+                            employees.getText(),
+                            description.getText(),
+                            Integer.parseInt(size.getText()),
+                            status.getText()
+                    );
+                    if (successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
+                }
+            });
+        }
+        else {
+            text.setText("Add project");
+            content.setHeading(text);
+            confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                boolean successful;
+                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
+                    successful = OM.addTask(
+                            name.getText(),
+                            dueDate.getText(),
+                            Integer.parseInt(projectID.getText()),
+                            employees.getText(),
+                            description.getText(),
+                            Integer.parseInt(size.getText()),
+                            status.getText()
+                    );
+                    if(successful) {
+                        refresh();
+                        dialog.close();
+                    }
+                    else { dialogError_JFXTF(employees, "Invalid project or employees not in project"); }
+                }
+            });
+        }
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(startTime, stopTime, projectID, employees, description, size, status);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();*/
     }
 
     void viewWorkLogDialog(WorkLog worklog)
