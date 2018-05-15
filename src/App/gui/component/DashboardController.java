@@ -501,6 +501,7 @@ public class DashboardController {
         JFXRippler viewWorkLogButton = createIconButton("View", "View WorkLog");
         JFXRippler editWorkLogButton = createIconButton("Edit", "Edit WorkLog");
         viewWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewWorkLogDialog(workLog));
+        editWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadWorkLogDialog(workLog));
         workLogLineButtons.getChildren().add(viewWorkLogButton);
         workLogLineButtons.getChildren().add(editWorkLogButton);
         this.workLogButtons = workLogLineButtons;
@@ -953,7 +954,7 @@ public class DashboardController {
         dialog.show();
     }
 
-    boolean isValidWorkLog(JFXTextField startTime, JFXTextField stopTime, JFXTextField description,
+    boolean workLogIsValid(JFXTextField startTime, JFXTextField stopTime, JFXTextField description,
                            JFXTextField taskID, JFXTextField employeeID)
     {
         boolean valid = true;
@@ -1011,93 +1012,100 @@ public class DashboardController {
     }
 
     void loadWorkLogDialog(WorkLog worklog)
-    {/*
+    {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXTextField    startTime = new JFXTextField(),
                         stopTime = new JFXTextField(),
+                        elapsedTime = new JFXTextField(),
                         description = new JFXTextField(),
-                        description = new JFXTextField(),
-                        size = new JFXTextField(),
-                        status = new JFXTextField();
+                        taskID = new JFXTextField(),
+                        employeeID = new JFXTextField();
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
 
-        startTime.setPromptText("Name");
-        stopTime.setPromptText("Due Date must be YYYY-MM-DD");
-        projectID.setPromptText("Project ID");
-        employees.setPromptText("Employees on the task");
-        description.setPromptText("Description of the task");
-        size.setPromptText("Size of task (1-10)");
-        status.setPromptText("Open or Closed");
+        startTime.setPromptText("Stop time must be YYYY-MM-DD HH:mm:ss");
+        stopTime.setPromptText("Stop time must be YYYY-MM-DD HH:mm:ss");
+        elapsedTime.setPromptText("Elapsed Time");
+        description.setPromptText("Description of the work done");
+        taskID.setPromptText("Task ID");
+        employeeID.setPromptText("Employee ID");
+
+        elapsedTime.setDisable(true);
 
         Text text = new Text();
         text.setFill(Paint.valueOf("#FFFFFF"));
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
         if(worklog != null) {
-            text.setText("Edit Project");
+            text.setText("Edit work log");
             content.setHeading(text);
-            startTime.setText(worklog.startTime);
-            stopTime.setText(worklog.stopTime);
-            projectID.setText(Integer.toString(worklog.projectID));
-            employees.setText(OM.empListToString(worklog.employees));
+            if(worklog.startTime != null) {
+                if (worklog.startTime.contains(".0"))
+                    startTime.setText(worklog.startTime.substring(0, worklog.startTime.lastIndexOf(".0")));
+                else startTime.setText(worklog.startTime);
+            }
+            if(worklog.stopTime != null) {
+                if (worklog.stopTime.contains(".0"))
+                    stopTime.setText(worklog.stopTime.substring(0, worklog.stopTime.lastIndexOf(".0")));
+                else stopTime.setText(worklog.stopTime);
+            }
+            elapsedTime.setText(worklog.elapsedTime);
             description.setText(worklog.description);
-            size.setText(Integer.toString(worklog.size));
-            status.setText(worklog.status);
+            taskID.setText(Integer.toString(worklog.logID));
+            employeeID.setText(Integer.toString(worklog.employeeID));
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
-                    successful = OM.editTask(
-                            task.taskID,
-                            name.getText(),
-                            dueDate.getText(),
-                            Integer.parseInt(projectID.getText()),
-                            employees.getText(),
+                if(workLogIsValid(startTime, stopTime, description, taskID, employeeID)) {
+                    successful = OM.editWorkLog(
+                            worklog.logID,
+                            startTime.getText(),
+                            stopTime.getText(),
+                            OM.calcElapsedTime(startTime.getText(), stopTime.getText()),
                             description.getText(),
-                            Integer.parseInt(size.getText()),
-                            status.getText()
+                            Integer.parseInt(taskID.getText()),
+                            Integer.parseInt(employeeID.getText())
                     );
                     if (successful) {
                         refresh();
                         dialog.close();
                     }
-                    else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
+                    else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
                 }
             });
         }
         else {
-            text.setText("Add project");
+            text.setText("Add work log");
             content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
-                    successful = OM.addTask(
-                            name.getText(),
-                            dueDate.getText(),
-                            Integer.parseInt(projectID.getText()),
-                            employees.getText(),
+                elapsedTime.setText(OM.calcElapsedTime(startTime.getText(), stopTime.getText()));
+                if(workLogIsValid(startTime, stopTime, description, taskID, employeeID)) {
+                    successful = OM.addWorkLog(
+                            startTime.getText(),
+                            stopTime.getText(),
+                            elapsedTime.getText(),
                             description.getText(),
-                            Integer.parseInt(size.getText()),
-                            status.getText()
+                            Integer.parseInt(taskID.getText()),
+                            Integer.parseInt(employeeID.getText())
                     );
-                    if(successful) {
+                    if (successful) {
                         refresh();
                         dialog.close();
                     }
-                    else { dialogError_JFXTF(employees, "Invalid project or employees not in project"); }
+                    else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
                 }
             });
         }
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        VBox vBox = new VBox(startTime, stopTime, projectID, employees, description, size, status);
+        VBox vBox = new VBox(startTime, stopTime, elapsedTime, description, taskID, employeeID);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         content.setActions(confirm, cancel);
-        dialog.show();*/
+        dialog.show();
     }
 
     void viewWorkLogDialog(WorkLog worklog)

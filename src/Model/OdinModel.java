@@ -101,7 +101,7 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
-    public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description) {
+    public boolean editWorkLog(int logID, String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID) {
         WorkLog log;
         Employee emp;
         Task task;
@@ -120,30 +120,43 @@ public class OdinModel implements OdinInterface {
     }
 
     public boolean stopWork(int logID, String description) {
-        DateTimeFormatter formatter;
-        LocalDateTime startTime, stopTime;
-        String startString, stopString, elapsedTime;
-        long hours, minutes, seconds;
         WorkLog workLog = null;
+        String startString, stopString;
         try { workLog = OS.getWorkLog_LogID(logID); }
         catch(Exception e) { e.printStackTrace(); }
         if (workLog != null) {
-            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            stopTime = LocalDateTime.now();
-            stopString = stopTime.format(formatter);
             startString = workLog.startTime;
             startString = startString.substring(0, startString.lastIndexOf(".0"));
-            startTime = LocalDateTime.parse(startString, formatter);
-            hours = startTime.until(stopTime, ChronoUnit.HOURS);
-            startTime = startTime.plusHours(hours);
-            minutes = startTime.until(stopTime, ChronoUnit.MINUTES);
-            startTime = startTime.plusMinutes(minutes);
-            seconds = startTime.until(stopTime, ChronoUnit.SECONDS);
-            elapsedTime = hours + " hours, " + minutes + " minutes, " + seconds + " seconds.";
-            editWorkLog(logID, workLog.taskID, workLog.employeeID, elapsedTime, startString, stopString, description);
+            stopString = LocalDateTime.now().toString();
+            if(stopString.contains(".0")) stopString = stopString.substring(0, stopString.lastIndexOf(".0"));
+            editWorkLog(logID, startString, stopString, calcElapsedTime(startString, stopString), description, workLog.taskID, workLog.employeeID);
             return true;
         }
         return false;
+    }
+
+    public String calcElapsedTime(String startString, String stopString)
+    {
+        DateTimeFormatter formatter;
+        LocalDateTime startTime, stopTime;
+        String elapsedTime;
+        long hours, minutes, seconds;
+
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if(startString.contains(".0")) startString = startString.substring(0, startString.lastIndexOf(".0"));
+        if(stopString.contains(".0")) stopString = stopString.substring(0, stopString.lastIndexOf(".0"));
+        startTime = LocalDateTime.parse(startString, formatter);
+        stopTime = LocalDateTime.parse(stopString, formatter);
+
+        hours = startTime.until(stopTime, ChronoUnit.HOURS);
+        startTime = startTime.plusHours(hours);
+        minutes = startTime.until(stopTime, ChronoUnit.MINUTES);
+        startTime = startTime.plusMinutes(minutes);
+        seconds = startTime.until(stopTime, ChronoUnit.SECONDS);
+
+        elapsedTime = hours + " hours, " + minutes + " minutes, " + seconds + " seconds.";
+
+        return elapsedTime;
     }
 
     public boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID) {
@@ -212,7 +225,7 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
-    public boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description) {
+    public boolean addWorkLog(String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID) {
         Employee emp;
         Task task;
         try {
@@ -825,6 +838,8 @@ public class OdinModel implements OdinInterface {
 
     public boolean isValidDateTime(String time)
     {
+        if(time.contains(".0")) time = time.substring(0, time.lastIndexOf(".0"));
+        time = time.replace(' ', 'T');
         if (time.isEmpty() || LocalDateTime.parse(time).toString().equals(time)) return true;
         else return false;
     }
