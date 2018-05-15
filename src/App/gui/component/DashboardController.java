@@ -1076,16 +1076,10 @@ public class DashboardController {
         if(worklog != null) {
             text.setText("Edit work log");
             content.setHeading(text);
-            if(worklog.startTime != null) {
-                if (worklog.startTime.contains(".0"))
-                    startTime.setText(worklog.startTime.substring(0, worklog.startTime.lastIndexOf(".0")));
-                else startTime.setText(worklog.startTime);
-            }
-            if(worklog.stopTime != null) {
-                if (worklog.stopTime.contains(".0"))
-                    stopTime.setText(worklog.stopTime.substring(0, worklog.stopTime.lastIndexOf(".0")));
-                else stopTime.setText(worklog.stopTime);
-            }
+            if(worklog.startTime != null)
+                startTime.setText(worklog.startTime.substring(0,19));
+            if(worklog.stopTime != null)
+                stopTime.setText(worklog.stopTime.substring(0,19));
             elapsedTime.setText(worklog.elapsedTime);
             description.setText(worklog.description);
             taskID.setText(Integer.toString(worklog.logID));
