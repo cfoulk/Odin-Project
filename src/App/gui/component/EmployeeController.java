@@ -76,12 +76,18 @@ public class EmployeeController {
     }
 
     private void initView() {
+        JFXRippler addButton = createIconButton("Add", "Add Employee");
         for(int i = 0; i < Employees.size(); ++i)
         {
             HBox empLine = createEmpLine(Employees.get(i));
             empLine.setId(Integer.toString(i));
             View.getChildren().add(empLine);
         }
+        HBox addEmp = new HBox(addButton, new Label("Add a new Employee"));
+        addEmp.getStyleClass().add("empLine");
+        addEmp.setStyle("-fx-background-color: #1a555b");
+        addEmp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadEmployeeDialog(null));
+        View.getChildren().add(addEmp);
     }
 
     public HBox createEmpLine(Employee employee) {

@@ -139,7 +139,9 @@ public class DashboardController {
 
     public void initHeader() {
         UserName.setText("Hello, " + User.name);
-        UserBar.getChildren().add(createIconButton("Message", "Messenger"));
+        JFXRippler messenger = createIconButton("Message", "Messenger");
+        messenger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadMessageWindow(new Stage(), User));
+        UserBar.getChildren().add(messenger);
         if (Privelage.equals(MANAGER)) {
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
             manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new Stage(), User, Employees));
@@ -169,7 +171,6 @@ public class DashboardController {
 
 
     }
-
 
     //Should initialize ProjectButtons based on PRIVILEGES of User
     public HBox initProjectControlButtons(HBox projectLine, Project project) {
@@ -219,7 +220,6 @@ public class DashboardController {
         Project project;
         HBox projectline;
         for (int i = 0; i < Projects.size(); i++) {
-            //TODO show only tasks that are w/ Empl ID or privelege
             project = Projects.get(i);
             if(User.position.equals("Manager")) {
                 projectline = createProjectLine(project);
@@ -234,13 +234,14 @@ public class DashboardController {
                 View.getChildren().add(projectline);
             }
         }
-        //Adds Create button TODO privelage base
-        JFXRippler addProject = createIconButton("Add", "Add Project");
-        addProject.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadProjectDialog(null));
-        HBox newProject = new HBox(addProject, new Label("Add Project"));
-        newProject.getStyleClass().add("projectLine");
-        newProject.setStyle("-fx-background-color: #1a555b");
-        View.getChildren().addAll(newProject);
+        if(User.position.equals("Manager")) {
+            JFXRippler addProject = createIconButton("Add", "Add Project");
+            addProject.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadProjectDialog(null));
+            HBox newProject = new HBox(addProject, new Label("Add Project"));
+            newProject.getStyleClass().add("projectLine");
+            newProject.setStyle("-fx-background-color: #1a555b");
+            View.getChildren().addAll(newProject);
+        }
     }
 
     private boolean projectHasTasks(HBox projectLine) {
@@ -324,6 +325,7 @@ public class DashboardController {
         //Start task line with Project name
         HBox taskLine = new HBox(new Label(task.name));
         taskLine.getStyleClass().add("taskLine");
+        taskLine.setId(String.valueOf(task.taskID));
 
         //add Listener
         EventHandler a = new EventHandler() {
@@ -347,6 +349,7 @@ public class DashboardController {
 
     //Should initialize taskButtons based on PRIVILEGES of User
     public HBox initTaskControlButtons(HBox taskLine, Task task) {
+        Project relaventProject = OM.filterProjects_ProjectID(Projects, task.projectID);
         boolean taskStarted;
         int lastLogID = getLastLog(task.taskID, User.employeeID);
 
@@ -388,11 +391,24 @@ public class DashboardController {
         });
 
         HBox taskLineButtons = new HBox();
-        taskLineButtons.getChildren().addAll(view, edit, workButton, expand);
+        if(User.position.equals("Manager") || relaventProject.projectLeadID == User.employeeID)
+            taskLineButtons.getChildren().addAll(view, edit, workButton, expand);
+        else
+            taskLineButtons.getChildren().addAll(view, workButton, expand);
         taskLineButtons.getStyleClass().add("lineButtons");
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
         return taskLineButtons;
+    }
+
+    private boolean taskHasLogs(HBox taskLine) {
+        int taskID = Integer.parseInt(taskLine.getId());
+        for (int i = 0; i < Worklogs.size();i++) {
+            if(taskID == Worklogs.get(i).taskID){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void closeWorklog(HBox taskLine) {
@@ -497,13 +513,15 @@ public class DashboardController {
     }
 
     public HBox initWorkLogControlButtons(WorkLog workLog) {
+        Project relevantProject = OM.filterProjects_ProjectID(Projects, OM.filterTasks_TaskID(Tasks, workLog.taskID).projectID);
         HBox workLogLineButtons = new HBox();
         JFXRippler viewWorkLogButton = createIconButton("View", "View WorkLog");
         JFXRippler editWorkLogButton = createIconButton("Edit", "Edit WorkLog");
         viewWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewWorkLogDialog(workLog));
         editWorkLogButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadWorkLogDialog(workLog));
         workLogLineButtons.getChildren().add(viewWorkLogButton);
-        workLogLineButtons.getChildren().add(editWorkLogButton);
+        if(User.position.equals("Manager") || (User.position.equals("Project Lead") && User.employeeID == relevantProject.projectLeadID))
+            workLogLineButtons.getChildren().add(editWorkLogButton);
         this.workLogButtons = workLogLineButtons;
         return workLogLineButtons;
     }
@@ -1185,6 +1203,15 @@ public class DashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void loadMessageWindow(Stage stage, Employee user) {
+       // try {
+         //   if(OM != null) {
+                //FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(""))
+            //}
+        //} catch (IOException e) { e.printStackTrace(); }
     }
 
     void refresh()
