@@ -122,7 +122,13 @@ public class loginController {
         //Throws Exception
         SVGGlyph logo = SVGGlyphLoader.getIcoMoonGlyph("icomoon.svg.Odin");
         logo.setFill(Color.WHITE);
-        OM = new OdinModel();
+        try {
+            OM = new OdinModel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         new ConnectionStatus(OM);
 
         StatusIcon = new ConnectionStatus(OM);
