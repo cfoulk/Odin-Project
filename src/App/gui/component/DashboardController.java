@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DashboardController {
@@ -72,19 +73,20 @@ public class DashboardController {
 
     public int selectedProject;
 
+    private ArrayList<HBox> projectLines = new ArrayList<>();
+    private ArrayList<HBox> taskLines = new ArrayList<>();
+    private ArrayList<HBox> workLogLines = new ArrayList<>();
+
     private HBox taskLineButtons = new HBox();
     private HBox projectLineButtons = new HBox();
     private HBox workLogButtons = new HBox();
 
     private List<Project> Projects;
-
     private List<Task> Tasks;
-
     private List<WorkLog> Worklogs;
-
     private List<Employee> Employees;
-
     private String responseString;
+
 
     public boolean load(int UserID, OdinModel OM) {
         User = OM.getEmployee_EmployeeID(UserID);
@@ -96,12 +98,14 @@ public class DashboardController {
     public void initialize() {
         Platform.runLater(() -> {
             //fetchAppropriateObjects();
-            Projects = OM.getProjects();
-            Tasks = OM.getTasks();
-            Worklogs = OM.getWorkLogs();
-            Employees = OM.getEmployees();
+            persistentUser.initiateServerData(OM,this);
+            Projects = persistentUser.ProjectList;
+            Tasks = persistentUser.TaskList;
+            Worklogs = persistentUser.WorkLogList;
+            Employees = persistentUser.EmployeeList;
             initHeader();
             initView();
+            persistentUser.runLiveUpdater();
         });
 
         heightHeader = 0.162;
@@ -224,15 +228,17 @@ public class DashboardController {
             if(User.position.equals("Manager")) {
                 projectline = createProjectLine(project);
                 //Set id of Hbox as related to the array list
-                projectline.setId(Integer.toString(project.projectID));
                 View.getChildren().add(projectline);
+                projectLines.add(projectline);
             }
             else if(project.groupID == User.groupID)
             {
                 projectline = createProjectLine(project);
                 projectline.setId(Integer.toString(project.projectID));
                 View.getChildren().add(projectline);
+                projectLines.add(projectline);
             }
+
         }
         //Adds Create button TODO privelage base
         JFXRippler addProject = createIconButton("Add", "Add Project");
@@ -277,6 +283,7 @@ public class DashboardController {
         };
         projectLine.addEventHandler(MouseEvent.MOUSE_ENTERED, a);
         projectLine.addEventHandler(MouseEvent.MOUSE_EXITED, a);
+        projectLine.setId(Integer.toString(project.projectID));
         return projectLine;
     }
 
@@ -368,7 +375,7 @@ public class DashboardController {
             if(!taskStarted)
             {
                 OM.startWork(task.taskID, User.employeeID);
-                refresh();
+//                refresh();
             }
             else getStopDesc(lastLogID);
         });
@@ -672,7 +679,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(projectLeadID, "Invalid Project Lead"); }
@@ -694,7 +701,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if(successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(projectLeadID, "Invalid Project Lead"); }
@@ -881,7 +888,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
@@ -909,7 +916,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if(successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(employees, "Invalid project or employees not in project"); }
@@ -958,7 +965,7 @@ public class DashboardController {
 
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             OM.stopWork(taskID, description.getText());
-            refresh();
+//            refresh();
             dialog.close();
         });
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -1087,7 +1094,7 @@ public class DashboardController {
                             Integer.parseInt(employeeID.getText())
                     );
                     if (successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
@@ -1110,7 +1117,7 @@ public class DashboardController {
                             Integer.parseInt(employeeID.getText())
                     );
                     if (successful) {
-                        refresh();
+//                        refresh();
                         dialog.close();
                     }
                     else { dialogError_JFXTF(taskID, "Invalid task or employees not in task"); }
@@ -1201,4 +1208,42 @@ public class DashboardController {
         }
         catch(Exception e){ System.out.println("Error"); }
     }
-}
+
+    public void updateProjectLine(Project project) {
+        Platform.runLater(()-> {
+            int id = project.projectID;
+            for (int i = 0; projectLines.size() > i; i++) {
+                HBox projLine;
+                if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
+                    VBox projView = (VBox) projLine.getParent();
+                    int index = projView.getChildren().indexOf(projLine);
+                    p("Project Name: " + project.name);
+                    p("Index: " + index);
+                    projView.getChildren().remove(index);
+                    projLine = createProjectLine(project);
+                    projectLines.set(i,projLine);
+                    projView.getChildren().add(index, projLine);
+                }
+            }
+        });
+    }
+
+//    public void insertProjectLine(int projectID) {
+//        Platform.runLater(()-> {
+//            int id = project.projectID;
+//            for (int i = 0; projectLines.size() > i; i++) {
+//                HBox projLine;
+//                if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
+//                    VBox projView = (VBox) projLine.getParent();
+//                    int index = projView.getChildren().indexOf(projLine);
+//                    p("Project Name: " + project.name);
+//                    p("Index: " + index);
+//                    projView.getChildren().remove(index);
+//                    projLine = createProjectLine(project);
+//                    projectLines.set(i,projLine);
+//                    projView.getChildren().add(index, projLine);
+//                }
+//            }
+//        });
+//    }
+//}

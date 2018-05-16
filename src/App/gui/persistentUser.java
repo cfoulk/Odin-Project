@@ -1,5 +1,6 @@
 package App.gui;
 
+import App.gui.component.DashboardController;
 import Server.*;
 import Model.OdinModel;
 import com.jfoenix.controls.JFXDecorator;
@@ -20,6 +21,7 @@ public class persistentUser {
     public static List<WorkLog> WorkLogList = null;
     public static List<Message> MessageList = null;
 
+    private static DashboardController Dashboard;
     private static OdinModel OM = null;
     private static Thread persistanceThread = null;
 
@@ -32,6 +34,15 @@ public class persistentUser {
         TaskList.add(task1);
         ProjectList.add(user1);
         ProjectList.add(user2);
+    }
+
+    public static void initiateServerData(OdinModel om,DashboardController dashboard){
+        OM = om;
+        Dashboard = dashboard;
+        EmployeeList = OM.getEmployees();
+        ProjectList = OM.getProjects();
+        TaskList = OM.getTasks();
+        WorkLogList = OM.getWorkLogs();
     }
 
     public static void runLiveUpdater(){
@@ -83,11 +94,37 @@ public class persistentUser {
         if(OM != null){
             List<Employee> employeeList = OM.getEmployees();
             List<Project> projectList = OM.getProjects();
-            List<Task> taskList = null;
-            List<WorkLog> workLogList = null;
-            List<Message> messageList = null;
-            for(int i = 0; i < employeeList.size(); i++){
+            List<Task> taskList = OM.getTasks();
+            List<WorkLog> workLogList = OM.getWorkLogs();
+            List<Message> messageList = OM.getMessages();
 
+            Project newProj;
+            Project oldProj;
+            for(int i = 0; i < projectList.size(); i++){
+                newProj = projectList.get(i);
+                if(ProjectList.size() > i) {
+                    oldProj = ProjectList.get(i);
+                    if (newProj.projectID == oldProj.projectID) {
+                        if(!newProj.name.equals(oldProj.name)){
+                            ProjectList.set(i,newProj);
+                            Dashboard.updateProjectLine(newProj);
+                        }
+                    }
+                    else {
+                        if(projectList.get(i+1).equals(oldProj)){
+                            ProjectList.add(i,newProj);
+//                            Dashboard.insertProjectLine(newProj);
+                        }
+                        else{
+                            ProjectList.remove(i);
+//                            Dashboard.removeProjecLine(oldProj);
+                        }
+                    }
+                }
+                else{
+                    ProjectList.add(newProj);
+//                    Dashboard.addProjectLine(newProj);
+                }
             }
         }
     }
