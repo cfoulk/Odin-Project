@@ -1195,8 +1195,8 @@ public class DashboardController {
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         String stop = (worklog.stopTime == null) ? "In Progress" : worklog.stopTime,
-                desc = (worklog.description == null) ? "In Progress" : worklog.description,
-                totalTime = (worklog.elapsedTime == null) ? "In Progress" : worklog.elapsedTime;
+                desc = (worklog.description == null) ? "In Progress" : worklog.description;
+                //totalTime = (worklog.elapsedTime == null) ? "In Progress" : worklog.elapsedTime;
 //<<<<<<< HEAD
 //        Text startTime = new Text("Started: " + worklog.startTime),
 //                stopTime = new Text("Stopped: " + stop),
@@ -1207,11 +1207,11 @@ public class DashboardController {
 //=======
         Label   startTime = new Label("Started: " + worklog.startTime),
                 stopTime = new Label("Stopped: " + stop),
-                elapsedTime = new Label("Total time: " + totalTime),
+                //elapsedTime = new Label("Total time: " + totalTime),
                 description = new Label("Description: " + desc),
                 taskID = new Label("Task: " + String.valueOf(worklog.taskID)),
                 employeeID = new Label("Employee: " + String.valueOf(worklog.employeeID));
-        VBox vBox = new VBox(startTime, stopTime, elapsedTime, description, taskID, employeeID);
+        VBox vBox = new VBox(startTime, stopTime/*, elapsedTime*/, description, taskID, employeeID);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         dialog.show();
