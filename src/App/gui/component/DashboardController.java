@@ -734,13 +734,13 @@ public class DashboardController {
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         String timeString = OM.durationAsString(OM.calcDuration(OM.getWorkLogs(project, Tasks, Worklogs)));
         JFXRippler addTask = new JFXRippler(new Label("Add Task"));
-        Text name = new Text("Name: " + project.name),
-             dueDate = new Text("Due Date: " + project.dueDate),
-             groupID = new Text("Group ID: " + String.valueOf(project.groupID)),
-             projectLeadID = new Text("Project Lead: " + String.valueOf(project.projectLeadID)),
-             description = new Text("Description: " + project.description),
-             status = new Text("Status: " + project.status),
-             timeSpent = new Text("Time spent on " + project.name + ": " + timeString);
+        Label name = new Label("Name: " + project.name),
+             dueDate = new Label("Due Date: " + project.dueDate),
+             groupID = new Label("Group ID: " + String.valueOf(project.groupID)),
+             projectLeadID = new Label("Project Lead: " + String.valueOf(project.projectLeadID)),
+             description = new Label("Description: " + project.description),
+             status = new Label("Status: " + project.status),
+             timeSpent = new Label("Time spent on " + project.name + ": " + timeString);
         addTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             dialog.close();
             loadTaskDialog(null, project.projectID);
@@ -946,13 +946,13 @@ public class DashboardController {
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        Text    name = new Text("Name: " + task.name),
-                dueDate = new Text("Due Date: " + task.dueDate),
-                projectID = new Text("Project ID: " + String.valueOf(task.projectID)),
-                employees = new Text("Employees: " + OM.empListToString(task.employees)),
-                description = new Text("Description: " + task.description),
-                size = new Text("Size: " + String.valueOf(task.size)),
-                status = new Text("Status: " + task.status);
+        Label    name = new Label("Name: " + task.name),
+                dueDate = new Label("Due Date: " + task.dueDate),
+                projectID = new Label("Project ID: " + String.valueOf(task.projectID)),
+                employees = new Label("Employees: " + OM.empListToString(task.employees)),
+                description = new Label("Description: " + task.description),
+                size = new Label("Size: " + String.valueOf(task.size)),
+                status = new Label("Status: " + task.status);
         VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
