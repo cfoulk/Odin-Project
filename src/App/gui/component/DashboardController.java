@@ -654,7 +654,8 @@ public class DashboardController {
                         status = new JFXTextField();
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
-        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        JFXRippler cancel = createIconButton("Cancel", "Cancel");
+        JFXRippler finish = createIconButton("Finish", "Close Project");
 
         name.setLabelFloat(true);
         dueDate.setLabelFloat(true);
@@ -675,7 +676,6 @@ public class DashboardController {
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
         if(project != null) {
-            JFXRippler finishButton = createIconButton("Finish", "Close Project");
             text.setText("Edit Project");
             content.setHeading(text);
             name.setText(project.name);
@@ -685,7 +685,7 @@ public class DashboardController {
             description.setText(project.description);
             status.setText(project.status);
             status.setDisable(true);
-            finishButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishProjectDialog(project));
+            finish.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishProjectDialog(project, dialog));
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
                 if(projectIsValid(name, dueDate, groupID, projectLeadID, description, status)) {
@@ -732,11 +732,11 @@ public class DashboardController {
         VBox vBox = new VBox(name, dueDate, groupID, projectLeadID, description, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
-        content.setActions(confirm, cancel);
+        if(project != null) content.setActions(finish, confirm, cancel);
         dialog.show();
     }
 
-    void loadFinishProjectDialog(Project project)
+    void loadFinishProjectDialog(Project project, JFXDialog parent)
     {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
@@ -744,7 +744,9 @@ public class DashboardController {
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
-        Label prompt = new Label("Are you sure you want to " + project.status.toLowerCase() + " " + project.name + "?");
+        Label prompt;
+        if(project.status.equals("Open")) prompt = new Label("Are you sure you want to close " + project.name + "?");
+        else prompt = new Label("Are you sure you want to open " + project.name + "?");
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
         {
             if(project.status.equals("Open"))
@@ -759,6 +761,7 @@ public class DashboardController {
             }
             refresh();
             dialog.close();
+            parent.close();
         });
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         VBox vBox = new VBox(prompt);
@@ -894,6 +897,7 @@ public class DashboardController {
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        JFXRippler finish = createIconButton("Finish", "Close Task");
 
         name.setLabelFloat(true);
         dueDate.setLabelFloat(true);
@@ -925,6 +929,7 @@ public class DashboardController {
             description.setText(task.description);
             size.setText(Integer.toString(task.size));
             status.setText(task.status);
+            status.setDisable(true);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
                 if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
@@ -945,6 +950,7 @@ public class DashboardController {
                     else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
                 }
             });
+            finish.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishTaskDialog(task, dialog));
         }
         else {
             text.setText("Add Task");
@@ -978,11 +984,11 @@ public class DashboardController {
         VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
-        content.setActions(confirm, cancel);
+        content.setActions(finish, confirm, cancel);
         dialog.show();
     }
 
-    void loadFinishTaskDialog(Task task)
+    void loadFinishTaskDialog(Task task, JFXDialog parent)
     {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
@@ -990,13 +996,16 @@ public class DashboardController {
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
-        Label prompt = new Label("Are you sure you want to " + task.status.toLowerCase() + " " + task.name + "?");
+        Label prompt;
+        if(task.status.equals("Open")) prompt = new Label("Are you sure you want to close " + task.name + "?");
+        else prompt = new Label("Are you sure you want to open " + task.name + "?");
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
         {
             if(task.status.equals("Open")) OM.setTask_Closed(task.taskID);
             else OM.setTask_Open(task.taskID);
             refresh();
             dialog.close();
+            parent.close();
         });
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         VBox vBox = new VBox(prompt);

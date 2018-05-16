@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Message {
     public int messageID;
-    String message;
+    public String message;
     public String status;
     public int recipientID;
     public int senderID;
