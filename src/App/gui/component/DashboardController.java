@@ -99,7 +99,7 @@ public class DashboardController {
             Tasks = OM.getTasks();//.TaskList;
             Worklogs = OM.getWorkLogs();//.WorkLogList;
             Employees = OM.getEmployees();//.EmployeeList;
-            Messages = OM.getMessages();//.MessageList;
+            Messages = OM.getMessages();//Sam.MessageList;
             initHeader();
             initView();
             //persistentUser.runLiveUpdater();
@@ -1264,7 +1264,7 @@ public class DashboardController {
             if (OM != null) {
                 Stage primaryStage = new Stage();
                 List<Message> correctMessages = OM.filterMessages_RecipientID(Messages, User.employeeID);
-                correctMessages.addAll(OM.filterMessages_SenderID(Messages, User.employeeID));
+                //correctMessages.addAll(OM.filterMessages_SenderID(Messages, User.employeeID));
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Messenger.fxml"));
                 Parent messenger = loader.load();
                 MessageController messageController = new MessageController();

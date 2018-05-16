@@ -70,7 +70,7 @@ public class MessageController {
         JFXRippler viewAllButton = createIconButton("Message", "View All Messages");
         JFXRippler viewReadButton = createIconButton("Check", "View Read Messages");
         JFXRippler viewUnreadButton = createIconButton("Cancel", "View Unread Messages");
-        JFXRippler viewSentButton = createIconButton("Arrowhead-Right", "View Sent Messages");
+        //JFXRippler viewSentButton = createIconButton("Arrowhead-Right", "View Sent Messages");
         Label viewing = new Label("Viewing: " + request + " messages");
         composeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> composeMessage());
         viewAllButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -85,11 +85,11 @@ public class MessageController {
             request = "Unread";
             refresh();
         });
-        viewSentButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+        /*viewSentButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             request = "Sent";
             refresh();
-        });
-        Header.getChildren().addAll(viewing, composeButton, viewAllButton, viewReadButton, viewUnreadButton, viewSentButton);
+        });*/
+        Header.getChildren().addAll(viewing, composeButton, viewAllButton, viewReadButton, viewUnreadButton);
     }
 
     void initView(String request)
@@ -97,8 +97,8 @@ public class MessageController {
         List<Message> messages;
         if(request.equals("All")) messages = Messages;
         else if(request.equals("Unread")) messages = OM.filterMessages_Unread(Messages);
-        else if(request.equals("Read")) messages = OM.filterMessages_Read(Messages);
-        else messages = OM.filterMessages_SenderID(Messages, User.employeeID);
+        else messages = OM.filterMessages_Read(Messages);
+        //else messages = OM.filterMessages_SenderID(Messages, User.employeeID);
         if(messages != null && messages.size() > 0) for(Message message : messages) View.getChildren().add(createMessageLine(message));
         else
         {
