@@ -175,12 +175,54 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
+    public boolean setProject_Open(int ProjectID) {
+        Project proj;
+        try {
+            proj = OS.getProject_ProjectID(ProjectID);
+            if (proj != null) {
+                OS.setProject_Open(ProjectID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean setProject_Closed(int ProjectID) {
         Project proj;
         try {
             proj = OS.getProject_ProjectID(ProjectID);
             if (proj != null) {
                 OS.setProject_Closed(ProjectID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setTask_Open(int TaskID) {
+        Task task;
+        try {
+            task = OS.getTask_TaskID(TaskID);
+            if (task != null) {
+                OS.setTask_Open(TaskID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setTask_Closed(int TaskID) {
+        Task task;
+        try {
+            task = OS.getTask_TaskID(TaskID);
+            if (task != null) {
+                OS.setTask_Closed(TaskID);
                 return true;
             }
         } catch (Exception e) {
