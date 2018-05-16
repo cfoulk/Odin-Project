@@ -175,6 +175,20 @@ public class OdinModel implements OdinInterface {
         return false;
     }
 
+    public boolean setProject_Closed(int ProjectID) {
+        Project proj;
+        try {
+            proj = OS.getProject_ProjectID(ProjectID);
+            if (proj != null) {
+                OS.setProject_Closed(ProjectID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     //Add methods
     public boolean addEmployee(String name, String position, int groupID, String username, String password, String status) {
         Employee emp;
