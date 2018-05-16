@@ -799,7 +799,7 @@ public class DashboardController {
             dialog.close();
             loadTaskDialog(null, project.projectID);
         });
-        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate, timeSpent, addTask);
+        VBox vBox = new VBox(groupID, projectLeadID, name, description, status, dueDate, /*timeSpent,*/ addTask);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         dialog.show();
