@@ -94,7 +94,7 @@ public class persistentUser {
     private static void comparator(){
         if(OM != null) {
 
-            boolean isManager = currentUser.position == "Manager";
+            boolean isManager = currentUser.position.equals("Manager");
             int groupID = currentUser.groupID;
 
             EmployeeList = OM.getEmployees();
