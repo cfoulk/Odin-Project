@@ -3,10 +3,7 @@ package App.gui.component;
 import App.gui.component.util.ConnectionStatus;
 import App.gui.persistentUser;
 import Model.OdinModel;
-import Server.Employee;
-import Server.Project;
-import Server.Task;
-import Server.WorkLog;
+import Server.*;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -84,6 +81,8 @@ public class DashboardController {
 
     private List<Employee> Employees;
 
+    private List<Message> Messages;
+
     private String responseString;
 
     public boolean load(int UserID, OdinModel OM) {
@@ -100,6 +99,7 @@ public class DashboardController {
             Tasks = OM.getTasks();
             Worklogs = OM.getWorkLogs();
             Employees = OM.getEmployees();
+            Messages = OM.getMessages();
             initHeader();
             initView();
         });
@@ -262,7 +262,10 @@ public class DashboardController {
     //Creates a project line
     public HBox createProjectLine(Project project) {
         //Start project line with Project name
-        HBox projectLine = new HBox(new Label("(PID: " + project.projectID + ") " + project.name));
+        HBox projectLine;
+        String title = "(PID: " + project.projectID + ") " + project.name;
+        if(project.status.equals("Closed")) title = title + " CLOSED";
+        projectLine = new HBox(new Label(title));
         projectLine.getStyleClass().add("projectLine");
         //Event handler for hover
         EventHandler a = new EventHandler() {
@@ -973,7 +976,7 @@ public class DashboardController {
         description.setPromptText("Description of work");
 
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            OM.stopWork(taskID, description.getText());
+                OM.stopWork(taskID, description.getText());
             refresh();
             dialog.close();
         });
