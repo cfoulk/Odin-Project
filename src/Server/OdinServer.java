@@ -113,36 +113,36 @@ public class OdinServer
 
     public void setMessage_Read (int MessageID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE messages SET" +
-                "Status = 'Read'" +
+        this.stmt.executeUpdate("UPDATE messages SET " +
+                "Status = 'Read' " +
                 "WHERE MessageID = " + MessageID + ";");
     }
 
     public void setProject_Open(int ProjectID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE projects SET" +
-                "Status = 'Open'" +
+        this.stmt.executeUpdate("UPDATE projects SET " +
+                "Status = 'Open' " +
                 "WHERE ProjectID = " + ProjectID + ";");
     }
 
     public void setProject_Closed(int ProjectID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE projects SET" +
-                "Status = 'Closed'" +
+        this.stmt.executeUpdate("UPDATE projects SET " +
+                "Status = 'Closed' " +
                 "WHERE ProjectID = " + ProjectID + ";");
     }
 
     public void setTask_Open(int TaskID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE tasks SET" +
-                "Status = 'Open'" +
+        this.stmt.executeUpdate("UPDATE tasks SET " +
+                "Status = 'Open' " +
                 "WHERE TaskID = " + TaskID + ";");
     }
 
     public void setTask_Closed(int TaskID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE tasks SET" +
-                "Status = 'Closed'" +
+        this.stmt.executeUpdate("UPDATE tasks SET " +
+                "Status = 'Closed' " +
                 "WHERE TaskID = " + TaskID + ";");
     }
 

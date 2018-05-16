@@ -3,10 +3,7 @@ package App.gui.component;
 import App.gui.component.util.ConnectionStatus;
 import App.gui.persistentUser;
 import Model.OdinModel;
-import Server.Employee;
-import Server.Project;
-import Server.Task;
-import Server.WorkLog;
+import Server.*;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -29,8 +26,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -84,6 +83,8 @@ public class DashboardController {
 
     private List<Employee> Employees;
 
+    private List<Message> Messages;
+
     private String responseString;
 
     public boolean load(int UserID, OdinModel OM) {
@@ -100,6 +101,7 @@ public class DashboardController {
             Tasks = OM.getTasks();
             Worklogs = OM.getWorkLogs();
             Employees = OM.getEmployees();
+            Messages = OM.getMessages();
             initHeader();
             initView();
         });
@@ -140,11 +142,11 @@ public class DashboardController {
     public void initHeader() {
         UserName.setText("Hello, " + User.name);
         JFXRippler messenger = createIconButton("Message", "Messenger");
-        messenger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadMessageWindow(new Stage(), User));
+        messenger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadMessageWindow());
         UserBar.getChildren().add(messenger);
         if (Privelage.equals(MANAGER)) {
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
-            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new Stage(), User, Employees));
+            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow());
             UserBar.getChildren().add(manageEmployeeButton);
             p(1);
         } else if (Privelage.equals(PROJECT_LEAD)) {
@@ -262,7 +264,10 @@ public class DashboardController {
     //Creates a project line
     public HBox createProjectLine(Project project) {
         //Start project line with Project name
-        HBox projectLine = new HBox(new Label("(PID: " + project.projectID + ") " + project.name));
+        HBox projectLine;
+        String title = "(PID: " + project.projectID + ") " + project.name;
+        if(project.status.equals("Closed")) title = title + " CLOSED";
+        projectLine = new HBox(new Label(title));
         projectLine.getStyleClass().add("projectLine");
         //Event handler for hover
         EventHandler a = new EventHandler() {
@@ -311,12 +316,15 @@ public class DashboardController {
             status = true;
         }
 
-        //Adds Create button TODO privelage base
-        HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
-        newTask.getStyleClass().add("taskLine");
-        newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
-        taskBox.getChildren().add(newTask);
-
+        //Adds Create button
+        if((User.position.equals("Manager") || User.position.equals("Project Lead")) &&
+                OM.filterProjects_ProjectID(Projects, projID).status.equals("Open"))
+        {
+            HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
+            newTask.getStyleClass().add("taskLine");
+            newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
+            taskBox.getChildren().add(newTask);
+        }
         return status;
     }
 
@@ -396,6 +404,8 @@ public class DashboardController {
         else
             taskLineButtons.getChildren().addAll(view, workButton, expand);
         taskLineButtons.getStyleClass().add("lineButtons");
+        if(task.status.equals("Closed"))
+            taskLineButtons.getChildren().remove(workButton);
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
         return taskLineButtons;
@@ -646,7 +656,8 @@ public class DashboardController {
                         status = new JFXTextField();
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
-        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        JFXRippler cancel = createIconButton("Cancel", "Cancel");
+        JFXRippler finish = createIconButton("Finish", "Close Project");
 
         name.setLabelFloat(true);
         dueDate.setLabelFloat(true);
@@ -675,6 +686,8 @@ public class DashboardController {
             projectLeadID.setText(Integer.toString(project.projectLeadID));
             description.setText(project.description);
             status.setText(project.status);
+            status.setDisable(true);
+            finish.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishProjectDialog(project, dialog));
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
                 if(projectIsValid(name, dueDate, groupID, projectLeadID, description, status)) {
@@ -721,10 +734,44 @@ public class DashboardController {
         VBox vBox = new VBox(name, dueDate, groupID, projectLeadID, description, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
-        content.setActions(confirm, cancel);
+        if(project != null) content.setActions(finish, confirm, cancel);
         dialog.show();
     }
 
+    void loadFinishProjectDialog(Project project, JFXDialog parent)
+    {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        Label prompt;
+        if(project.status.equals("Open")) prompt = new Label("Are you sure you want to close " + project.name + "?");
+        else prompt = new Label("Are you sure you want to open " + project.name + "?");
+        confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
+        {
+            if(project.status.equals("Open"))
+            {
+                OM.setProject_Closed(project.projectID);
+                for(Task task : Tasks) if(task.projectID == project.projectID) OM.setTask_Closed(task.taskID);
+            }
+            else
+            {
+                OM.setProject_Open(project.projectID);
+                for(Task task : Tasks) if(task.projectID == project.projectID) OM.setTask_Open(task.taskID);
+            }
+            refresh();
+            dialog.close();
+            parent.close();
+        });
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(prompt);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
 
     void viewProjectDialog(Project project)
     {
@@ -859,6 +906,7 @@ public class DashboardController {
 
         JFXRippler confirm = createIconButton("Check", "Confirm");
         JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        JFXRippler finish = createIconButton("Finish", "Close Task");
 
         name.setLabelFloat(true);
         dueDate.setLabelFloat(true);
@@ -890,6 +938,7 @@ public class DashboardController {
             description.setText(task.description);
             size.setText(Integer.toString(task.size));
             status.setText(task.status);
+            status.setDisable(true);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
                 if(taskIsValid(name, dueDate, projectID, employees, description, size, status)) {
@@ -910,6 +959,7 @@ public class DashboardController {
                     else { dialogError_JFXTF(projectID, "Invalid project or employees not in project"); }
                 }
             });
+            finish.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishTaskDialog(task, dialog));
         }
         else {
             text.setText("Add Task");
@@ -941,6 +991,33 @@ public class DashboardController {
         }
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
         VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(finish, confirm, cancel);
+        dialog.show();
+    }
+
+    void loadFinishTaskDialog(Task task, JFXDialog parent)
+    {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        Label prompt;
+        if(task.status.equals("Open")) prompt = new Label("Are you sure you want to close " + task.name + "?");
+        else prompt = new Label("Are you sure you want to open " + task.name + "?");
+        confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
+        {
+            if(task.status.equals("Open")) OM.setTask_Closed(task.taskID);
+            else OM.setTask_Open(task.taskID);
+            refresh();
+            dialog.close();
+            parent.close();
+        });
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(prompt);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         content.setActions(confirm, cancel);
@@ -980,7 +1057,7 @@ public class DashboardController {
         description.setPromptText("Description of work");
 
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            OM.stopWork(taskID, description.getText());
+                OM.stopWork(taskID, description.getText());
             refresh();
             dialog.close();
         });
@@ -1083,16 +1160,10 @@ public class DashboardController {
         if(worklog != null) {
             text.setText("Edit work log");
             content.setHeading(text);
-            if(worklog.startTime != null) {
-                if (worklog.startTime.contains(".0"))
-                    startTime.setText(worklog.startTime.substring(0, worklog.startTime.lastIndexOf(".0")));
-                else startTime.setText(worklog.startTime);
-            }
-            if(worklog.stopTime != null) {
-                if (worklog.stopTime.contains(".0"))
-                    stopTime.setText(worklog.stopTime.substring(0, worklog.stopTime.lastIndexOf(".0")));
-                else stopTime.setText(worklog.stopTime);
-            }
+            if(worklog.startTime != null)
+                startTime.setText(worklog.startTime.substring(0,19));
+            if(worklog.stopTime != null)
+                stopTime.setText(worklog.stopTime.substring(0,19));
             elapsedTime.setText(worklog.elapsedTime);
             description.setText(worklog.description);
             taskID.setText(Integer.toString(worklog.logID));
@@ -1191,9 +1262,10 @@ public class DashboardController {
     }
 
     @FXML
-    void loadEmployeeWindow(Stage primaryStage, Employee User, List<Employee> Employees) {
+    void loadEmployeeWindow() {
         try {
             if (OM != null) {
+                Stage primaryStage = new Stage();
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
                 Parent employee = loader.load();
                 EmployeeController employeeController = new EmployeeController();
@@ -1212,13 +1284,27 @@ public class DashboardController {
         }
     }
 
-
-    private void loadMessageWindow(Stage stage, Employee user) {
-       // try {
-         //   if(OM != null) {
-                //FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(""))
-            //}
-        //} catch (IOException e) { e.printStackTrace(); }
+    private void loadMessageWindow() {
+        try {
+            if (OM != null) {
+                Stage primaryStage = new Stage();
+                List<Message> correctMessages = OM.filterMessages_RecipientID(Messages, User.employeeID);
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Messenger.fxml"));
+                Parent messenger = loader.load();
+                MessageController messageController = new MessageController();
+                primaryStage.setTitle("Messenger");
+                JFXDecorator decorator = new JFXDecorator(primaryStage, messenger);
+                primaryStage.setScene(new Scene(decorator));
+                decorator.setContent(messenger);
+                messageController.setDecorator(decorator);
+                messenger.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                messageController.load(User, Employees, correctMessages, OM);
+                primaryStage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void refresh()
