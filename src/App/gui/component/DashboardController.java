@@ -89,7 +89,8 @@ public class DashboardController {
 
 
     public boolean load(int UserID, OdinModel OM) {
-        User = OM.getEmployee_EmployeeID(UserID);
+        persistentUser.currentUser = OM.getEmployee_EmployeeID(UserID);
+        User = persistentUser.currentUser;
         Privelage = User.position;
                 DashboardController.OM = OM;
         return true;
@@ -1212,12 +1213,12 @@ public class DashboardController {
     public void updateProjectLine(Project project) {
         Platform.runLater(()-> {
             int id = project.projectID;
+            HBox projLine;
             for (int i = 0; projectLines.size() > i; i++) {
-                HBox projLine;
                 if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
                     VBox projView = (VBox) projLine.getParent();
                     int index = projView.getChildren().indexOf(projLine);
-                    p("Project Name: " + project.name);
+                    p("Update, Project Name: " + project.name);
                     p("Index: " + index);
                     projView.getChildren().remove(index);
                     projLine = createProjectLine(project);
@@ -1228,22 +1229,54 @@ public class DashboardController {
         });
     }
 
-//    public void insertProjectLine(int projectID) {
-//        Platform.runLater(()-> {
-//            int id = project.projectID;
-//            for (int i = 0; projectLines.size() > i; i++) {
-//                HBox projLine;
-//                if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
-//                    VBox projView = (VBox) projLine.getParent();
-//                    int index = projView.getChildren().indexOf(projLine);
-//                    p("Project Name: " + project.name);
-//                    p("Index: " + index);
-//                    projView.getChildren().remove(index);
-//                    projLine = createProjectLine(project);
-//                    projectLines.set(i,projLine);
-//                    projView.getChildren().add(index, projLine);
-//                }
-//            }
-//        });
-//    }
-//}
+    public void insertProjectLine(Project project, Project reference) {
+        Platform.runLater(()-> {
+            int id = reference.projectID;
+            HBox projLine;
+            for (int i = 0; projectLines.size() > i; i++) {
+                if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
+                    VBox projView = (VBox) projLine.getParent();
+                    int index = projView.getChildren().indexOf(projLine);
+                    p("Insert, Project Name: " + project.name);
+                    p("Index: " + index);
+                    HBox newProjLine = createProjectLine(project);
+                    projectLines.add(i,newProjLine);
+                    projView.getChildren().add(index, newProjLine);
+                }
+            }
+        });
+    }
+
+
+    public void removeProjectLine(Project project) {
+        Platform.runLater(()-> {
+            int id = project.projectID;
+            HBox projLine;
+            for (int i = 0; projectLines.size() > i; i++) {
+                if (Integer.parseInt((projLine = projectLines.get(i)).getId()) == id) {
+                    VBox projView = (VBox) projLine.getParent();
+                    int index = projView.getChildren().indexOf(projLine);
+                    p("Remove, Project Name: " + project.name);
+                    p("Index: " + index);
+                    projLine = createProjectLine(project);
+                    projectLines.add(i,projLine);
+                    projView.getChildren().add(index, projLine);
+                }
+            }
+        });
+    }
+
+    public void addProjectLine(Project project) {
+        Platform.runLater(()-> {
+            int id = project.projectID;
+            VBox projView = (VBox) projectLines.get(0).getParent();
+            p("Add, Project Name: " + project.name);
+            HBox projLine = createProjectLine(project);
+            projectLines.add(projLine);
+            projView.getChildren().add(projLine);
+
+        });
+    }
+
+
+}

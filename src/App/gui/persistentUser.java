@@ -6,6 +6,7 @@ import Model.OdinModel;
 import com.jfoenix.controls.JFXDecorator;
 import javafx.scene.Parent;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 public class persistentUser {
@@ -92,6 +93,10 @@ public class persistentUser {
 
     private static void comparator(){
         if(OM != null){
+
+            boolean isManager = currentUser.position == "Manager";
+            int groupID = currentUser.groupID;
+
             List<Employee> employeeList = OM.getEmployees();
             List<Project> projectList = OM.getProjects();
             List<Task> taskList = OM.getTasks();
@@ -105,25 +110,34 @@ public class persistentUser {
                 if(ProjectList.size() > i) {
                     oldProj = ProjectList.get(i);
                     if (newProj.projectID == oldProj.projectID) {
+                        ProjectList.set(i,newProj);
                         if(!newProj.name.equals(oldProj.name)){
-                            ProjectList.set(i,newProj);
-                            Dashboard.updateProjectLine(newProj);
+                            if(isManager || groupID == newProj.groupID) {
+                                Dashboard.updateProjectLine(newProj);
+                            }
                         }
                     }
                     else {
-                        if(projectList.get(i+1).equals(oldProj)){
+                        if(projectList.size() > i+1 && projectList.get(i+1).equals(oldProj)){
                             ProjectList.add(i,newProj);
-//                            Dashboard.insertProjectLine(newProj);
+                            if(isManager || groupID == newProj.groupID) {
+                                Dashboard.insertProjectLine(newProj, projectList.get(i + 1));
+                            }
                         }
                         else{
                             ProjectList.remove(i);
-//                            Dashboard.removeProjecLine(oldProj);
+                            i--;
+                            if(isManager || groupID == newProj.groupID) {
+                                Dashboard.removeProjectLine(oldProj);
+                            }
                         }
                     }
                 }
                 else{
                     ProjectList.add(newProj);
-//                    Dashboard.addProjectLine(newProj);
+                    if(isManager || groupID == newProj.groupID) {
+                        Dashboard.addProjectLine(newProj);
+                    }
                 }
             }
         }
