@@ -3,12 +3,10 @@ package App.gui.component;
 import Model.OdinModel;
 import Server.Employee;
 import Server.Message;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -60,8 +58,10 @@ public class MessageController {
     @FXML
     void initialize()
     {
-        initHeader();
-        initView(request);
+        Platform.runLater(() -> {
+            initHeader();
+            initView(request);
+        });
     }
 
     void initHeader()
@@ -70,6 +70,19 @@ public class MessageController {
         JFXRippler viewAllButton = createIconButton("Message", "View All Messages");
         JFXRippler viewReadButton = createIconButton("Check", "View Read Messages");
         JFXRippler viewUnreadButton = createIconButton("Cancel", "View Unread Messages");
+        composeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> composeMessage());
+        viewAllButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            request = "All";
+            refresh();
+        });
+        viewReadButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            request = "Read";
+            refresh();
+        });
+        viewUnreadButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            request = "Unread";
+            refresh();
+        });
         Header.getChildren().addAll(composeButton, viewAllButton, viewReadButton, viewUnreadButton);
     }
 
@@ -98,8 +111,9 @@ public class MessageController {
         else body = message.message;
         messageLine = new HBox(new Label("From: " + from + " Contains: " + body));
         messageButtons = initMessageButtons(message);
-        messageLine.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> messageButtons.getChildren().add(messageButtons));
-        messageLine.addEventHandler(MouseEvent.MOUSE_EXITED, event -> messageButtons.getChildren().remove(messageButtons));
+        messageLine.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> messageLine.getChildren().add(messageButtons));
+        messageLine.addEventHandler(MouseEvent.MOUSE_EXITED, event -> messageLine.getChildren().remove(messageButtons));
+        messageLine.getStyleClass().add("empLine");
         return messageLine;
     }
 
@@ -108,7 +122,7 @@ public class MessageController {
         HBox messageButtons;
         JFXRippler viewMessage, markRead;
         viewMessage = createIconButton("View", "View message");
-        markRead = createIconButton("Confirm", "Mark read");
+        markRead = createIconButton("Check", "Mark read");
         viewMessage.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewMessageDialog(message));
         markRead.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> markMessageRead(message));
         messageButtons = new HBox(viewMessage, markRead);
@@ -132,8 +146,79 @@ public class MessageController {
         dialog.show();
     }
 
+    private void composeMessage(){
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        JFXTextField recipient = new JFXTextField();
+        JFXTextArea message = new JFXTextArea();
+        recipient.setPromptText("Recipient's ID");
+        message.setPromptText("Enter your message");
+        confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if(messageIsValid(recipient,message))
+                OM.addMessage(message.getText(),Integer.parseInt(recipient.getText()),User.employeeID);
+                refresh();
+                dialog.close();
+        });
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(recipient,message,confirm,cancel);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
+
+    private boolean messageIsValid(JFXTextField recipient, JFXTextArea message)
+    {
+        boolean valid = true;
+
+        if(recipient.getText().isEmpty())
+        {
+            dialogError_JFXTF(recipient,"Recipient ID cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidNum(recipient.getText()))
+        {
+            dialogError_JFXTF(recipient, "Recipient ID must be an integer");
+            valid = false;
+        }
+        else recipient.setStyle("-fx-background-color: #FFFFFF");
+
+        if(message.getText().isEmpty())
+        {
+            dialogError_JFXTF(message, "Message cannot be empty");
+            valid = false;
+        }
+        else if(!OM.isValidString(message.getText()))
+        {
+            dialogError_JFXTF(message, "Description cannot contain special characters");
+            valid = false;
+        }
+        else message.setStyle("-fx-background-color: #FFFFFF");
+
+        return valid;
+    }
+
+    void dialogError_JFXTF(JFXTextArea input, String message)
+    {
+        input.clear();
+        input.setPromptText(message);
+        input.setStyle("-fx-background-color: #FFCDD2");
+    }
+
+    void dialogError_JFXTF(JFXTextField input, String message)
+    {
+        input.clear();
+        input.setPromptText(message);
+        input.setStyle("-fx-background-color: #FFCDD2");
+    }
+
     private void markMessageRead(Message message) {
         OM.setMessage_Read(message.messageID);
+        refresh();
     }
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
@@ -169,5 +254,11 @@ public class MessageController {
 
     public void setDecorator(JFXDecorator decorator) {
         this.decorator = decorator;
+    }
+
+    private void refresh()
+    {
+        View.getChildren().remove(0, View.getChildren().size());
+        initView(request);
     }
 }

@@ -322,7 +322,7 @@ public class OdinModel implements OdinInterface {
         Employee emp;
         try {
             emp = OS.getEmployee_EmployeeID(recipientID);
-            if (emp == null) {
+            if (emp != null) {
                 OS.addMessage(message, recipientID, senderID);
                 return true;
             }
@@ -782,7 +782,7 @@ public class OdinModel implements OdinInterface {
     public List<Message> filterMessages_Unread(List<Message> list) {
         List<Message> messages = new ArrayList<>();
         for (Message message : list) {
-            if (message.status.equals("Unread")) messages.add(message);
+            if (message != null && message.status.equals("Unread")) messages.add(message);
         }
         return messages;
     }

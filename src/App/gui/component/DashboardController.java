@@ -26,6 +26,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.swing.*;

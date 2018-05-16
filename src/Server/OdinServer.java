@@ -113,8 +113,8 @@ public class OdinServer
 
     public void setMessage_Read (int MessageID) throws Exception
     {
-        this.stmt.executeUpdate("UPDATE messages SET" +
-                "Status = 'Read'" +
+        this.stmt.executeUpdate("UPDATE messages SET " +
+                "Status = 'Read' " +
                 "WHERE MessageID = " + MessageID + ";");
     }
 
