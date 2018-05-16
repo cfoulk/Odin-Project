@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.gui.component.EmployeeController">
+<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.gui.component.EmployeeController">
    <children>
       <AnchorPane style="-fx-background-color: #2b5797;">
          <children>
@@ -32,7 +32,7 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <ScrollPane prefHeight="264.0" prefWidth="598.0">
+                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="264.0" prefWidth="598.0">
                      <content>
                         <AnchorPane prefHeight="35.0" prefWidth="598.0">
                            <padding>

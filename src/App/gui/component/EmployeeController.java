@@ -76,16 +76,22 @@ public class EmployeeController {
     }
 
     private void initView() {
+        JFXRippler addButton = createIconButton("Add", "Add Employee");
         for(int i = 0; i < Employees.size(); ++i)
         {
             HBox empLine = createEmpLine(Employees.get(i));
             empLine.setId(Integer.toString(i));
             View.getChildren().add(empLine);
         }
+        HBox addEmp = new HBox(addButton, new Label("Add a new Employee"));
+        addEmp.getStyleClass().add("empLine");
+        addEmp.setStyle("-fx-background-color: #1a555b");
+        addEmp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadEmployeeDialog(null));
+        View.getChildren().add(addEmp);
     }
 
     public HBox createEmpLine(Employee employee) {
-        HBox empLine = new HBox(new Label(employee.name));
+        HBox empLine = new HBox(new Label("(EID: " + employee.employeeID + ") " + employee.name));
         empLine.getStyleClass().add("empLine");
         EventHandler a = new EventHandler() {
             @Override
@@ -134,7 +140,6 @@ public class EmployeeController {
         StackPane pane = new StackPane();
         pane.getChildren().add(glyph);
         pane.setPadding(new Insets(10));
-
         JFXRippler rippler = new JFXRippler(pane);
         rippler.getRipplerRadius();
         rippler.getStyleClass().add("icon-rippler");
@@ -158,23 +163,25 @@ public class EmployeeController {
         JFXDialogLayout content = new JFXDialogLayout();
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+
         JFXTextField name = new JFXTextField(),
                 position = new JFXTextField(),
                 groupID = new JFXTextField(),
+                status = new JFXTextField(),
                 username = new JFXTextField(),
-                password = new JFXTextField(),
-                status = new JFXTextField();
+                password = new JFXTextField();
 
         JFXRippler confirm = createIconButton("User-Check", "Confirm");
-        JFXRippler cancel = createIconButton("User-Cancel", "Confrim");
+        JFXRippler cancel = createIconButton("User-Cancel", "Cancel");
 
         name.setPromptText("Name");
         position.setPromptText("Manager, Project Lead, or Employee");
         groupID.setPromptText("Group Number");
+        status.setPromptText("Active or Inactive");
         username.setPromptText("UserName");
         password.setPromptText("Password");
-        status.setPromptText("Active or Inactive");
 
         Text text = new Text();
         text.setFill(Paint.valueOf("#FFFFFF"));
@@ -186,11 +193,12 @@ public class EmployeeController {
             name.setText(employee.name);
             position.setText(employee.position);
             groupID.setText(Integer.toString(employee.groupID));
+            status.setText(employee.status);
             username.setText(employee.username);
             password.setText(employee.password);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(isValid(name, position, groupID, username, password, status)) {
+                if(isValid(name, position, groupID, status, username, password)) {
                     successful = OM.editEmployee(
                             employee.employeeID,
                             name.getText(),
@@ -206,9 +214,7 @@ public class EmployeeController {
                     }
                     else
                     {
-                        username.setPromptText("Duplicate Username");
-                        username.setStyle("-fx-background-color: #FFCDD2");
-                        username.clear();
+                        dialogError_JFXTF(username, "Duplicate username");
                     }
                 }
             });
@@ -218,7 +224,7 @@ public class EmployeeController {
             content.setHeading(text);
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
-                if(isValid(name, position, groupID, username, password, status)) {
+                if(isValid(name, position, groupID, status, username, password)) {
                     successful = OM.addEmployee(
                             name.getText(),
                             position.getText(),
@@ -233,16 +239,13 @@ public class EmployeeController {
                     }
                     else
                     {
-                        username.setPromptText("Duplicate Username");
-                        username.setStyle("-fx-background-color: #FFCDD2");
-                        username.clear();
+                        dialogError_JFXTF(username, "Duplicate username");
                     }
                 }
             });
         }
-        //name.addEventHandler();
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
-        VBox vBox = new VBox(name, position, groupID, username, password);
+        VBox vBox = new VBox(name, position, groupID, status, username, password);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         content.setActions(confirm, cancel);
@@ -254,11 +257,11 @@ public class EmployeeController {
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        Text name = new Text(employee.name),
-                position = new Text(employee.position),
-                groupID = new Text(String.valueOf(employee.groupID)),
-                username = new Text(employee.username),
-                password = new Text(employee.password);
+        Label    name = new Label("Name: " + employee.name),
+                position = new Label("Position: " + employee.position),
+                groupID = new Label("Group ID: " + String.valueOf(employee.groupID)),
+                username = new Label("Username: " + employee.username),
+                password = new Label("Password: " + employee.password);
         VBox vBox = new VBox(name, position, groupID, username, password);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
@@ -266,61 +269,55 @@ public class EmployeeController {
     }
 
     boolean isValid(JFXTextField name, JFXTextField position, JFXTextField groupID,
-                    JFXTextField username, JFXTextField password, JFXTextField status) {
+                    JFXTextField status, JFXTextField username, JFXTextField password) {
         boolean valid = true;
 
         //name
         if(name.getText().isEmpty())
         {
-            name.setPromptText("Name cannot be empty");
-            name.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(name, "Name cannot be empty");
             valid = false;
         }
-        else if(name.getText().matches("(.*)[0-9](.*)") ||
-                name.getText().matches("(.*)[!\"#$%&'()*+,./:;<=>?@^_`{|}~-](.*)"))
+        else if(!OM.isValidName(name.getText()))
         {
-            name.clear();
-            name.setPromptText("Name can only alphabetic characters");
-            name.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(name, "Name can only alphabetic characters");
             valid = false;
         }
         else name.setStyle("-fx-background-color: #FFFFFF");
 
         //position
-        if(position.getText().isEmpty() ||
-              !(position.getText().equals("Manager") ||
-                position.getText().equals("Project Lead") ||
-                position.getText().equals("Employee")))
+        if(position.getText().isEmpty() || !OM.isValidPos(position.getText()))
         {
-            position.clear();
-            position.setPromptText("Must be Manager, Project Lead, or Employee");
-            position.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(position, "Must be Manager, Project Lead, or Employee");
             valid = false;
         }
         else position.setStyle("-fx-background-color: #FFFFFF");
 
         //groupID
-        if(!StringUtils.isStrictlyNumeric(groupID.getText()))
+        if(!(groupID.getText().isEmpty()) && !OM.isValidNum(groupID.getText()))
         {
-            groupID.clear();
-            groupID.setPromptText("Group ID must be an integer");
-            groupID.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(groupID, "Group ID must be an integer");
             valid = false;
         }
         else groupID.setStyle("-fx-background-color: #FFFFFF");
 
+        //status
+        if(status.getText().isEmpty() || !OM.isValidEmpStatus(status.getText()))
+        {
+            dialogError_JFXTF(status, "Status must be Active or Inactive");
+            valid = false;
+        }
+        else status.setStyle("-fx-background-color: #FFFFFF");
+
         //username
         if(username.getText().isEmpty())
         {
-            username.setPromptText("Username cannot be empty");
-            username.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(username, "Username cannot be empty");
             valid = false;
         }
-        else if(username.getText().matches("(.*)[\'\";](.*)"))
+        else if(!OM.isValidString(username.getText()))
         {
-            username.clear();
-            username.setPromptText("Username cannot contain special characters");
-            username.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(username, "Username cannot contain special characters");
             valid = false;
         }
         else username.setStyle("-fx-background-color: #FFFFFF");
@@ -328,37 +325,29 @@ public class EmployeeController {
         //password
         if(password.getText().isEmpty())
         {
-            password.setPromptText("Password cannot be empty");
-            password.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(password, "Password cannot be empty");
             valid = false;
         }
-        else if(password.getText().matches("(.*)[\'\";](.*)"))
+        else if(!OM.isValidString(password.getText()))
         {
-            password.clear();
-            password.setPromptText("Password cannot contain special characters");
-            password.setStyle("-fx-background-color: #FFCDD2");
+            dialogError_JFXTF(password, "Password cannot contain special characters");
             valid = false;
         }
         else password.setStyle("-fx-background-color: #FFFFFF");
 
-        //status
-        if(status.getText().isEmpty() ||
-            !(status.getText().equals("Active") ||
-              status.getText().equals("Inactive")))
-        {
-            status.clear();
-            status.setPromptText("Status must be Active or Inactive");
-            status.setStyle("-fx-background-color: #FFCDD2");
-            valid = false;
-        }
-        else status.setStyle("-fx-background-color: #FFFFFF");
-
         return valid;
+    }
+
+    void dialogError_JFXTF(JFXTextField input, String message)
+    {
+        input.clear();
+        input.setPromptText(message);
+        input.setStyle("-fx-background-color: #FFCDD2");
     }
 
     void refresh()
     {
-        View = new VBox();
+        View.getChildren().remove(0,View.getChildren().size());
         Employees = OM.getEmployees();
         initView();
     }

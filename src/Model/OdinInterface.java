@@ -14,15 +14,21 @@ public interface OdinInterface
     //Edits
     boolean editEmployee(int employeeID, String name, String position, int groupID, String username, String password, String status);
     boolean editProject(int projectID, String name, String dueDate, int groupID, int projectLeadID, String description, String status);
-    boolean editTask(int taskID, String name, String dueDate, String employees, int projectID, String description, int size, String status);
-    public boolean editWorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
-    boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
+    boolean editTask(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status);
+    public boolean editWorkLog(int logID, String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
+    public boolean stopWork(int logID, String description);
+    boolean setMessage_Read(int MessageID);
+    boolean setProject_Open(int ProjectID);
+    boolean setProject_Closed(int ProjectID);
+    boolean setTask_Open(int TaskID);
+    boolean setTask_Closed(int TaskID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password, String status);
     boolean addProject(String name, String dueDate, int groupID, int projectLeadID, String description, String status);
     boolean addTask(String name, String dueDate, int projectID, String employees, String description, int size, String status);
-    boolean addWorkLog(int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description);
+    boolean addWorkLog(String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
+    public int startWork(int taskID, int employeeID);
     boolean addMessage(String message, int recipientID, int senderID);
 
     //deletes
@@ -78,5 +84,6 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
     List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
     List<Message> filterMessages_SenderID(List<Message> list, int SenderID, int RecipientID);
-
+    List<Message> filterMessages_Read(List<Message> list);
+    List<Message> filterMessages_Unread(List<Message> list);
 }
