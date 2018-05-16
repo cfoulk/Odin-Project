@@ -113,28 +113,37 @@ public class OdinServer
 
     public void setMessage_Read (int MessageID) throws Exception
     {
-        //this probably is going to need to be worked on, i don't know where to take it
-        Message mes = getMessage_MessageID(MessageID);
-        this.stmt.executeUpdate(  "UPDATE messages SET " +
-                "MessageID = " + MessageID + ", " +
-                "Message = '" + mes.message + "', " +
-                "Status = 'Read'"  + ", " +
-                "RecipientID = " + mes.recipientID  + ", " +
-                "SenderID = "  + mes.senderID + ";");
+        this.stmt.executeUpdate("UPDATE messages SET" +
+                "Status = 'Read'" +
+                "WHERE MessageID = " + MessageID + ";");
+    }
+
+    public void setProject_Open(int ProjectID) throws Exception
+    {
+        this.stmt.executeUpdate("UPDATE projects SET" +
+                "Status = 'Open'" +
+                "WHERE ProjectID = " + ProjectID + ";");
     }
 
     public void setProject_Closed(int ProjectID) throws Exception
     {
-        //this probably is going to need to be worked on, i don't know where to take it
-        Project proj = getProject_ProjectID(ProjectID);
-        this.stmt.executeUpdate( "UPDATE projects SET " +
-                "Name = '" + proj.name + "', " +
-                "DueDate = '" + proj.dueDate + "', " +
-                "GroupID = " + proj.groupID + ", " +
-                "ProjectLeadID = " + proj.projectLeadID + ", " +
-                "Description = '" + proj.description + "', " +
-                "Status = 'Closed'" +  ", " +
-                "WHERE ProjectID = " + proj.projectID + ";");
+        this.stmt.executeUpdate("UPDATE projects SET" +
+                "Status = 'Closed'" +
+                "WHERE ProjectID = " + ProjectID + ";");
+    }
+
+    public void setTask_Open(int TaskID) throws Exception
+    {
+        this.stmt.executeUpdate("UPDATE tasks SET" +
+                "Status = 'Open'" +
+                "WHERE TaskID = " + TaskID + ";");
+    }
+
+    public void setTask_Closed(int TaskID) throws Exception
+    {
+        this.stmt.executeUpdate("UPDATE tasks SET" +
+                "Status = 'Closed'" +
+                "WHERE TaskID = " + TaskID + ";");
     }
 
     //Add methods
