@@ -13,16 +13,31 @@ public class SeedOdinData {
 
         OdinModel model = new OdinModel();
         //see employee data
-        model.addEmployee("John", "Employee", 1234, "JohnUser", "doe", "Active");
-        model.addEmployee("Sarah", "Employee", 1234, "SarahJones", "Sarahpwd", "Active");
-        model.addEmployee("Tim", "Employee", 1234, "TimSmith", "Timpwd", "Active");
-        model.addEmployee("Bob", "Employee", 1234, "BobUser", "Bobpwd", "Active");
-        model.addEmployee("Glen", "Employee", 1234, "GlenUser", "Glenpwd", "Active");
-        model.addEmployee("Joe", "Employee", 1234, "JoeUser", "Joepwd", "Active");
-        model.addEmployee("Chris", "Employee", 1234, "ChrisUser", "Chrispwd", "Active");
-        model.addEmployee("Julia", "Employee", 1234, "JuliaUser", "Juliapwd", "Active");
-        model.addEmployee("Hannah", "Employee", 1234, "HannahUser", "Hannahpwd", "Active");
-        model.addEmployee("Lauren", "Employee", 1234, "LaurenUser", "Laurenpwd", "Active");
+        //user: employees
+        model.addEmployee("John", "Employee", 1, "JohnUser", "doe", "Active");
+        model.addEmployee("Sarah", "Employee", 1, "SarahJones", "Sarahpwd", "Active");
+        model.addEmployee("Tim", "Employee", 2, "TimSmith", "Timpwd", "Active");
+        model.addEmployee("Bob", "Employee", 2, "BobUser", "Bobpwd", "Active");
+        model.addEmployee("Glen", "Employee", 3, "GlenUser", "Glenpwd", "Active");
+        model.addEmployee("Joe", "Employee", 3, "JoeUser", "Joepwd", "Active");
+        model.addEmployee("Chris", "Employee", 4, "ChrisUser", "Chrispwd", "Active");
+        model.addEmployee("Julia", "Employee", 4, "JuliaUser", "Juliapwd", "Active");
+        model.addEmployee("Hannah", "Employee", 5, "HannahUser", "Hannahpwd", "Active");
+        model.addEmployee("Lauren", "Employee", 5, "LaurenUser", "Laurenpwd", "Active");
+
+        //user: Project Lead
+        model.addEmployee("Jane", "Project Lead", 1, "JaneUser", "Janepwd", "Active");
+        model.addEmployee("Zoe", "Project Lead", 2, "ZoeUser", "Zoepwd", "Active");
+        model.addEmployee("Simon", "Project Lead", 3, "SimonUser", "Simonpwd", "Active");
+        model.addEmployee("George", "Project Lead", 4, "GeorgeUser", "Georgepwd", "Active");
+        model.addEmployee("Max", "Project Lead", 5, "MaxUser", "Maxpwd", "Active");
+
+
+        //user: ProjectLead
+        model.addEmployee("Hannah", "Manager", 123, "HannahUser", "Hannahpwd", "Active");
+        model.addEmployee("Alex", "Manager", 45, "AlexUser", "Alexpwd", "Active");
+
+
 
 
 
