@@ -6,7 +6,6 @@ import Model.OdinModel;
 import com.jfoenix.controls.JFXDecorator;
 import javafx.scene.Parent;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 public class persistentUser {
@@ -92,7 +91,7 @@ public class persistentUser {
 //    }
 
     private static void comparator(){
-        if(OM != null){
+        if(OM != null) {
 
             boolean isManager = currentUser.position == "Manager";
             int groupID = currentUser.groupID;
@@ -105,81 +104,95 @@ public class persistentUser {
 
             Project newProj;
             Project oldProj;
-            for(int i = 0; i < projectList.size(); i++){
+            for (int i = 0; i < projectList.size(); i++) {
                 newProj = projectList.get(i);
-                if(ProjectList.size() > i) {
+                if (ProjectList.size() > i) {
                     oldProj = ProjectList.get(i);
                     if (newProj.projectID == oldProj.projectID) {
-                        ProjectList.set(i,newProj);
-                        if(!newProj.name.equals(oldProj.name)){
-                            if(isManager || groupID == newProj.groupID) {
+                        ProjectList.set(i, newProj);
+                        if (!newProj.name.equals(oldProj.name)) {
+                            if (isManager || groupID == newProj.groupID) {
                                 Dashboard.updateProjectLine(newProj);
                             }
                         }
-                    }
-                    else {
-                        if(projectList.size() > i+1 && projectList.get(i+1).equals(oldProj)){
-                            ProjectList.add(i,newProj);
-                            if(isManager || groupID == newProj.groupID) {
+                    } else {
+                        if (projectList.size() > i + 1 && projectList.get(i + 1).equals(oldProj)) {
+                            ProjectList.add(i, newProj);
+                            if (isManager || groupID == newProj.groupID) {
                                 Dashboard.insertProjectLine(newProj, projectList.get(i + 1));
                             }
-                        }
-                        else{
+                        } else {
                             ProjectList.remove(i);
                             i--;
-                            if(isManager || groupID == newProj.groupID) {
+                            if (isManager || groupID == newProj.groupID) {
                                 Dashboard.removeProjectLine(oldProj);
                             }
                         }
                     }
-                }
-                else{
+                } else {
                     ProjectList.add(newProj);
-                    if(isManager || groupID == newProj.groupID) {
+                    if (isManager || groupID == newProj.groupID) {
                         Dashboard.addProjectLine(newProj);
                     }
                 }
             }
 
-//            Task newTask;
-//            Task oldTask;
-//            for(int i = 0; i < taskList.size(); i++){
-//                newTask = taskList.get(i);
-//                if(TaskList.size() > i) {
-//                    oldTask = TaskList.get(i);
-//                    if (newTask.projectID == oldTask.projectID) {
-//                        TaskList.set(i,newTask);
-//                        if(!newTask.name.equals(oldTask.name)){
-//                            if(isManager || groupID == newTask.groupID) {
-//                                Dashboard.updateProjectLine(newTask);
-//                            }
-//                        }
-//                    }
-//                    else {
-//                        if(projectList.size() > i+1 && projectList.get(i+1).equals(oldTask)){
-//                            TaskList.add(i,newTask);
-//                            if(isManager || groupID == newTask.groupID) {
-//                                Dashboard.insertProjectLine(newTask, projectList.get(i + 1));
-//                            }
-//                        }
-//                        else{
-//                            TaskList.remove(i);
-//                            i--;
-//                            if(isManager || groupID == newTask.groupID) {
-//                                Dashboard.removeProjectLine(oldTask);
-//                            }
-//                        }
-//                    }
-//                }
-//                else{
-//                    TaskList.add(newProj);
-//                    if(isManager || groupID == newProj.groupID) {
-//                        Dashboard.addProjectLine(newProj);
-//                    }
-//                }
-//            }
-//        }
-//    }
+
+            int userID = currentUser.employeeID;
+            Task newTask;
+            Task oldTask;
+            for (int i = 0; i < taskList.size(); i++) {
+                newTask = taskList.get(i);
+                if (TaskList.size() > i) {
+                    oldTask = TaskList.get(i);
+                    if (newTask.taskID == oldTask.taskID) {
+                        TaskList.set(i, newTask);
+                        if (!newTask.name.equals(oldTask.name)) {
+                            if (isManager || newTask.employees.contains(String.valueOf(userID))) {
+                                Dashboard.updateTaskLine(newTask);
+                            }
+                        }
+                    } else {
+                        if (taskList.size() > i + 1 && taskList.get(i + 1).equals(oldTask)) {
+                            TaskList.add(i, newTask);
+                            if (isManager || newTask.employees.contains(String.valueOf(userID))) {
+//                                Dashboard.insertTaskLine(newTask, taskList.get(i + 1));
+                            }
+                        } else {
+                            TaskList.remove(i);
+                            i--;
+                            if (isManager || newTask.employees.contains(String.valueOf(userID))) {
+                                Dashboard.removeTaskLine(oldTask);
+                            }
+                        }
+                    }
+                } else {
+                    TaskList.add(newTask);
+                    if (isManager || newTask.employees.contains(String.valueOf(userID))) {
+                        Dashboard.addTaskLine(newTask);
+                    }
+                }
+            }
+
+            WorkLog newWorklog;
+            WorkLog oldWorklog;
+            if (WorkLogList.size() != workLogList.size()) {
+                WorkLogList = workLogList;
+                Dashboard.reRenderWorklogPanes();
+            } else {
+                for (int i = 0; i < workLogList.size(); i++) {
+                    newWorklog = workLogList.get(i);
+                    oldWorklog = WorkLogList.get(i);
+                    if(oldWorklog.equals(newWorklog)){
+                        WorkLogList = workLogList;
+                        Dashboard.reRenderWorklogPanes();
+                        break;
+                    }
+
+                }
+            }
+        }
+    }
 
     public static void getServerData(OdinModel OM, String username) {/*
         List<Task> holdTasks;
