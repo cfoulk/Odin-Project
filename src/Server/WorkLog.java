@@ -1,6 +1,7 @@
 package Server;
 
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public class WorkLog
 {
@@ -21,6 +22,26 @@ public class WorkLog
         this.startTime = myRS.getString("StartTime");
         this.stopTime = myRS.getString("StopTime");
         this.description = myRS.getString("Description");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkLog workLog = (WorkLog) o;
+        return logID == workLog.logID &&
+                taskID == workLog.taskID &&
+                employeeID == workLog.employeeID &&
+                Objects.equals(elapsedTime, workLog.elapsedTime) &&
+                Objects.equals(startTime, workLog.startTime) &&
+                Objects.equals(stopTime, workLog.stopTime) &&
+                Objects.equals(description, workLog.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(logID, taskID, employeeID, elapsedTime, startTime, stopTime, description);
     }
 
     public WorkLog(int logID, int taskID, int employeeID, String elapsedTime, String startTime, String stopTime, String description)

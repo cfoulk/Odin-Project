@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -111,7 +112,9 @@ public class loginController {
                 dashboard.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
                 decorator.setContent(dashboard);
                 //Resize window to the new scene
-                decorator.getScene().getWindow().sizeToScene();
+                if(!((Stage) decorator.getScene().getWindow()).isFullScreen()) {
+                    decorator.getScene().getWindow().sizeToScene();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package Server;
 
 import java.sql.ResultSet;
 import java.sql.Date;
+import java.util.Objects;
 
 public class Task {
     public int taskID;
@@ -46,15 +47,37 @@ public class Task {
         this.status = status;
     }
 
-    public boolean hasEmployee(int employeeID)
-    {
-        return(this.employees.contains("," + employeeID + ","));
-    }
-
     String taskLine()
     {
         return (this.employees + "\t" + this.name + "\t" + this.projectID + "\t" +
                 this.description + "\t" + this.dueDate + "\t" + this.size + "\t" +
                 this.taskID);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return taskID == task.taskID &&
+                projectID == task.projectID &&
+                size == task.size &&
+                Objects.equals(name, task.name) &&
+                Objects.equals(dueDate, task.dueDate) &&
+                Objects.equals(employees, task.employees) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(status, task.status);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(taskID, name, dueDate, projectID, employees, description, size, status);
+    }
+
+    public boolean hasEmployee(int employeeID)
+    {
+        return(this.employees.contains("," + employeeID + ","));
+    }
+
 }

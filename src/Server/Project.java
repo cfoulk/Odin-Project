@@ -1,6 +1,7 @@
 package Server;
 
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public class Project
 {
@@ -38,5 +39,25 @@ public class Project
         return (this.projectID + "\t" + this.name + "\t" + this.status + "\t" +
                 this.groupID + "\t" + this.projectLeadID + "\t" + this.dueDate + "\t" +
                 this.description);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return projectID == project.projectID &&
+                groupID == project.groupID &&
+                projectLeadID == project.projectLeadID &&
+                Objects.equals(name, project.name) &&
+                Objects.equals(description, project.description) &&
+                Objects.equals(status, project.status) &&
+                Objects.equals(dueDate, project.dueDate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(projectID, groupID, projectLeadID, name, description, status, dueDate);
     }
 }
