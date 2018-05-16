@@ -315,11 +315,14 @@ public class DashboardController {
         }
 
         //Adds Create button TODO privelage base
-        HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
-        newTask.getStyleClass().add("taskLine");
-        newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
-        taskBox.getChildren().add(newTask);
-
+        if((User.position.equals("Manager") || User.position.equals("Project Lead")) &&
+                OM.filterProjects_ProjectID(Projects, projID).status.equals("Open"))
+        {
+            HBox newTask = new HBox(createIconButton("Add", "Add Task"), new Label("Add Task"));
+            newTask.getStyleClass().add("taskLine");
+            newTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadTaskDialog(null, Integer.parseInt(projectLine.getId())));
+            taskBox.getChildren().add(newTask);
+        }
         return status;
     }
 
@@ -399,6 +402,8 @@ public class DashboardController {
         else
             taskLineButtons.getChildren().addAll(view, workButton, expand);
         taskLineButtons.getStyleClass().add("lineButtons");
+        if(relaventProject.status.equals("Closed"))
+            taskLineButtons.getChildren().remove(workButton);
         HBox.setHgrow(taskLineButtons, Priority.ALWAYS);
         this.taskLineButtons = taskLineButtons;
         return taskLineButtons;
@@ -670,6 +675,7 @@ public class DashboardController {
         text.setStyle("-fx-font: bold 16px \"System\" ;");
 
         if(project != null) {
+            JFXRippler finishButton = createIconButton("Finish", "Close Project");
             text.setText("Edit Project");
             content.setHeading(text);
             name.setText(project.name);
@@ -678,6 +684,8 @@ public class DashboardController {
             projectLeadID.setText(Integer.toString(project.projectLeadID));
             description.setText(project.description);
             status.setText(project.status);
+            status.setDisable(true);
+            finishButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadFinishDialog(project));
             confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 boolean successful;
                 if(projectIsValid(name, dueDate, groupID, projectLeadID, description, status)) {
@@ -728,6 +736,27 @@ public class DashboardController {
         dialog.show();
     }
 
+    void loadFinishDialog(Project project)
+    {
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXRippler confirm = createIconButton("Check", "Confirm");
+        JFXRippler cancel = createIconButton("Cancel", "Confrim");
+        Label prompt = new Label("Are you sure you want to close " + project.name + "?");
+        confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
+        {
+            if(project.status.equals("Open")) OM.setProjectClosed(project.projectID);
+            else OM.setProjectOpen(project.projectID);
+        });
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> dialog.close());
+        VBox vBox = new VBox(prompt);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        content.setActions(confirm, cancel);
+        dialog.show();
+    }
 
     void viewProjectDialog(Project project)
     {
