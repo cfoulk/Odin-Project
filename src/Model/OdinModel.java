@@ -250,8 +250,7 @@ public class OdinModel implements OdinInterface {
         Employee lead;
         try {
             lead = OS.getEmployee_EmployeeID(projectLeadID);
-            //if (lead != null && lead.position.compareTo("Project Lead") == 0) {
-            if(lead != null) {
+            if (lead != null && lead.position.compareTo("Project Lead") == 0) {
                 OS.addProject(name, Date.valueOf(dueDate), groupID, projectLeadID, description, status);
                 return true;
             }
