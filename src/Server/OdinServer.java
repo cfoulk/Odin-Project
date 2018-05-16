@@ -123,6 +123,20 @@ public class OdinServer
                 "SenderID = "  + mes.senderID + ";");
     }
 
+    public void setProject_Closed(int ProjectID) throws Exception
+    {
+        //this probably is going to need to be worked on, i don't know where to take it
+        Project proj = getProject_ProjectID(ProjectID);
+        this.stmt.executeUpdate( "UPDATE projects SET " +
+                "Name = '" + proj.name + "', " +
+                "DueDate = '" + proj.dueDate + "', " +
+                "GroupID = " + proj.groupID + ", " +
+                "ProjectLeadID = " + proj.projectLeadID + ", " +
+                "Description = '" + proj.description + "', " +
+                "Status = 'Closed'" +  ", " +
+                "WHERE ProjectID = " + proj.projectID + ";");
+    }
+
     //Add methods
     public void addEmployee(String name, String position, int groupID, String username, String password, String status) throws Exception
     {
