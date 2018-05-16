@@ -116,11 +116,11 @@ public class OdinServer
         //this probably is going to need to be worked on, i don't know where to take it
         Message mes = getMessage_MessageID(MessageID);
         this.stmt.executeUpdate(  "UPDATE messages SET " +
-                "MessageID = '" + MessageID + "', " +
+                "MessageID = " + MessageID + ", " +
                 "Message = '" + mes.message + "', " +
-                "Status = 'read'"  + ", " +
+                "Status = 'Read'"  + ", " +
                 "RecipientID = " + mes.recipientID  + ", " +
-                "SenderID = '"  + mes.senderID + ";");
+                "SenderID = "  + mes.senderID + ";");
     }
 
     //Add methods

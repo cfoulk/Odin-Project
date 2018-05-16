@@ -715,6 +715,22 @@ public class OdinModel implements OdinInterface {
         return messages;
     }
 
+    public List<Message> filterMessages_Read(List<Message> list) {
+        List<Message> messages = new ArrayList<>();
+        for (Message message : list) {
+            if (message.status.equals("Read")) messages.add(message);
+        }
+        return messages;
+    }
+
+    public List<Message> filterMessages_Unread(List<Message> list) {
+        List<Message> messages = new ArrayList<>();
+        for (Message message : list) {
+            if (message.status.equals("Unread")) messages.add(message);
+        }
+        return messages;
+    }
+
     public List<Integer> extractEmployeeIDs(String employees) {
         List<Integer> list = new ArrayList<>();
         StringTokenizer stk = new StringTokenizer(employees, ",");
