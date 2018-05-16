@@ -126,9 +126,9 @@ public class OdinModel implements OdinInterface {
         catch(Exception e) { e.printStackTrace(); }
         if (workLog != null) {
             startString = workLog.startTime;
-            startString = startString.substring(0, startString.lastIndexOf(".0"));
+            startString = startString.substring(0,19);
             stopString = LocalDateTime.now().toString();
-            if(stopString.contains(".0")) stopString = stopString.substring(0, stopString.lastIndexOf(".0"));
+            stopString = stopString.substring(0,19);
             editWorkLog(logID, startString, stopString, calcElapsedTime(startString, stopString), description, workLog.taskID, workLog.employeeID);
             return true;
         }
@@ -143,8 +143,10 @@ public class OdinModel implements OdinInterface {
         long hours, minutes, seconds;
 
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        if(startString.contains(".0")) startString = startString.substring(0, startString.lastIndexOf(".0"));
-        if(stopString.contains(".0")) stopString = stopString.substring(0, stopString.lastIndexOf(".0"));
+        startString = startString.substring(0,19);
+        stopString = stopString.substring(0,19);
+        startString = startString.replace('T', ' ');
+        stopString = stopString.replace('T', ' ');
         startTime = LocalDateTime.parse(startString, formatter);
         stopTime = LocalDateTime.parse(stopString, formatter);
 
@@ -159,12 +161,68 @@ public class OdinModel implements OdinInterface {
         return elapsedTime;
     }
 
-    public boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID) {
+    public boolean setMessage_Read(int MessageID) {
         Message mes;
         try {
             mes = OS.getMessage_MessageID(MessageID);
             if (mes != null) {
-                OS.setMessage_Read(MessageID, message, recipientID, senderID);
+                OS.setMessage_Read(MessageID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setProject_Open(int ProjectID) {
+        Project proj;
+        try {
+            proj = OS.getProject_ProjectID(ProjectID);
+            if (proj != null) {
+                OS.setProject_Open(ProjectID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setProject_Closed(int ProjectID) {
+        Project proj;
+        try {
+            proj = OS.getProject_ProjectID(ProjectID);
+            if (proj != null) {
+                OS.setProject_Closed(ProjectID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setTask_Open(int TaskID) {
+        Task task;
+        try {
+            task = OS.getTask_TaskID(TaskID);
+            if (task != null) {
+                OS.setTask_Open(TaskID);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setTask_Closed(int TaskID) {
+        Task task;
+        try {
+            task = OS.getTask_TaskID(TaskID);
+            if (task != null) {
+                OS.setTask_Closed(TaskID);
                 return true;
             }
         } catch (Exception e) {
@@ -247,7 +305,7 @@ public class OdinModel implements OdinInterface {
         LocalDateTime startDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startTime = startDateTime.format(formatter);
-        if(startTime.contains(".0")) startTime = startTime.substring(0, startTime.lastIndexOf(".0"));
+        startTime = startTime.substring(0,19);
         try {
             emp = OS.getEmployee_EmployeeID(employeeID);
             task = OS.getTask_TaskID(taskID);
@@ -264,7 +322,7 @@ public class OdinModel implements OdinInterface {
         Employee emp;
         try {
             emp = OS.getEmployee_EmployeeID(recipientID);
-            if (emp == null) {
+            if (emp != null) {
                 OS.addMessage(message, recipientID, senderID);
                 return true;
             }
@@ -713,6 +771,22 @@ public class OdinModel implements OdinInterface {
         return messages;
     }
 
+    public List<Message> filterMessages_Read(List<Message> list) {
+        List<Message> messages = new ArrayList<>();
+        for (Message message : list) {
+            if (message.status.equals("Read")) messages.add(message);
+        }
+        return messages;
+    }
+
+    public List<Message> filterMessages_Unread(List<Message> list) {
+        List<Message> messages = new ArrayList<>();
+        for (Message message : list) {
+            if (message != null && message.status.equals("Unread")) messages.add(message);
+        }
+        return messages;
+    }
+
     public List<Integer> extractEmployeeIDs(String employees) {
         List<Integer> list = new ArrayList<>();
         StringTokenizer stk = new StringTokenizer(employees, ",");
@@ -771,8 +845,8 @@ public class OdinModel implements OdinInterface {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
         for(WorkLog workLog : workLogs)
         {
-            startTime = LocalDateTime.parse(workLog.startTime.replace(".0", ""), formatter);
-            endTime = LocalDateTime.parse(workLog.startTime.replace(".0", ""), formatter);
+            startTime = LocalDateTime.parse(workLog.startTime.substring(0,19), formatter);
+            endTime = LocalDateTime.parse(workLog.startTime.substring(0,19), formatter);
             duration = duration.plus(Duration.between(startTime, endTime));
         }
         return duration;
@@ -838,8 +912,8 @@ public class OdinModel implements OdinInterface {
 
     public boolean isValidDateTime(String time)
     {
-        if(time.contains(".0")) time = time.substring(0, time.lastIndexOf(".0"));
-        time = time.replace(' ', 'T');
+        time = time.substring(0,19);
+        //time = time.replace(' ', 'T');
         if (time.isEmpty() || LocalDateTime.parse(time).toString().equals(time)) return true;
         else return false;
     }

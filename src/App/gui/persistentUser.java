@@ -43,6 +43,7 @@ public class persistentUser {
         ProjectList = OM.getProjects();
         TaskList = OM.getTasks();
         WorkLogList = OM.getWorkLogs();
+        MessageList = OM.getMessages();
     }
 
     public static void runLiveUpdater(){

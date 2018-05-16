@@ -17,7 +17,11 @@ public interface OdinInterface
     boolean editTask(int taskID, String name, String dueDate, int projectID, String employees, String description, int size, String status);
     public boolean editWorkLog(int logID, String startTime, String stopTime, String elapsedTime, String description, int taskID, int employeeID);
     public boolean stopWork(int logID, String description);
-    boolean setMessage_Read(int MessageID, String message, int recipientID, int senderID);
+    boolean setMessage_Read(int MessageID);
+    boolean setProject_Open(int ProjectID);
+    boolean setProject_Closed(int ProjectID);
+    boolean setTask_Open(int TaskID);
+    boolean setTask_Closed(int TaskID);
 
     //Adds
     boolean addEmployee(String name, String position, int groupID, String username, String password, String status);
@@ -80,5 +84,6 @@ public interface OdinInterface
     List<WorkLog> filterWorkLog_EmployeeID(List<WorkLog> list, int EmployeeID);
     List<Message> filterMessages_RecipientID(List<Message> list, int RecipientID);
     List<Message> filterMessages_SenderID(List<Message> list, int SenderID, int RecipientID);
-
+    List<Message> filterMessages_Read(List<Message> list);
+    List<Message> filterMessages_Unread(List<Message> list);
 }

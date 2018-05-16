@@ -32,7 +32,7 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <ScrollPane fitToWidth="true" prefHeight="264.0" prefWidth="598.0">
+                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="264.0" prefWidth="598.0">
                      <content>
                         <AnchorPane prefHeight="35.0" prefWidth="598.0">
                            <padding>

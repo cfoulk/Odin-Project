@@ -76,12 +76,18 @@ public class EmployeeController {
     }
 
     private void initView() {
+        JFXRippler addButton = createIconButton("Add", "Add Employee");
         for(int i = 0; i < Employees.size(); ++i)
         {
             HBox empLine = createEmpLine(Employees.get(i));
             empLine.setId(Integer.toString(i));
             View.getChildren().add(empLine);
         }
+        HBox addEmp = new HBox(addButton, new Label("Add a new Employee"));
+        addEmp.getStyleClass().add("empLine");
+        addEmp.setStyle("-fx-background-color: #1a555b");
+        addEmp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadEmployeeDialog(null));
+        View.getChildren().add(addEmp);
     }
 
     public HBox createEmpLine(Employee employee) {
@@ -251,11 +257,11 @@ public class EmployeeController {
         content.getStyleClass().add("dialog");
         content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
-        Text    name = new Text("Name: " + employee.name),
-                position = new Text("Position: " + employee.position),
-                groupID = new Text("Group ID: " + String.valueOf(employee.groupID)),
-                username = new Text("Username: " + employee.username),
-                password = new Text("Password: " + employee.password);
+        Label    name = new Label("Name: " + employee.name),
+                position = new Label("Position: " + employee.position),
+                groupID = new Label("Group ID: " + String.valueOf(employee.groupID)),
+                username = new Label("Username: " + employee.username),
+                password = new Label("Password: " + employee.password);
         VBox vBox = new VBox(name, position, groupID, username, password);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
