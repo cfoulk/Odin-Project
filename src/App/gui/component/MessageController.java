@@ -21,8 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
 import java.util.List;
 
 
@@ -88,24 +87,30 @@ public class MessageController {
         if(message.message.length() > 10) body = message.message.substring(0, 10) + "...";
         else body = message.message;
         messageLine = new HBox(new Label("From: " + from + " Contains: " + body));
-        messageButtons = initMessageButtons();
-        EventHandler a = new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                if (event.getEventType().equals(javafx.scene.input.MouseEvent.MOUSE_ENTERED)) {
-                    messageButtons.getChildren().add(messageButtons);
-                }
-                if (event.getEventType().equals(javafx.scene.input.MouseEvent.MOUSE_EXITED)) {
-                    messageButtons.getChildren().remove(messageButtons);
-                }
-            }
-        };
+        messageButtons = initMessageButtons(message);
+        messageLine.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> messageButtons.getChildren().add(messageButtons));
+        messageLine.addEventHandler(MouseEvent.MOUSE_EXITED, event -> messageButtons.getChildren().remove(messageButtons));
         return messageLine;
     }
 
-    HBox initMessageButtons()
+    HBox initMessageButtons(Message message)
     {
-        return null;
+        HBox messageButtons;
+        JFXRippler viewMessage, markRead;
+        viewMessage = createIconButton("View", "View message");
+        markRead = createIconButton("Confirm", "Mark read");
+        viewMessage.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> viewMessageDialog(message));
+        markRead.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> markMessageRead(message));
+        messageButtons = new HBox(viewMessage, markRead);
+        return messageButtons;
+    }
+
+    private void viewMessageDialog(Message message) {
+
+    }
+
+    private void markMessageRead(Message message) {
+
     }
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
