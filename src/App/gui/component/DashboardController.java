@@ -741,6 +741,13 @@ public class DashboardController {
              description = new Label("Description: " + project.description),
              status = new Label("Status: " + project.status),
              timeSpent = new Label("Time spent on " + project.name + ": " + timeString);
+        name.setWrapText(true);
+        dueDate.setWrapText(true);
+        groupID.setWrapText(true);
+        projectLeadID.setWrapText(true);
+        description.setWrapText(true);
+        status.setWrapText(true);
+        timeSpent.setWrapText(true);
         addTask.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             dialog.close();
             loadTaskDialog(null, project.projectID);
