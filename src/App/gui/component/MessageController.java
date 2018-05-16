@@ -3,7 +3,9 @@ package App.gui.component;
 import Model.OdinModel;
 import Server.Employee;
 import Server.Message;
+import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -29,10 +31,11 @@ import java.util.List;
 
 public class MessageController {
 
-    private Employee User;
-    private List<Employee> Employees;
-    private List<Message> Messages;
-    private OdinModel OM;
+    private static Employee User;
+    private static List<Employee> Employees;
+    private static List<Message> Messages;
+    private static OdinModel OM;
+    private static JFXDecorator decorator;
 
     private String request = "All";
 
@@ -54,6 +57,7 @@ public class MessageController {
         OM = om;
     }
 
+    @FXML
     void initialize()
     {
         initHeader();
@@ -75,7 +79,13 @@ public class MessageController {
         if(request.equals("All")) messages = Messages;
         else if(request.equals("Unread")) messages = OM.filterMessages_Unread(Messages);
         else messages = OM.filterMessages_Read(Messages);
-        for(Message message : messages) View.getChildren().add(createMessageLine(message));
+        if(messages != null) for(Message message : messages) View.getChildren().add(createMessageLine(message));
+        else
+        {
+            Label label = new Label("You have no messages!");
+            label.setStyle("-fx-text-fill: #000000");
+            View.getChildren().add(label);
+        }
     }
 
     HBox createMessageLine(Message message)
@@ -106,11 +116,24 @@ public class MessageController {
     }
 
     private void viewMessageDialog(Message message) {
-
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.getStyleClass().add("dialog");
+        content.lookup(".jfx-layout-actions").setStyle("-fx-alignment: CENTER; -fx-spacing: 100");
+        JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+        String  from = OM.filterEmployees_EmployeeID(Employees, message.senderID).name,
+                body = message.message;
+        Label   fromLabel = new Label(from),
+                bodyLabel = new Label(body);
+        bodyLabel.setWrapText(true);
+        VBox vBox = new VBox(fromLabel, bodyLabel);
+        vBox.setStyle("-fx-spacing: 15");
+        content.setBody(vBox);
+        markMessageRead(message);
+        dialog.show();
     }
 
     private void markMessageRead(Message message) {
-
+        OM.setMessage_Read(message.messageID);
     }
 
     private JFXRippler createIconButton(String iconName, String tooltip) {
@@ -142,5 +165,9 @@ public class MessageController {
         }
 
         return rippler;
+    }
+
+    public void setDecorator(JFXDecorator decorator) {
+        this.decorator = decorator;
     }
 }

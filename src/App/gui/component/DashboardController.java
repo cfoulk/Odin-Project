@@ -141,11 +141,11 @@ public class DashboardController {
     public void initHeader() {
         UserName.setText("Hello, " + User.name);
         JFXRippler messenger = createIconButton("Message", "Messenger");
-        messenger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadMessageWindow(new Stage(), User));
+        messenger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> loadMessageWindow());
         UserBar.getChildren().add(messenger);
         if (Privelage.equals(MANAGER)) {
             JFXRippler manageEmployeeButton = createIconButton("Group", "Manage Employees");
-            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow(new Stage(), User, Employees));
+            manageEmployeeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> loadEmployeeWindow());
             UserBar.getChildren().add(manageEmployeeButton);
             p(1);
         } else if (Privelage.equals(PROJECT_LEAD)) {
@@ -1254,9 +1254,10 @@ public class DashboardController {
     }
 
     @FXML
-    void loadEmployeeWindow(Stage primaryStage, Employee User, List<Employee> Employees) {
+    void loadEmployeeWindow() {
         try {
             if (OM != null) {
+                Stage primaryStage = new Stage();
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Employee.fxml"));
                 Parent employee = loader.load();
                 EmployeeController employeeController = new EmployeeController();
@@ -1275,13 +1276,27 @@ public class DashboardController {
         }
     }
 
-
-    private void loadMessageWindow(Stage stage, Employee user) {
-       // try {
-         //   if(OM != null) {
-                //FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(""))
-            //}
-        //} catch (IOException e) { e.printStackTrace(); }
+    private void loadMessageWindow() {
+        try {
+            if (OM != null) {
+                Stage primaryStage = new Stage();
+                List<Message> correctMessages = OM.filterMessages_RecipientID(Messages, User.employeeID);
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Messenger.fxml"));
+                Parent messenger = loader.load();
+                MessageController messageController = new MessageController();
+                primaryStage.setTitle("Messenger");
+                JFXDecorator decorator = new JFXDecorator(primaryStage, messenger);
+                primaryStage.setScene(new Scene(decorator));
+                decorator.setContent(messenger);
+                messageController.setDecorator(decorator);
+                messenger.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                decorator.getStylesheets().add("App/gui/resource/css/odin_scheme.css");
+                messageController.load(User, Employees, correctMessages, OM);
+                primaryStage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void refresh()
