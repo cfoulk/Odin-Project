@@ -1150,12 +1150,12 @@ public class DashboardController {
         String  stop = (worklog.stopTime == null) ? "In Progress" : worklog.stopTime,
                 desc = (worklog.description == null) ? "In Progress" : worklog.description,
                 totalTime = (worklog.elapsedTime == null) ? "In Progress" : worklog.elapsedTime;
-        Text    startTime = new Text("Started: " + worklog.startTime),
-                stopTime = new Text("Stopped: " + stop),
-                elapsedTime = new Text("Total time: " + totalTime),
-                description = new Text("Description: " + desc),
-                taskID = new Text("Task: " + String.valueOf(worklog.taskID)),
-                employeeID = new Text("Employee: " + String.valueOf(worklog.employeeID));
+        Label   startTime = new Label("Started: " + worklog.startTime),
+                stopTime = new Label("Stopped: " + stop),
+                elapsedTime = new Label("Total time: " + totalTime),
+                description = new Label("Description: " + desc),
+                taskID = new Label("Task: " + String.valueOf(worklog.taskID)),
+                employeeID = new Label("Employee: " + String.valueOf(worklog.employeeID));
         VBox vBox = new VBox(startTime, stopTime, elapsedTime, description, taskID, employeeID);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
