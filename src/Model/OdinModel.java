@@ -763,10 +763,10 @@ public class OdinModel implements OdinInterface {
         return messages;
     }
 
-    public List<Message> filterMessages_SenderID(List<Message> list, int senderID, int recipientID) {
+    public List<Message> filterMessages_SenderID(List<Message> list, int senderID) {
         List<Message> messages = new ArrayList<>();
         for (Message message : list) {
-            if (message.senderID == senderID && message.recipientID == recipientID) messages.add(message);
+            if (message.senderID == senderID) messages.add(message);
         }
         return messages;
     }

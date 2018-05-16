@@ -70,6 +70,8 @@ public class MessageController {
         JFXRippler viewAllButton = createIconButton("Message", "View All Messages");
         JFXRippler viewReadButton = createIconButton("Check", "View Read Messages");
         JFXRippler viewUnreadButton = createIconButton("Cancel", "View Unread Messages");
+        JFXRippler viewSentButton = createIconButton("Arrowhead-Right", "View Sent Messages");
+        Label viewing = new Label("Viewing: " + request + " messages");
         composeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> composeMessage());
         viewAllButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             request = "All";
@@ -83,7 +85,11 @@ public class MessageController {
             request = "Unread";
             refresh();
         });
-        Header.getChildren().addAll(composeButton, viewAllButton, viewReadButton, viewUnreadButton);
+        viewSentButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            request = "Sent";
+            refresh();
+        });
+        Header.getChildren().addAll(viewing, composeButton, viewAllButton, viewReadButton, viewUnreadButton, viewSentButton);
     }
 
     void initView(String request)
@@ -91,8 +97,9 @@ public class MessageController {
         List<Message> messages;
         if(request.equals("All")) messages = Messages;
         else if(request.equals("Unread")) messages = OM.filterMessages_Unread(Messages);
-        else messages = OM.filterMessages_Read(Messages);
-        if(messages != null) for(Message message : messages) View.getChildren().add(createMessageLine(message));
+        else if(request.equals("Read")) messages = OM.filterMessages_Read(Messages);
+        else messages = OM.filterMessages_SenderID(Messages, User.employeeID);
+        if(messages != null && messages.size() > 0) for(Message message : messages) View.getChildren().add(createMessageLine(message));
         else
         {
             Label label = new Label("You have no messages!");
@@ -107,7 +114,7 @@ public class MessageController {
         HBox messageLine, messageButtons;
         String from, body;
         from = OM.filterEmployees_EmployeeID(Employees, message.senderID).name;
-        if(message.message.length() > 10) body = message.message.substring(0, 10) + "...";
+        if(message.message.length() > 40) body = message.message.substring(0, 40) + "...";
         else body = message.message;
         messageLine = new HBox(new Label("From: " + from + " Contains: " + body));
         messageButtons = initMessageButtons(message);
@@ -143,6 +150,7 @@ public class MessageController {
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         markMessageRead(message);
+        refresh();
         dialog.show();
     }
 

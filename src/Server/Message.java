@@ -12,11 +12,11 @@ public class Message {
     public int senderID;
 
     public Message(ResultSet myRS) throws SQLException {
-        this.messageID = myRS.getInt("messageID");
-        this.message = myRS.getString("message");
-        this.status = myRS.getString("status");
-        this.recipientID = myRS.getInt("recipientID");
-        this.senderID = myRS.getInt("senderID");
+        this.messageID = myRS.getInt("MessageID");
+        this.message = myRS.getString("Message");
+        this.status = myRS.getString("Status");
+        this.recipientID = myRS.getInt("RecipientID");
+        this.senderID = myRS.getInt("SenderID");
     }
 
     public Message(int messageID, String message, String status, int recipientID, int senderID) {

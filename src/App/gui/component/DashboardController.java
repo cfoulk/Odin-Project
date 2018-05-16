@@ -726,6 +726,7 @@ public class DashboardController {
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
         if(project != null) content.setActions(finish, confirm, cancel);
+        else content.setActions(confirm, cancel);
         dialog.show();
     }
 
@@ -969,7 +970,8 @@ public class DashboardController {
         VBox vBox = new VBox(name, dueDate, projectID, employees, description, size, status);
         vBox.setStyle("-fx-spacing: 15");
         content.setBody(vBox);
-        content.setActions(finish, confirm, cancel);
+        if(task != null) content.setActions(finish, confirm, cancel);
+        else content.setActions(confirm, cancel);
         dialog.show();
     }
 
@@ -1257,27 +1259,12 @@ public class DashboardController {
         }
     }
 
-    void refresh() {
-        View.getChildren().remove(0, View.getChildren().size());
-        try {
-            persistentUser.ProjectList = OM.getProjects();
-            persistentUser.TaskList = OM.getTasks();
-            persistentUser.WorkLogList = OM.getWorkLogs();
-            persistentUser.EmployeeList = OM.getEmployees();
-            projectLines =  new ArrayList<>();
-            taskLines = new ArrayList<>();
-            workLogPanes = new ArrayList<>();
-            initView();
-        } catch (Exception e) {
-            System.out.println("Error");
-        }
-    }
-
     private void loadMessageWindow() {
         try {
             if (OM != null) {
                 Stage primaryStage = new Stage();
                 List<Message> correctMessages = OM.filterMessages_RecipientID(Messages, User.employeeID);
+                correctMessages.addAll(OM.filterMessages_SenderID(Messages, User.employeeID));
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("App/gui/Messenger.fxml"));
                 Parent messenger = loader.load();
                 MessageController messageController = new MessageController();
@@ -1296,6 +1283,32 @@ public class DashboardController {
         }
     }
 
+    void refresh() {
+        View.getChildren().remove(0, View.getChildren().size());
+        try{
+            Projects = OM.getProjects();
+            Tasks = OM.getTasks();
+            Worklogs = OM.getWorkLogs();
+            Employees = OM.getEmployees();
+            initView();
+        }
+        catch(Exception e){
+            System.out.println("Error");
+        }
+        /*View.getChildren().remove(0, View.getChildren().size());
+        try {
+            persistentUser.ProjectList = OM.getProjects();
+            persistentUser.TaskList = OM.getTasks();
+            persistentUser.WorkLogList = OM.getWorkLogs();
+            persistentUser.EmployeeList = OM.getEmployees();
+            projectLines =  new ArrayList<>();
+            taskLines = new ArrayList<>();
+            workLogPanes = new ArrayList<>();
+            initView();
+        } catch (Exception e) {
+            System.out.println("Error");
+        }*/
+    }
 
     public void updateProjectLine(Project project) {
         Platform.runLater(() -> {
@@ -1333,7 +1346,6 @@ public class DashboardController {
             }
         });
     }
-
 
     public void removeProjectLine(Project project) {
         Platform.runLater(() -> {
@@ -1428,7 +1440,6 @@ public class DashboardController {
             taskView.getChildren().add(taskLine);
         });
     }
-
 
     public void reRenderWorklogPanes() {
         Platform.runLater(() -> {
