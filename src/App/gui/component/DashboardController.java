@@ -94,15 +94,15 @@ public class DashboardController {
     public void initialize() {
         Platform.runLater(() -> {
             //fetchAppropriateObjects();
-            persistentUser.initiateServerData(OM, this);
-            Projects = persistentUser.ProjectList;
-            Tasks = persistentUser.TaskList;
-            Worklogs = persistentUser.WorkLogList;
-            Employees = persistentUser.EmployeeList;
-            Messages = persistentUser.MessageList;
+            //persistentUser.initiateServerData(OM, this);
+            Projects = OM.getProjects();//.ProjectList;
+            Tasks = OM.getTasks();//.TaskList;
+            Worklogs = OM.getWorkLogs();//.WorkLogList;
+            Employees = OM.getEmployees();//.EmployeeList;
+            Messages = OM.getMessages();//.MessageList;
             initHeader();
             initView();
-            persistentUser.runLiveUpdater();
+            //persistentUser.runLiveUpdater();
         });
 
         heightHeader = 0.162;
@@ -386,7 +386,7 @@ public class DashboardController {
         workButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (!taskStarted) {
                 OM.startWork(task.taskID, User.employeeID);
-//                refresh();
+                refresh();
             } else getStopDesc(lastLogID);
         });
 
@@ -691,7 +691,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(projectLeadID, "Invalid Project Lead");
@@ -713,7 +713,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(projectLeadID, "Invalid Project Lead");
@@ -929,7 +929,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(projectID, "Invalid project or employees not in project");
@@ -958,7 +958,7 @@ public class DashboardController {
                             status.getText()
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(employees, "Invalid project or employees not in project");
@@ -1043,7 +1043,7 @@ public class DashboardController {
 
         confirm.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             OM.stopWork(taskID, description.getText());
-//            refresh();
+            refresh();
             dialog.close();
         });
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -1150,7 +1150,7 @@ public class DashboardController {
                             Integer.parseInt(employeeID.getText())
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(taskID, "Invalid task or employees not in task");
@@ -1173,7 +1173,7 @@ public class DashboardController {
                             Integer.parseInt(employeeID.getText())
                     );
                     if (successful) {
-//                        refresh();
+                        refresh();
                         dialog.close();
                     } else {
                         dialogError_JFXTF(taskID, "Invalid task or employees not in task");
