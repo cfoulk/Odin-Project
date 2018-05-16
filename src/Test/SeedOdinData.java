@@ -12,9 +12,9 @@ public class SeedOdinData {
 
 
         OdinModel model = new OdinModel();
-        //see employee data
+        //-----------------------------------------------------------------employee data-----------------------------------------------------
         //user: employees
-        model.addEmployee("John", "Employee", 1, "JohnUser", "doe", "Active");
+        /*model.addEmployee("John", "Employee", 1, "JohnUser", "doe", "Active");
         model.addEmployee("Sarah", "Employee", 1, "SarahJones", "Sarahpwd", "Active");
         model.addEmployee("Tim", "Employee", 2, "TimSmith", "Timpwd", "Active");
         model.addEmployee("Bob", "Employee", 2, "BobUser", "Bobpwd", "Active");
@@ -33,21 +33,20 @@ public class SeedOdinData {
         model.addEmployee("Max", "Project Lead", 5, "MaxUser", "Maxpwd", "Active");
 
 
-        //user: ProjectLead
-        model.addEmployee("Hannah", "Manager", 123, "HannahUser", "Hannahpwd", "Active");
-        model.addEmployee("Alex", "Manager", 45, "AlexUser", "Alexpwd", "Active");
+        //user: Manager
+        model.addEmployee("Hannah", "Manager", 1, "HannahUser", "Hannahpwd", "Active");
+        model.addEmployee("Alex", "Manager", 2, "AlexUser", "Alexpwd", "Active");*/
+        model.addEmployee("Jim", "Manager", 3, "JimUser", "Jimpwd", "Active");
+        model.addEmployee("Tom", "Manager", 4, "TomUser", "Tompwd", "Active");
+        model.addEmployee("Maddy", "Manager", 5, "MaddyUser", "Maddypwd", "Active");
 
 
 
-
-
-
-
+        //--------------------------------------------------------------employee data--------------------------------------------------------
+        //model.addProject("Time Management", "2018-02-05", "1", "11")
 
 
     }
-
-
 
 
 }
