@@ -97,11 +97,11 @@ public class persistentUser {
             boolean isManager = currentUser.position == "Manager";
             int groupID = currentUser.groupID;
 
-            List<Employee> employeeList = OM.getEmployees();
+            EmployeeList = OM.getEmployees();
             List<Project> projectList = OM.getProjects();
             List<Task> taskList = OM.getTasks();
             List<WorkLog> workLogList = OM.getWorkLogs();
-            List<Message> messageList = OM.getMessages();
+            MessageList = OM.getMessages();
 
             Project newProj;
             Project oldProj;
@@ -140,8 +140,46 @@ public class persistentUser {
                     }
                 }
             }
-        }
-    }
+
+//            Task newTask;
+//            Task oldTask;
+//            for(int i = 0; i < taskList.size(); i++){
+//                newTask = taskList.get(i);
+//                if(TaskList.size() > i) {
+//                    oldTask = TaskList.get(i);
+//                    if (newTask.projectID == oldTask.projectID) {
+//                        TaskList.set(i,newTask);
+//                        if(!newTask.name.equals(oldTask.name)){
+//                            if(isManager || groupID == newTask.groupID) {
+//                                Dashboard.updateProjectLine(newTask);
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        if(projectList.size() > i+1 && projectList.get(i+1).equals(oldTask)){
+//                            TaskList.add(i,newTask);
+//                            if(isManager || groupID == newTask.groupID) {
+//                                Dashboard.insertProjectLine(newTask, projectList.get(i + 1));
+//                            }
+//                        }
+//                        else{
+//                            TaskList.remove(i);
+//                            i--;
+//                            if(isManager || groupID == newTask.groupID) {
+//                                Dashboard.removeProjectLine(oldTask);
+//                            }
+//                        }
+//                    }
+//                }
+//                else{
+//                    TaskList.add(newProj);
+//                    if(isManager || groupID == newProj.groupID) {
+//                        Dashboard.addProjectLine(newProj);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public static void getServerData(OdinModel OM, String username) {/*
         List<Task> holdTasks;

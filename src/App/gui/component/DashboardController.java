@@ -10,8 +10,6 @@ import Server.WorkLog;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
-import com.mysql.jdbc.StringUtils;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.application.Platform;
 import javafx.event.Event;
 import com.jfoenix.controls.*;
@@ -32,12 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class DashboardController {
@@ -75,7 +68,7 @@ public class DashboardController {
 
     private ArrayList<HBox> projectLines = new ArrayList<>();
     private ArrayList<HBox> taskLines = new ArrayList<>();
-    private ArrayList<HBox> workLogLines = new ArrayList<>();
+    private ArrayList<HBox> workLogPane = new ArrayList<>();
 
     private HBox taskLineButtons = new HBox();
     private HBox projectLineButtons = new HBox();
@@ -1258,9 +1251,22 @@ public class DashboardController {
                     int index = projView.getChildren().indexOf(projLine);
                     p("Remove, Project Name: " + project.name);
                     p("Index: " + index);
-                    projLine = createProjectLine(project);
-                    projectLines.add(i,projLine);
-                    projView.getChildren().add(index, projLine);
+                    projectLines.remove(projLine);
+                    projView.getChildren().remove(index);
+                    if(projView.getChildren().get(index) instanceof VBox){
+                        VBox taskBox = (VBox) projView.getChildren().get(index);
+                        for(int h = 0; h < taskBox.getChildren().size() ;h++){
+                            if(taskBox.getChildren().get(h) instanceof HBox){
+                                taskLines.remove(taskBox.getChildren().get(h));
+                                taskBox.getChildren().remove(h);
+                                if(taskBox.getChildren().get(h) instanceof ScrollPane){
+                                    workLogPane.remove((ScrollPane) taskBox.getChildren().get(h));
+                                    taskBox.getChildren().remove(h);
+                                }
+                            }
+                        }
+                        projView.getChildren().remove(index);
+                    }
                 }
             }
         });
@@ -1268,15 +1274,14 @@ public class DashboardController {
 
     public void addProjectLine(Project project) {
         Platform.runLater(()-> {
-            int id = project.projectID;
             VBox projView = (VBox) projectLines.get(0).getParent();
             p("Add, Project Name: " + project.name);
             HBox projLine = createProjectLine(project);
             projectLines.add(projLine);
             projView.getChildren().add(projLine);
-
         });
     }
+
 
 
 }
